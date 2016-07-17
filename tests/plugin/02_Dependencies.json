@@ -1,0 +1,20 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "boolean", "doc": "One liner", "arity": "1",
+      "deps": [
+        { "when": [ true ], "require": [ "@.var1.p.var1" ] }
+      ]
+    },
+    "var1": {
+      "kind": "plugin", "arity": "1",
+      "model": "Base.json",
+      "doc": "Valid plugin option"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "templates": {
+    "a_class": {
+      "kind": "class", "arity": "?", "doc": "one liner",
+      "model": "Simple.json"
+    }
+  },
+  "body": {
+    "t0": {
+      "kind": "string", "arity": "+", "doc": "one liner"
+    },
+    "t1": {
+      "kind": "string", "arity": "+", "hook": "$.t2:hello_([a-z]+):world_\\1", "doc": "one liner"
+    },
+    "t2": {
+      "kind": "string", "arity": "+", "hook": "$.t0:([a-z]+)mop:hello_\\1", "doc": "one liner"
+    },
+    "t3": {
+      "kind": "select", "arity": "1", "hook": "$.t1:([a-z]+)_([a-z]+):\\10\\2",
+      "doc": "one liner", "size": "*", "template": "a_class"
+    },
+    "t4": {
+      "kind": "string", "arity": "+", "hook": "$.t3:([a-z]+)0([a-z]+):\\1+\\2",
+      "doc": "one liner"
+    }
+  }
+}

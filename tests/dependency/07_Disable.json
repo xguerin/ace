@@ -1,0 +1,29 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "body": {
+    "t0": {
+      "kind": "string", "arity": "?", "doc": "Valid deps",
+      "either": [ "none", "enum", "range", "error" ],
+      "deps": [
+        { "when": [ "enum" ], "disable": [ "@.t1" ] },
+        { "when": [ "range" ], "disable": [ "@.t2" ] },
+        { "when": [ "error" ], "require": [ "@.t1", "@.t3" ] }
+      ]
+    },
+    "t1": {
+      "kind": "string", "arity": "?", "doc": "Dummy deps"
+    },
+    "t2": {
+      "kind": "integer", "arity": "?", "doc": "Dummy deps",
+      "deps": [ { "require": [ "@.t1" ] } ]
+    },
+    "t3": {
+      "kind": "integer", "arity": "?", "doc": "Dummy deps",
+      "deps": [ { "disable": [ "@.t1" ] } ]
+    }
+  }
+}

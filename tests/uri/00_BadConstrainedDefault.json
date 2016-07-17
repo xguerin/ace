@@ -1,0 +1,14 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "BadConstrainedDefault model"
+  },
+  "body": {
+    "var0": {
+      "kind": "uri", "arity": "1", "default": "http",
+      "either": [ "file", "ftp" ],
+      "doc": "Bad either-constrained default uri option"
+    }
+  }
+}

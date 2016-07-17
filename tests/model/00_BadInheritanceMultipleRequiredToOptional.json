@@ -1,0 +1,14 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "include": [ "Inheritance.json" ],
+    "version": "1.0",
+    "doc": "BadInheritanceSingleRequiredToOptional model"
+  },
+  "body": {
+    "var2": {
+      "kind": "integer", "arity": "*",
+      "doc": "an integer entry"
+    }
+  }
+}

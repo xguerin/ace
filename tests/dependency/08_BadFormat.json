@@ -1,0 +1,18 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "body": {
+    "t0": {
+      "kind": "boolean", "arity": "?",
+      "deps": [ { "when": [ true ], "require": [ "@.t1[0]" ] } ],
+      "doc": "Invalid when type"
+    },
+    "t1": {
+      "kind": "boolean", "arity": "?",
+      "doc": "Dummy dependent type"
+    }
+  }
+}

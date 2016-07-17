@@ -1,0 +1,27 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "templates": {
+    "tmpl1": {
+      "kind": "class", "arity": "1",
+      "model": "Simple.json",
+      "doc": "an integer template"
+    }
+  },
+  "body": {
+    "var0": {
+      "kind": "boolean", "arity": "1",
+      "doc": "Valid boolean option",
+      "deps": [ { "when": [ true ], "require": [ "@.var1.value1.var1" ] } ]
+    },
+    "var1": {
+      "kind": "select", "arity": "1",
+      "either": [ "value1", "value2" ],
+      "size": "*", "template": "tmpl1",
+      "doc": "Valid select option"
+    }
+  }
+}

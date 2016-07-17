@@ -1,0 +1,14 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "Bad type model" 
+  }, 
+  "body": { 
+    "var0": {
+      "kind": "integer", "arity": "1",
+      "range": "[ -3.14, 3.14 ]",
+      "doc": "Option with bad range"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "InvalidClass model"
+  },
+
+  "body": {
+    "myFloat": {
+      "kind": "string",
+      "optional": false,
+      "doc": "a float entry",
+      "either": [ -1.0, 1.0 ],
+      "deps": [ ]
+    }
+  },
+
+  "deps": {
+
+  }
+}

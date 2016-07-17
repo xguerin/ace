@@ -1,0 +1,13 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "cpuid", "arity": "+",
+      "doc": "Valid CPUID option"
+    }
+  }
+}

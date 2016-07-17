@@ -1,0 +1,13 @@
+.*.swp
+build.ninja
+*.pyc
+build*
+*.o
+*.a
+*.so
+*.x
+*.ac.*
+*.out
+*.dump.*
+.ycm_extra_conf.py
+tests.log

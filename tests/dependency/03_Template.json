@@ -1,0 +1,23 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "templates" : {
+    "a_class": {
+      "kind": "class", "arity": "?", "doc": "one-liner",
+      "model": "Simple.json"
+    }
+  },
+  "body": {
+    "t0": {
+      "kind": "boolean", "arity": "?", "doc": "one-liner",
+      "deps": [ { "when": [ true ], "require": [ "@.t1.*.var1" ] } ]
+    },
+    "t1": {
+      "kind": "select", "arity": "?", "doc": "one-liner",
+      "size": "*", "template": "a_class"
+    }
+  }
+}

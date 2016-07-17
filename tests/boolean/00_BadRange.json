@@ -1,0 +1,19 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "Bad range model" 
+  }, 
+  "body": { 
+    "var0": {
+      "kind": "boolean", "arity": "1",
+      "range": [ "hello", "world" ],
+      "doc": "Option with bad range"
+    },
+    "var1": {
+      "kind": "boolean", "arity": "1",
+      "range": [ -3.14, 3.14 ],
+      "doc": "Option with bad range"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "file", "arity": "*", "mode": "r",
+      "doc": "Valid any file option"
+    },
+    "var1": {
+      "kind": "file", "arity": "*", "mode": "r",
+      "either": [ "directory" ],
+      "doc": "Valid directory only option"
+    },
+    "var2": {
+      "kind": "file", "arity": "*", "mode": "w+",
+      "either": [ "regular" ],
+      "doc": "Valid file only option"
+    },
+    "var3": {
+      "kind": "file", "arity": "*", "mode": "w+",
+      "doc": "Valid file only option"
+    },
+    "var4": {
+      "kind": "file", "arity": "*", "mode": "w+",
+      "either": [ "directory" ],
+      "doc": "Valid directory only option"
+    }
+  }
+}

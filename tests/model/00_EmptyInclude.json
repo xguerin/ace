@@ -1,0 +1,10 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "include": [ "" ],
+    "version": "1.0",
+    "doc": "BadInclude model"
+  },
+  "body": {
+  }
+}

@@ -1,0 +1,14 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "Ok model" 
+  }, 
+  "body": { 
+    "var0": {
+      "kind": "plugin", "arity": "+",
+      "model": "Simple.json",
+      "doc": "Invalid arity plugin option"
+    }
+  }
+}

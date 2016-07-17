@@ -1,0 +1,10 @@
+[
+  { 
+    "name": "A model", 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "A model" 
+  }
+]
+
+

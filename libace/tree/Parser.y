@@ -1,0 +1,207 @@
+/**
+ * Copyright (c) 2016 Xavier R. Guerin
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ * software and associated documentation files (the "Software"), to deal in the Software
+ * without restriction, including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+%extra_argument       { ace::tree::Path ** ppPath }
+
+%token_type           { Token * }
+%token_destructor     { delete $$; }
+
+%type path            { ace::tree::Path * }
+%destructor path      { }
+
+%type root            { ace::tree::path::Item * }
+%destructor root      { }
+
+%type accessorL       { std::list<ace::tree::path::Item *> * }
+%destructor accessorL { delete $$; }
+
+%type member          { ace::tree::path::Item * }
+%destructor member    { }
+
+%type index           { std::vector<size_t> * }
+%destructor index     { delete $$; }
+
+%type range           { ace::tree::path::Item::Range * }
+%destructor range     { delete $$; }
+
+%type entries         { std::vector<size_t> * }
+%destructor entries   { delete $$; }
+
+%include {
+  #include "Parser.h"
+  #include <ace/tree/Item.h>
+  #include <ace/tree/Token.h>
+  #include <ace/common/Log.h>
+  #include <cassert>
+  #include <iostream>
+  #include <list>
+  #include <malloc.h>
+}
+
+%syntax_error {
+  ACE_LOG(Error, "invalid JSONPath format");
+}
+
+// Path definition
+
+path ::= root(A) accessorL(B).
+{
+  auto * p = new ace::tree::Path();
+  p->push(ace::tree::path::Item::Ref(A));
+  for (auto & i : *B) p->push(ace::tree::path::Item::Ref(i));
+  *ppPath = p;
+}
+
+// Root definition
+
+root(A) ::= GROOT.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "root ::= GROOT" << std::endl;
+#endif
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Global);
+}
+
+root(A) ::= LROOT.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "root ::= LROOT" << std::endl;
+#endif
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Local);
+}
+
+// Accessor list
+
+accessorL(A) ::= .
+{
+  A = new std::list<ace::tree::path::Item *>();
+}
+
+accessorL(A) ::= accessorL(B) member(C).
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "accessor ::= accessorL member" << std::endl;
+#endif
+  B->push_back(C);
+  A = B;
+}
+
+accessorL(A) ::= accessorL(B) DOT member(C).
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "accessor ::= accessorL DOT member" << std::endl;
+#endif
+  C->setRecursive();
+  B->push_back(C);
+  A = B;
+}
+
+// Member
+
+member(A) ::= DOT MEMBER(B).
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "member ::= DOT MEMBER" << std::endl;
+#endif
+  auto const & n = dynamic_cast<MemberToken *>(B)->value;
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Named, n);
+}
+
+member(A) ::= index(B).
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "member ::= index" << std::endl;
+#endif
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Indexed, *B);
+}
+
+member(A) ::= range(B).
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "member ::= MEMBER range" << std::endl;
+#endif
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Ranged, *B);
+}
+
+member(A) ::= OPENC WILDCARD CLOSEC.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "member ::= OPENC WILDCARD CLOSEC " << std::endl;
+#endif
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Any);
+}
+
+member(A) ::= DOT WILDCARD.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "member ::= DOT WILDCARD" << std::endl;
+#endif
+  A = new ace::tree::path::Item(ace::tree::path::Item::Type::Any);
+}
+
+// Index
+
+index(A) ::= OPENC entries(B) CLOSEC.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "index ::= [a,b,..]" << std::endl;
+#endif
+  A = B;
+}
+
+// Index
+
+range(A) ::= OPENC INDEX(B) SLICE INDEX(C) CLOSEC.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "index ::= [i:j]" << std::endl;
+#endif
+  A = new ace::tree::path::Item::Range {
+    dynamic_cast<IndexToken *>(B)->value,
+    dynamic_cast<IndexToken *>(C)->value,
+    1 
+  };
+}
+
+range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
+{
+#ifdef ACE_PARSER_DEBUG
+  std::cout << "index ::= [i:j:k]" << std::endl;
+#endif
+  A = new ace::tree::path::Item::Range {
+    dynamic_cast<IndexToken *>(B)->value,
+    dynamic_cast<IndexToken *>(C)->value,
+    dynamic_cast<IndexToken *>(D)->value
+  };
+}
+
+// Entries
+
+entries(A) ::= INDEX(B).
+{
+  A = new std::vector<size_t>();
+  A->push_back(dynamic_cast<IndexToken *>(B)->value);
+}
+
+entries(A) ::= entries(B) COMMA INDEX(C).
+{
+  B->push_back(dynamic_cast<IndexToken *>(C)->value);
+  A = B;
+}

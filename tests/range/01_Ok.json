@@ -1,0 +1,29 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "Ok model" 
+  }, 
+  "body": { 
+    "closed": {
+      "kind": "float", "arity": "?",
+      "range": "[ -1.0, 1.0 ]",
+      "doc": "Valid float option"
+    },
+    "open_right": {
+      "kind": "float", "arity": "?",
+      "range": "[ -1.0, 1.0 )",
+      "doc": "Valid float option"
+    },
+    "open_left": {
+      "kind": "float", "arity": "?",
+      "range": "( -1.0, 1.0 ]",
+      "doc": "Valid float option"
+    },
+    "opened": {
+      "kind": "float", "arity": "?",
+      "range": "( -1.0, 1.0 )",
+      "doc": "Valid float option"
+    }
+  }
+}

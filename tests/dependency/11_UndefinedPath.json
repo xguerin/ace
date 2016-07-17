@@ -1,0 +1,20 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "UndefinedNestedDep model"
+  },
+  "body": {
+    "var0": {
+      "kind": "boolean", "arity": "1", "doc": "one-liner",
+      "deps": [ { "when": [ true ], "require": [ "@.var2.myInt" ] } ]
+    },
+    "var1": {
+      "kind": "boolean", "arity": "1", "doc": "one-liner",
+      "deps": [ { "when": [ true ], "require": [ "@.var2.var0" ] } ]
+    },
+    "var2": {
+      "kind": "class", "arity": "?", "model": "Simple.json", "doc": "one-liner"
+    }
+  }
+}

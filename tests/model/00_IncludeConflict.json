@@ -1,0 +1,10 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "include": [ "simple.json", "conflict.json" ],
+    "version": "1.0", 
+    "doc": "IncludeConflict model" 
+  }, 
+  "body": { 
+  }
+}

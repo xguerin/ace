@@ -1,0 +1,14 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "UnexpectedAttribute model"
+  },
+  "body": {
+    "var0": {
+      "kind": "string", "arity": "1", "default": 1,
+      "attr0": false,
+      "doc": "Unexpected attribute string option"
+    }
+  }
+}

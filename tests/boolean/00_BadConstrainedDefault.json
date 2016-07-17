@@ -1,0 +1,19 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Bad constrained default model"
+  },
+  "body": {
+    "var0": {
+      "kind": "boolean", "arity": "1", "default": true,
+      "either": [ false ],
+      "doc": "Option with bad constrained default"
+    },
+    "var1": {
+      "kind": "boolean", "arity": "1", "default": false,
+      "range": [ true ],
+      "doc": "Option with bad constrained default"
+    }
+  }
+}

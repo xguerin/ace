@@ -1,0 +1,22 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Simple model"
+  },
+  "body": {
+    "var0": {
+      "kind": "float", "arity": "1", "either": [ -1.0, 1.0 ],
+      "doc": "a float entry"
+    },
+    "var1": {
+      "kind": "integer", "arity": "?", "either": [ -1, 1 ],
+      "doc": "a int entry"
+    },
+    "var2": {
+      "kind": "string", "arity": "?",
+      "default": "hello world",
+      "doc": "a int entry"
+    }
+  }
+}

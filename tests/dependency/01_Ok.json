@@ -1,0 +1,16 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "body": {
+    "t0": {
+      "kind": "boolean", "arity": "?", "doc": "Valid deps",
+      "deps": [ { "when": [ true ], "require": [ "@.t1" ] } ]
+    },
+    "t1": {
+      "kind": "boolean", "arity": "?", "doc": "Dummy deps"
+    }
+  }
+}

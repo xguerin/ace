@@ -1,0 +1,23 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "boolean", "arity": "1",
+      "doc": "Valid boolean option",
+      "deps": [
+        { "when": [ true ], "require": [ "@.var1" ], "either": [ false ] }
+      ]
+    },
+    "var1": {
+      "kind": "boolean", "arity": "1",
+      "doc": "Valid boolean option",
+      "deps": [
+        { "when": [ true ], "require": [ "@.var0" ], "either": [ false ] }
+      ]
+    }
+  }
+}

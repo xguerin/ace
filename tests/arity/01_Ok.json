@@ -1,0 +1,29 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "boolean", "arity": "?",
+      "doc": "Valid boolean option"
+    },
+    "var1": {
+      "kind": "boolean", "arity": "1",
+      "doc": "Valid boolean option"
+    },
+    "var2": {
+      "kind": "boolean", "arity": "*",
+      "doc": "Valid boolean option"
+    },
+    "var3": {
+      "kind": "boolean", "arity": "+",
+      "doc": "Valid boolean option"
+    },
+    "var4": {
+      "kind": "boolean", "arity": "1:3",
+      "doc": "Valid boolean option"
+    }
+  }
+}

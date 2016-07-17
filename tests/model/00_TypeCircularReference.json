@@ -1,0 +1,13 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "TypeCircularReference model"
+  },
+  "body": {
+    "circular": {
+      "kind": "class", "arity": "1", "doc": "circular reference",
+      "model": "00_TypeCircularReference.json"
+    }
+  }
+}

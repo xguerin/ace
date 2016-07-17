@@ -1,0 +1,21 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "float", "arity": "?",
+      "doc": "Valid integer option"
+    },
+    "var1": {
+      "kind": "float", "arity": "?", "either": [ -1.11, 0.0, 1.11 ],
+      "doc": "Valid integer option"
+    },
+    "var2": {
+      "kind": "float", "arity": "?", "range": "(-10.0, 10.0)",
+      "doc": "Valid integer option"
+    }
+  }
+}

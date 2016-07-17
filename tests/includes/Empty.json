@@ -1,0 +1,9 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Empty model"
+  },
+  "body": {
+  }
+}

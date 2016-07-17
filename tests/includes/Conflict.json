@@ -1,0 +1,17 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Conflict model, conflicting with Simple"
+  },
+  "body": {
+   "var0": {
+      "kind": "integer", "arity": "?", "either": [ -1.0, 1.0 ],
+      "doc": "a int entry"
+    },
+    "var1": {
+      "kind": "float", "arity": "1", "either": [ -1.0, 1.0 ],
+      "doc": "a float entry",
+    }
+  }
+}

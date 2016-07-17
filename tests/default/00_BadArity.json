@@ -1,0 +1,14 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Bad arity model"
+  },
+  "body": {
+    "var0": {
+      "kind": "integer", "arity": "1",
+      "default": [ 1, 2 ],
+      "doc": "Valid integer option"
+    }
+  }
+}

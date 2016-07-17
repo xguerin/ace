@@ -1,0 +1,14 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "BadDefault model"
+  },
+  "body": {
+    "var0": {
+      "kind": "class", "arity": "1", "default": true,
+      "model": "Simple.json",
+      "doc": "Bad default class option"
+    }
+  }
+}

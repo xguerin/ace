@@ -1,0 +1,10 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "include": [ "00_IncludeCircularReference.json" ],
+    "version": "1.0",
+    "doc": "IncludeCicrularReference model"
+  },
+  "body": {
+  }
+}

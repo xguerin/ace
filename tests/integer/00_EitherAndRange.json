@@ -1,0 +1,15 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "Model with either and range" 
+  }, 
+  "body": { 
+    "var0": {
+      "kind": "integer", "arity": "1",
+      "either": [ 1, 2, 3, 4, 5 ],
+      "range": [ 1, 5 ],
+      "doc": "Option with either and range"
+    }
+  }
+}

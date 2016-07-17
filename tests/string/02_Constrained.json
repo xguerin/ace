@@ -1,0 +1,14 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Length-constrained string model"
+  },
+  "body": {
+    "var0": {
+      "kind": "string", "arity": "1",
+      "length": "(0, 10]",
+      "doc": "Length-constrained string option"
+    }
+  }
+}

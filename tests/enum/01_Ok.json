@@ -1,0 +1,19 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "body": {
+    "var0": {
+      "kind": "enum", "arity": "1",
+      "bind": {
+        "ENUM_VAL_A": 0,
+        "ENUM_VAL_B": 1,
+        "ENUM_VAL_C": 2,
+        "ENUM_VAL_D": 3
+      },
+      "doc": "Valid enum option"
+    }
+  }
+}

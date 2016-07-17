@@ -1,0 +1,18 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "templates": {
+    "string_template": {
+      "kind": "string", "arity": "1", "doc": "A string template"
+    }
+  },
+  "body": {
+    "var0": {
+      "kind": "select", "arity": "1", "doc": "one liner",
+      "template": "string_template", "size": "+"
+    }
+  }
+}

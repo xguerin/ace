@@ -1,0 +1,19 @@
+{ 
+  "header": { 
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "Bad either model" 
+  }, 
+  "body": { 
+    "var0": {
+      "kind": "boolean", "arity": "1",
+      "either": [ "hello", "world" ],
+      "doc": "Option with bad either"
+    },
+    "var1": {
+      "kind": "boolean", "arity": "1",
+      "either": [ -3.14, 3.14 ],
+      "doc": "Option with bad either"
+    }
+  }
+}

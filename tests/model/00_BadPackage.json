@@ -1,0 +1,10 @@
+{
+  "header": {
+    "package": [ "irrelevant", "package" ],
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Bad package model"
+  },
+  "body": {
+  }
+}

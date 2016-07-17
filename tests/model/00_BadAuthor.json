@@ -1,0 +1,9 @@
+{ 
+  "header": { 
+    "author": { "name": 12, "email": "jdoe@acme.com" }, 
+    "version": "1.0", 
+    "doc": "BadAuthor model" 
+  }, 
+  "body": { 
+  }
+}

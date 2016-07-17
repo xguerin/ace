@@ -1,0 +1,16 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "UnboundNestedWildcard model"
+  },
+  "body": {
+    "var0": {
+      "kind": "string", "arity": "1", "doc": "one-liner",
+      "deps": [ { "require": [ "@..var1" ] } ]
+    },
+    "var1": {
+      "kind": "class", "arity": "?", "model": "Simple.json", "doc": "one-liner"
+    }
+  }
+}
