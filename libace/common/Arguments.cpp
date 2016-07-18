@@ -32,10 +32,15 @@ normalize(const int argc, const char * const argv[]) {
   char ** r = static_cast<char **>(calloc(argc, sizeof(char *)));
   for (int i = 0; i < argc; i += 1) {
     if (strncmp(argv[i], "-L", 2) == 0 or strncmp(argv[i], "-I", 2) == 0) {
-      r[i] = static_cast<char *>(calloc(strlen(argv[i]) + 2, sizeof(char)));
+      const size_t arglen = strlen(argv[i]) + 2;
+      r[i] = static_cast<char *>(calloc(arglen, sizeof(char)));
       strncpy(r[i], argv[i], 2);
       r[i][2] = ' ';
+#if defined(__OpenBSD__)
+      strlcpy(&r[i][3], &argv[i][2], arglen);
+#else
       strcpy(&r[i][3], &argv[i][2]);
+#endif
     } else {
       r[i] = strdup(argv[i]);
     }

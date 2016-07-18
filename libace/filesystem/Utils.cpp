@@ -77,7 +77,11 @@ libraryPrefix() {
   Dl_info libInfo;
   if (dladdr(reinterpret_cast<void *>(&libraryPrefix), &libInfo) != 0) {
     char buffer[4096];
+#if defined(__OpenBSD__)
+    strlcpy(buffer, libInfo.dli_fname, 4096);
+#else
     strcpy(buffer, libInfo.dli_fname);
+#endif
     return std::string(dirname(dirname(buffer)));
   }
   return "";
