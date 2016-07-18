@@ -113,9 +113,6 @@ prefix(std::string const & a, std::string const & b);
 std::string
 normalize(std::string const & in);
 
-std::ostream &
-multi_line(std::ostream & o, std::string const & s, int l, int c);
-
 std::string
 expand(std::string const & s, const char c, std::string const & v);
 

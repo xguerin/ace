@@ -116,25 +116,6 @@ normalize(std::string const & in) {
   return oss.str();
 }
 
-std::ostream &
-multi_line(std::ostream & o, std::string const & s, int l, int c) {
-  size_t pos = 0, off = 2;
-  if ((size_t)l < c - off) {
-    while (s[pos + c - l - off - 1] == '\\') off += 1;
-    o << '\"' << s.substr(pos, c - l - off) << '\"';
-    pos = c - l - off;
-  }
-  o << std::endl;
-  while (pos < s.length()) {
-    off = 4;
-    while (s[pos + c - off - 1] == '\\') off += 1;
-    indent(o, 2) << '\"' << s.substr(pos, c - off) << '\"';
-    pos += c - off;
-    if (pos < s.length()) o << std::endl;
-  }
-  return o;
-}
-
 std::string
 expand(std::string const & s, const char c, std::string const & v) {
   std::ostringstream oss;
