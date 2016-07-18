@@ -47,6 +47,11 @@ find_package(RE2 REQUIRED)
 find_package(Lemon REQUIRED)
 find_package(Ragel REQUIRED)
 
+include_directories(${TCLAP_INCLUDE_DIRS})
+include_directories(${RE2_INCLUDE_DIRS})
+include_directories(${LEMON_INCLUDE_DIRS})
+include_directories(${RAGEL_INCLUDE_DIRS})
+
 if (ACE_PLUGIN_JSON)
   find_package(JANSSON REQUIRED)
 endif ()

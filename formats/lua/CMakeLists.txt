@@ -7,7 +7,10 @@ add_library(ace_lua_format  SHARED  Array.cpp
                                     Scanner.cpp)
 
 target_compile_features(ace_lua_format PRIVATE cxx_nullptr)
-target_link_libraries(ace_lua_format PRIVATE ace lua5.1)
+
+target_link_libraries(ace_lua_format
+  PRIVATE ace
+  PUBLIC ${LUA51_LIBRARIES})
 
 install(
   TARGETS ace_lua_format

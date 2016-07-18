@@ -1,3 +1,5 @@
+include_directories(${JANSSON_INCLUDE_DIRS})
+
 add_library(ace_json_format SHARED  Array.cpp
                                     Common.cpp
                                     Object.cpp
@@ -5,7 +7,10 @@ add_library(ace_json_format SHARED  Array.cpp
                                     Scanner.cpp)
 
 target_compile_features(ace_json_format PRIVATE cxx_nullptr)
-target_link_libraries(ace_json_format PRIVATE ace jansson)
+
+target_link_libraries(ace_json_format
+  PRIVATE ace
+  PUBLIC ${JANSSON_LIBRARIES})
 
 install(
   TARGETS ace_json_format
