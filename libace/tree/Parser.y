@@ -52,7 +52,13 @@
   #include <cassert>
   #include <iostream>
   #include <list>
+#if defined(__linux__)
   #include <malloc.h>
+#elif defined(__OpenBSD__)
+  #include <stdlib.h>
+#else
+#error "Unsupported operating system"
+#endif
 }
 
 %syntax_error {
