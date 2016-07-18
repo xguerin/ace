@@ -14,7 +14,7 @@ add_library(ace SHARED
   $<TARGET_OBJECTS:ace_types>
   )
 
-target_link_libraries(ace PUBLIC ${RE2_LIBRARIES})
+target_link_libraries(ace PUBLIC ${RE2_LIBRARIES} ${CMAKE_DL_LIBS})
 
 install(
   TARGETS ace

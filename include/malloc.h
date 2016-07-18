@@ -3,8 +3,10 @@
 
 #if defined(__OpenBSD__)
 #include <stdlib.h>
+#elif defined(__linux__)
+#include "/usr/include/malloc.h"
 #else
-#include <malloc/malloc.h>
+#error "Unsupported architecture"
 #endif
 
 #endif
