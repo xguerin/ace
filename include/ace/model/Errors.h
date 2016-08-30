@@ -228,6 +228,7 @@
 #define ERR_CONFLICTING_SELECT_NAME(_n)       "Conflicting select name \"", _n, "\"" // NOLINT
 #define ERR_INVALID_TARGET_ARITY(_a)          "Invalid target arity ", "\"", _a, "\"" // NOLINT
 #define ERR_INVALID_SELECT_SIZE(_a)           "Size ", "\"", _a, "\" not in defined range" // NOLINT
+#define ERR_SELECT_UNEXPECTED_EITHER(_a)      "Unexpected \"either\" value ", _a, " in select" // NOLINT
 
 // String
 

@@ -83,7 +83,12 @@ Selector::validateModel() {
   if (not EnumeratedType::validateModel()) return false;
   if (not m_template->validateModel()) return false;
   if (hasEitherAttribute()) for (auto & e : eitherAttribute().values()) {
-    if (not m_types[e]->validateModel()) return false;
+    if (m_types.count(e) == 0) {
+      ERROR(ERR_SELECT_UNEXPECTED_EITHER(e));
+      return false;
+    } else if (not m_types[e]->validateModel()) {
+      return false;
+    }
   }
   return true;
 }

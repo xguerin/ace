@@ -60,9 +60,11 @@ CPUID::validateModel() {
   if (not RangedType::validateModel()) return false;
   if (not EnumeratedType::validateModel()) return false;
   int score = 0;
-  if (hasEitherAttribute()) for (auto & e : eitherAttribute().values()) if (not checkFormat(e)) {
-    ERROR(ERR_INVALID_EITHER_CPUID(e));
-    score += 1;
+  if (hasEitherAttribute()) for (auto & e : eitherAttribute().values()) {
+    if (not checkFormat(e)) {
+      ERROR(ERR_INVALID_EITHER_CPUID(e));
+      score += 1;
+    }
   }
   return score == 0;
 }
