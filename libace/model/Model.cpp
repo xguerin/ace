@@ -648,7 +648,7 @@ Model::generateImplementationSource(std::ostream & o) const {
   o << std::endl << std::endl;
 
   o << "const std::string I" << normalizedName() << "::MODEL = ";
-  o << "\"" << m_source << "\"";
+  o << "\"" << m_source << "\";";
   o << std::endl << std::endl;
 
   o << "const std::string I" << normalizedName() << "::VERSION = \"" << ACE_VERSION << "\";";
