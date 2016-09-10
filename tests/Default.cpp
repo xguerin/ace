@@ -53,3 +53,10 @@ TEST_F(Default, Fail_BadValue) {
   auto res = ace::model::Model::load("00_BadValue.json");
   ASSERT_EQ(res.get(), nullptr);
 }
+
+TEST_F(Default, Pass_Ok) {
+  WRITE_HEADER;
+  auto res = ace::model::Model::load("01_Ok.json");
+  ASSERT_NE(res.get(), nullptr);
+}
+
