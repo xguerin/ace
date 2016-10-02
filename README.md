@@ -2,6 +2,10 @@
 
 ACE is a model-based configuration authoring and validation environment. It's aim is to bring determinism to tool configuration by externalizing the configuration definition into a separate model file. The model file can be seen as the expected layout of the configuration and declares valid options along with their types, arities, and documentations. It is used to externally check the validity of a configuration instance, browse legit options, and generate the necessary source code to access the options values.
 
+#### Documentation
+
+The complete documentation as well as building instructions can be found [here](http://xguer.in/ace).
+
 #### How it works
 
 ACE requires tool programmers to define a model for their configuration. Models contain declarations of valid options along with their types, arities, and documentation. Models are self-describing, meaning that a full configuration parser and full documentation can be generated form a single model definition. Models can inherit from others and option merging is supported depending on the option type. The language chosen to define models is JSON.
