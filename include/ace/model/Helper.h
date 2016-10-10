@@ -177,7 +177,7 @@ template<typename T, template <class, class> class C>
 typename T::Ref
 parseString(std::string const & str, std::string const & fmt,
             C<std::string, StrAlloc> const & stms = std::vector<std::string>(),
-            int argc = 0, char ** argv = nullptr) {
+            const bool strict = false, int argc = 0, char ** argv = nullptr) {
   if (not MASTER.hasScannerByName(fmt)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
     return nullptr;
@@ -191,7 +191,7 @@ parseString(std::string const & str, std::string const & fmt,
     ACE_LOG(Error, "Alteration of inline configuration failed");
     return nullptr;
   }
-  if (validate(T::PATH, T::VERSION, false, svr)) return T::build(*svr);
+  if (validate(T::PATH, T::VERSION, strict, svr)) return T::build(*svr);
   return nullptr;
 }
 
@@ -209,8 +209,8 @@ parseString(std::string const & str, std::string const & fmt,
 template<typename T>
 typename T::Ref
 parseString(std::string const & str, std::string const & fmt,
-            int argc = 0, char ** argv = nullptr) {
-  return parseString<T>(str, fmt, std::vector<std::string>(), argc, argv);
+            const bool strict = false, int argc = 0, char ** argv = nullptr) {
+  return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc, argv);
 }
 
 /**  @} */
