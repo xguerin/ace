@@ -56,6 +56,8 @@
   #include <malloc.h>
 #elif defined(__OpenBSD__)
   #include <stdlib.h>
+#elif defined(__MACH__)
+  #include <malloc/malloc.h>
 #else
 #error "Unsupported operating system"
 #endif

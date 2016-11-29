@@ -23,6 +23,7 @@ option(ACE_BUILD_TESTS    "Build the Google tests suite"        OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_definitions(-DACE_VERSION="1.0.0")
 
@@ -32,7 +33,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Flags preferences
 #
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-parameter -pthread")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-parameter")
+ELSE()
+  set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-parameter -pthread")
+ENDIF()
+
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O3")

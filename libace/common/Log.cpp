@@ -96,6 +96,11 @@ Log::Channel::defaultOutputPath() {
 #elif defined(__OpenBSD__)
   ss << "thread_";
   ss << getthrid() << ".log";
+#elif defined(__MACH__)
+  uint64_t id;
+  pthread_threadid_np(pthread_self(), &id);
+  ss << "thread_";
+  ss << id << ".log";
 #else
 #error "Operating system not supported"
 #endif
@@ -218,6 +223,10 @@ Log::doHeader(Channel & c, Level l, std::string const & f, int n, std::ostringst
   oss << buffer << std::setfill(' ') << " ";
 #elif defined(__OpenBSD__)
   oss << getthrid() << std::setfill(' ') << " ";
+#elif defined(__MACH__)
+  uint64_t id;
+  pthread_threadid_np(pthread_self(), &id);
+  oss << id << std::setfill(' ') << " ";
 #else
 #error "Operating system not supported"
 #endif
