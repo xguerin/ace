@@ -162,5 +162,3 @@ camelify(std::string const & s) {
 } // namespace String
 } // namespace common
 } // namespace ace
-
-
