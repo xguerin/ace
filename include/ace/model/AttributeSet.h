@@ -54,7 +54,7 @@ class AttributeSet : public Object {
   AttributeSet();
   explicit AttributeSet(AttributeSet const & o);
 
-  tree::Path path() const;
+  tree::Path path(const bool local = false) const;
 
   bool checkModel(tree::Value const & t) const;
   void loadModel(tree::Value const & t);

@@ -72,10 +72,13 @@ void Object::setParent(const Object * p) {
 };
 
 tree::Path
-Object::path() const {
+Object::path(const bool local) const {
   tree::Path result;
   if (m_parent == nullptr) {
     result.push(tree::path::Item::build(tree::path::Item::Type::Global));
+  } else if (local) {
+    result.push(tree::path::Item::build(tree::path::Item::Type::Local));
+    result.push(tree::path::Item::build(tree::path::Item::Type::Named, m_name));
   } else {
     auto item = tree::path::Item::build(tree::path::Item::Type::Named, m_name);
     result = m_parent->path().push(item);

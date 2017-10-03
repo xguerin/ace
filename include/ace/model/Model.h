@@ -49,7 +49,7 @@ class Model : public Object, public Instance, public Coach {
 
   // Object
 
-  tree::Path path() const;
+  tree::Path path(const bool local = false) const;
 
   bool checkModel(tree::Value const & t) const;
   void loadModel(tree::Value const & t);

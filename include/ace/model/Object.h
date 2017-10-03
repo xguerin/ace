@@ -105,7 +105,7 @@ class Object {
    * @brief   Get the path of the type in the model
    * @return  the the path of the type in the model
    */
-  virtual tree::Path path() const;
+  virtual tree::Path path(const bool local = false) const;
 
   /**
    * @brief   Check the validity of an object

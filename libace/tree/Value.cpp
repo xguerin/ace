@@ -53,21 +53,6 @@ Value::has(std::string const & k) const {
 }
 
 bool
-Value::has(common::Path const & p) const {
-  common::Path::const_iterator n(p.begin());
-  if (p.isAbsolute()) {
-    if (parent() != nullptr) return false;
-    n = p.down(n);
-  }
-  return has(p, n);
-}
-
-bool
-Value::has(common::Path const & p, common::Path::const_iterator const & i) const {
-  return i == p.end();
-}
-
-bool
 Value::has(Path const & p) const {
   if (p.global() and m_parent != nullptr) {
     auto & parent = *m_parent;
@@ -104,17 +89,19 @@ Value::get(std::string const & k) const {
 }
 
 Value &
-Value::get(common::Path const & p) {
-  common::Path::const_iterator n(p.begin());
-  if (p.isAbsolute()) n = p.down(n);
-  return get(p, n);
+Value::get(Path const & p) {
+  std::vector<Value::Ref> r;
+  get(p, p.down(p.begin()), r);
+  if (r.empty()) throw "No element for the specified path";
+  return *r[0];
 }
 
 Value const &
-Value::get(common::Path const & p) const {
-  common::Path::const_iterator n(p.begin());
-  if (p.isAbsolute()) n = p.down(n);
-  return get(p, n);
+Value::get(Path const & p) const {
+  std::vector<Value::Ref> r;
+  get(p, p.down(p.begin()), r);
+  if (r.empty()) throw "No element for the specified path";
+  return *r[0];
 }
 
 void
@@ -147,18 +134,6 @@ Value::get(Path const & p, const_callback op) const {
   }
 }
 
-Value &
-Value::get(common::Path const & p, common::Path::const_iterator const & i) {
-  if (i == p.end()) return *this;
-  throw std::invalid_argument("tree::Value as no children");
-}
-
-Value const &
-Value::get(common::Path const & p, common::Path::const_iterator const & i) const {
-  if (i == p.end()) return *this;
-  throw std::invalid_argument("tree::Value as no children");
-}
-
 void
 Value::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) {
   // Nothing to get
@@ -185,19 +160,6 @@ Value::get(Path const & p, Path::const_iterator const & i, const_callback op) co
 
 void
 Value::erase(std::string const & k) {
-  throw std::invalid_argument("tree::Value as no children");
-}
-
-void
-Value::erase(common::Path const & p) {
-  common::Path::const_iterator n(p.begin());
-  if (p.isAbsolute()) n = p.down(n);
-  erase(p, n);
-}
-
-void
-Value::erase(common::Path const & p, common::Path::const_iterator const & i) {
-  if (i == p.end()) return;
   throw std::invalid_argument("tree::Value as no children");
 }
 

@@ -50,7 +50,6 @@ class Array : public Value {
 
   bool has(std::string const & k) const;
   using Value::has;
-  bool has(common::Path const & p, common::Path::const_iterator const & i) const;
   bool has(Path const & p, Path::const_iterator const & i) const;
 
   size_t size() const;
@@ -65,16 +64,12 @@ class Array : public Value {
 
   using Value::get;
 
-  Value & get(common::Path const & p, common::Path::const_iterator const & i);
-  Value const & get(common::Path const & p, common::Path::const_iterator const & i) const;
-
   void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r);
   void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const;
 
   void erase(std::string const & k);
   using Value::erase;
 
-  void erase(common::Path const & p, common::Path::const_iterator const & i);
   void erase(Path const & p, Path::const_iterator const & i);
 
   void push_back(Value::Ref const & r);

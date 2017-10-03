@@ -29,8 +29,8 @@ namespace model {
 Author::Author() : m_name(), m_email() { }
 
 tree::Path
-Author::path() const {
-  return m_parent->path();
+Author::path(const bool local) const {
+  return m_parent->path(local);
 }
 
 bool Author::checkModel(tree::Value const & t) const {

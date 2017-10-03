@@ -68,15 +68,6 @@ Array::has(std::string const & k) const {
 }
 
 bool
-Array::has(common::Path const & p, common::Path::const_iterator const & i) const {
-  if (i == p.end() or i->empty()) return true;
-  size_t idx = atol(i->c_str());
-  if (idx == 0 and *i != "0") return false;
-  if (idx >= m_content.size()) return false;
-  return m_content[idx]->has(p, p.down(i));
-}
-
-bool
 Array::has(Path const & p, Path::const_iterator const & i) const {
   if (i == p.end()) return true;
   size_t success = 0;
@@ -141,22 +132,6 @@ Array::get(std::string const & v) const {
   if (not has(v)) throw std::invalid_argument(v + ": invalid index");
   int i = atoi(v.c_str());
   return *m_content[i];
-}
-
-Value &
-Array::get(common::Path const & p, common::Path::const_iterator const & i) {
-  if (i == p.end() or i->empty()) return *this;
-  if (not has(*i)) throw std::invalid_argument(*i + ": invalid index");
-  size_t idx = atol(i->c_str());
-  return m_content[idx]->get(p, p.down(i));
-}
-
-Value const &
-Array::get(common::Path const & p, common::Path::const_iterator const & i) const {
-  if (i == p.end() or i->empty()) return *this;
-  if (not has(*i)) throw std::invalid_argument(*i + ": invalid index");
-  size_t idx = atol(i->c_str());
-  return m_content[idx]->get(p, p.down(i));
 }
 
 void
@@ -242,22 +217,6 @@ Array::erase(std::string const & v) {
   if (not has(v)) return;
   size_t idx = atoi(v.c_str());
   m_content.erase(m_content.begin() + idx);
-  for (; idx < m_content.size(); idx += 1) {
-    m_content[idx]->setName(std::to_string(idx));
-  }
-}
-
-void
-Array::erase(common::Path const & p, common::Path::const_iterator const & i) {
-  if (i == p.end() or i->empty()) return;
-  size_t idx = atol(i->c_str());
-  if (p.down(i) == p.end() or p.down(i)->empty()) {
-    m_content.erase(m_content.begin() + idx);
-  } else if (has(*i)) {
-    m_content[idx]->erase(p, p.down(i));
-  } else {
-    throw std::invalid_argument(*i + ": invalid index");
-  }
   for (; idx < m_content.size(); idx += 1) {
     m_content[idx]->setName(std::to_string(idx));
   }

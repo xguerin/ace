@@ -107,13 +107,18 @@ Model::Model(Model const & o)
 }
 
 tree::Path
-Model::path() const {
+Model::path(const bool local) const {
   if (m_parent == nullptr) {
     auto item = tree::path::Item::build(tree::path::Item::Type::Global);
     tree::Path p = tree::Path().push(item);
     return p;
+  } else if (local) {
+    auto item = tree::path::Item::build(tree::path::Item::Type::Local);
+    tree::Path p = tree::Path().push(item);
+    return p;
+  } else {
+    return m_parent->path();
   }
-  return m_parent->path();
 }
 
 bool
@@ -681,7 +686,10 @@ Model::generateImplementationSource(std::ostream & o) const {
 
   o << normalizedName() << "::" << normalizedName() << "(ace::tree::Object const & r) {";
   o << std::endl;
-  for (auto & e : m_body) e.second->doBuildDefinition("\"" + e.first + "\"" , o, 2);
+  for (auto & e : m_body) {
+    auto str = e.second->path(true).toString();
+    e.second->doBuildDefinition("\"" + str + "\"" , o, 2);
+  }
   o << "}" << std::endl;
   o << std::endl;
 

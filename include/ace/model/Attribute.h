@@ -63,7 +63,7 @@ class Attribute : public Object {
   explicit Attribute(Attribute const &) = default;
   virtual ~Attribute() { }
 
-  tree::Path path() const;
+  tree::Path path(const bool local = false) const;
 
   using Object::loadModel;
   using Object::checkModel;

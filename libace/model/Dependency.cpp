@@ -52,8 +52,8 @@ namespace ace {
 namespace model {
 
 tree::Path
-Dependency::path() const {
-  return m_parent->path();
+Dependency::path(const bool local) const {
+  return m_parent->path(local);
 }
 
 bool

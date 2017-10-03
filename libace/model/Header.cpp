@@ -38,8 +38,8 @@ Header::Header() : m_author(), m_version(), m_doc() {
 }
 
 tree::Path
-Header::path() const {
-  return m_parent->path();
+Header::path(const bool local) const {
+  return m_parent->path(local);
 }
 
 bool

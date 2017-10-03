@@ -44,8 +44,8 @@ namespace model {
 Section::Section() : m_types() { }
 
 tree::Path
-Section::path() const {
-  return m_parent->path();
+Section::path(const bool local) const {
+  return m_parent->path(local);
 }
 
 bool

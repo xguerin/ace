@@ -24,6 +24,7 @@
 #include "Array.h"
 #include "Object.h"
 #include "Primitive.h"
+#include <ace/common/Log.h>
 #include <ace/common/Path.h>
 #include <ace/common/Regex.h>
 #include <ace/engine/Master.h>
@@ -59,9 +60,8 @@ apply(Value & v, C<std::string, std::allocator<std::string>> const & stms) {
       vrf = buildPrimitiveOrArray("", content);
       if (vrf == nullptr) return false;
     }
-    std::string pathValue(parts[0]);
-    std::replace(pathValue.begin(), pathValue.end(), '.', '/');
-    common::Path path(pathValue);
+    std::string pathValue("$." + parts[0]);
+    tree::Path path = tree::Path::parse(pathValue);
     if (not obj.put(path, vrf)) return false;
   }
   return true;
@@ -70,8 +70,11 @@ apply(Value & v, C<std::string, std::allocator<std::string>> const & stms) {
 template<typename T>
 bool
 parsePrimitive(Object const & r, std::string const & k, T & l) {
-  common::Path path(k);
-  if (not r.has(path)) return false;
+  auto path = tree::Path::parse(k);
+  if (not r.has(path)) {
+    ACE_LOG(Error, "Path \"", path.toString(), "\" not found");
+    return false;
+  }
   tree::Value const & v = r.get(path);
   if (not v.isPrimitive()) return false;
   tree::Primitive const & w = static_cast<tree::Primitive const &>(v);
@@ -82,8 +85,11 @@ parsePrimitive(Object const & r, std::string const & k, T & l) {
 template<typename T>
 void
 parsePrimitive(Object const & r, std::string const & k, std::vector<T> & l) {
-  common::Path path(k);
-  if (not r.has(path)) return;
+  auto path = tree::Path::parse(k);
+  if (not r.has(path)) {
+    ACE_LOG(Error, "Path \"", path.toString(), "\" not found");
+    return;
+  }
   l.clear();
   tree::Value const & v = r.get(path);
   if (v.isPrimitive()) {
@@ -101,7 +107,7 @@ parsePrimitive(Object const & r, std::string const & k, std::vector<T> & l) {
 template<typename T>
 bool
 parseObject(Object const & r, std::string const & k, typename T::Ref & l) {
-  common::Path path(k);
+  auto path = tree::Path::parse(k);
   if (not r.has(path)) return false;
   tree::Value const & v = r.get(path);
   if (not v.isObject()) return false;
@@ -112,7 +118,7 @@ parseObject(Object const & r, std::string const & k, typename T::Ref & l) {
 template<typename T>
 void
 parseObject(Object const & r, std::string const & k, std::vector<typename T::Ref> & l) {
-  common::Path path(k);
+  auto path = tree::Path::parse(k);
   if (not r.has(path)) return;
   l.clear();
   tree::Value const & v = r.get(path);

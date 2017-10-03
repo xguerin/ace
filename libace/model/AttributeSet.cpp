@@ -58,8 +58,8 @@ AttributeSet::AttributeSet(AttributeSet const & o)
 }
 
 tree::Path
-AttributeSet::path() const {
-  return m_parent->path();
+AttributeSet::path(const bool local) const {
+  return m_parent->path(local);
 }
 
 bool

@@ -21,7 +21,6 @@
 #ifndef ACE_TREE_VALUE_H_
 #define ACE_TREE_VALUE_H_
 
-#include <ace/common/Path.h>
 #include <ace/tree/Path.h>
 #include <functional>
 #include <memory>
@@ -79,9 +78,6 @@ class Value {
 
   virtual bool has(std::string const & k) const;
 
-  virtual bool has(common::Path const & p) const;
-  virtual bool has(common::Path const & p, common::Path::const_iterator const & i) const;
-
   virtual bool has(Path const & p) const;
   virtual bool has(Path const & p, Path::const_iterator const & i) const;
 
@@ -91,17 +87,14 @@ class Value {
   virtual Value & get(std::string const & k);
   virtual Value const & get(std::string const & k) const;
 
-  virtual Value & get(common::Path const & p);
-  virtual Value const & get(common::Path const & p) const;
+  virtual Value & get(Path const & p);
+  virtual Value const & get(Path const & p) const;
 
   virtual void get(Path const & p, std::vector<Value::Ref> & r);
   virtual void get(Path const & p, std::vector<Value::Ref> & r) const;
 
   virtual void get(Path const & p, callback op);
   virtual void get(Path const & p, const_callback op) const;
-
-  virtual Value & get(common::Path const & p, common::Path::const_iterator const & i);
-  virtual Value const & get(common::Path const & p, common::Path::const_iterator const & i) const;
 
   virtual void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r);
   virtual void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const;  // NOLINT
@@ -110,9 +103,6 @@ class Value {
   virtual void get(Path const & p, Path::const_iterator const & i, const_callback op) const;
 
   virtual void erase(std::string const & k);
-
-  virtual void erase(common::Path const & p);
-  virtual void erase(common::Path const & p, common::Path::const_iterator const & i);
 
   virtual void erase(Path const & p);
   virtual void erase(Path const & p, Path::const_iterator const & i);

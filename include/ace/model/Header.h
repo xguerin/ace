@@ -36,7 +36,7 @@ class Header : public Object, public Coach {
 
   Header();
 
-  tree::Path path() const;
+  tree::Path path(const bool local = false) const;
 
   void loadModel(tree::Value const & t);
   bool checkModel(tree::Value const & t) const;

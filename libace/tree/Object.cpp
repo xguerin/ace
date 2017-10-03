@@ -56,13 +56,6 @@ Object::has(std::string const & k) const {
 }
 
 bool
-Object::has(common::Path const & p, common::Path::const_iterator const & i) const {
-  if (i == p.end() or i->empty()) return true;
-  if (m_content.find(*i) == m_content.end()) return false;
-  return m_content.at(*i)->has(p, p.down(i));
-}
-
-bool
 Object::has(Path const & p, Path::const_iterator const & i) const {
   if (i == p.end()) return true;
   size_t success = 0;
@@ -112,8 +105,8 @@ Object::put(std::string const & k, Value::Ref const & r) {
 }
 
 bool
-Object::put(common::Path const & p, Value::Ref const & r) {
-  return put(p, p.begin(), r);
+Object::put(Path const & p, Value::Ref const & r) {
+  return put(p, ++p.begin(), r);
 }
 
 Value &
@@ -136,20 +129,6 @@ Value const &
 Object::get(std::string const & k) const  {
   if (not has(k)) throw std::invalid_argument(k + ": no such key");
   return *m_content.at(k);
-}
-
-Value &
-Object::get(common::Path const & p, common::Path::const_iterator const & i) {
-  if (i == p.end() or i->empty()) return *this;
-  if (not has(*i)) throw std::invalid_argument(*i + ": no such key");
-  return m_content.at(*i)->get(p, p.down(i));
-}
-
-Value const &
-Object::get(common::Path const & p, common::Path::const_iterator const & i) const {
-  if (i == p.end() or i->empty()) return *this;
-  if (not has(*i)) throw std::invalid_argument(*i + ": no such key");
-  return m_content.at(*i)->get(p, p.down(i));
 }
 
 void
@@ -213,18 +192,6 @@ Object::erase(std::string const & k) {
 }
 
 void
-Object::erase(common::Path const & p, common::Path::const_iterator const & i) {
-  if (i == p.end() or i->empty()) return;
-  if (p.down(i) == p.end() or p.down(i)->empty()) {
-    m_content.erase(*i);
-  } else if (has(*i)) {
-    m_content[*i]->erase(p, p.down(i));
-  } else {
-    throw std::invalid_argument(*i + ": no such key");
-  }
-}
-
-void
 Object::erase(Path const & p, Path::const_iterator const & i) {
   if (i == p.end()) return;
   switch ((*i)->type()) {
@@ -273,35 +240,40 @@ Object::path() const {
 }
 
 bool
-Object::put(common::Path const & p, common::Path::const_iterator const & i, Value::Ref const & r) {
+Object::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r) {
   if (i == p.end()) return false;
+  if ((*i)->type() != path::Item::Type::Named) {
+    ACE_LOG(Error, "Only named path items are supported (", (*i)->toString(), ")");
+    return false;
+  }
+  std::string const & id = (*i)->value();
   if (p.down(i) != p.end()) {
-    if (m_content.find(*i) == m_content.end()) {
-      tree::Object::Ref tmp = Object::build(*i);
+    if (m_content.find(id) == m_content.end()) {
+      tree::Object::Ref tmp = Object::build(id);
       put(tmp);
     }
-    Value::Ref vr = m_content[*i];
+    Value::Ref vr = m_content[id];
     if (vr->type() != Value::Type::Object) {
-      ACE_LOG(Error, "Cannot put a value to \"", p, "\", ", *i, " is not an object");
+      ACE_LOG(Error, "Cannot put a value to \"", p, "\", ", id, " is not an object");
       return false;
     }
     Object::Ref oref = std::static_pointer_cast<Object>(vr);
     return oref->put(p, p.down(i), r);
   } else {
     if (r == nullptr) {
-      m_content.erase(*i);
-    } else if (m_content.find(*i) == m_content.end()) {
-      put(*i, r);
+      m_content.erase(id);
+    } else if (m_content.find(id) == m_content.end()) {
+      put(id, r);
     } else {
-      Value::Ref vr = m_content[*i];
+      Value::Ref vr = m_content[id];
       if (vr->type() == Value::Type::Array) {
         Array::Ref aref = std::static_pointer_cast<Array>(vr);
         aref->push_back(r);
       } else {
-        Array::Ref aref = Array::build(*i);
+        Array::Ref aref = Array::build(id);
         aref->push_back(vr);
         aref->push_back(r);
-        put(*i, aref);
+        put(id, aref);
       }
     }
     return true;

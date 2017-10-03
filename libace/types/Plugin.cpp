@@ -315,7 +315,7 @@ Plugin::doBuildDefinition(std::string const & s, std::string const & v, std::str
   auto tmpPath = tempName();
   auto tmpObj = tempName();
   auto tmpItem = tempName();
-  indent(o, l)      << "auto " << tmpPath << " = ace::common::Path(" << e << ");" << std::endl;
+  indent(o, l)      << "auto " << tmpPath << " = ace::tree::Path::parse(" << e << ");" << std::endl;
   indent(o, l)      << "if (r.has(" << tmpPath << ")) {" << std::endl;
   indent(o, l + 2)  << "auto & " << tmpObj << " =" << std::endl;
   indent(o, l + 4)  << "static_cast<ace::tree::Object const &>";

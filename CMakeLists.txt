@@ -5,8 +5,23 @@
 project("ACE" C CXX)
 cmake_minimum_required(VERSION 3.3)
 
+include(cmake/GetGitRevisionDescription.cmake)
 include(cmake/Lemon.cmake)
 include(cmake/Ragel.cmake)
+
+#
+# Get the current GIT version
+#
+
+git_describe(VERSION)
+
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
+
+set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+message(STATUS "Build version: " ${VERSION_SHORT})
 
 #
 # Options
@@ -22,10 +37,13 @@ option(ACE_BUILD_TESTS    "Build the Google tests suite"        OFF)
 #
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_definitions(-DACE_VERSION="1.0.0")
+IF(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release ... FORCE)
+ENDIF()
+
+add_definitions(-DACE_VERSION="${VERSION_SHORT}")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

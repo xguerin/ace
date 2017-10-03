@@ -217,7 +217,6 @@ Selector::collectImplementationIncludes(std::set<std::string> & i) const {
   const Model * m = static_cast<const Model *>(owner());
   std::string const & n = templateAttribute().head();
   BasicType::collectImplementationIncludes(i);
-  i.insert("<ace/common/Path.h>");
   i.insert("<map>");
   m->templates().get(n).collectImplementationIncludes(i);
   i.insert("<string>");
@@ -235,12 +234,12 @@ Selector::doBuildDefinition(std::string const & s, std::string const & v, std::s
   std::string path(e);
   if (*--path.end() == '"') {
     path.erase(--path.end());
-    path = path + "/\" + ";
+    path = path + ".\" + ";
   } else {
-    path = path + " + \"/\" + ";
+    path = path + " + \".\" + ";
   }
   BasicType const & bt = m->templates().get(n);
-  indent(o, l)      << "auto " << tmpPath << " = ace::common::Path(" << e << ");" << std::endl;
+  indent(o, l)      << "auto " << tmpPath << " = ace::tree::Path::parse(" << e << ");" << std::endl;
   indent(o, l)      << "if (r.has(" << tmpPath << ")) {" << std::endl;
   indent(o, l + 2)  << "auto const & " << tmpObj << " =" << std::endl;
   indent(o, l + 4)  << "static_cast<ace::tree::Object const &>(r.get(" << tmpPath << "));";

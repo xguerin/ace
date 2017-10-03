@@ -32,7 +32,7 @@ class Author : public Object {
 
   Author();
 
-  tree::Path path() const;
+  tree::Path path(const bool local = false) const;
 
   bool checkModel(tree::Value const & t) const;
   void loadModel(tree::Value const & t);

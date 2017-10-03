@@ -22,7 +22,6 @@
 #define ACE_TREE_OBJECT_H_
 
 #include "Value.h"
-#include <ace/common/Path.h>
 #include <map>
 #include <memory>
 #include <string>
@@ -47,7 +46,6 @@ class Object : public Value {
 
   bool has(std::string const & k) const;
   using Value::has;
-  bool has(common::Path const & p, common::Path::const_iterator const & i) const;
   bool has(Path const & p, Path::const_iterator const & i) const;
 
   size_t size() const;
@@ -56,7 +54,7 @@ class Object : public Value {
 
   void put(Value::Ref const & r);
   void put(std::string const & k, Value::Ref const & r);
-  bool put(common::Path const & p, Value::Ref const & r);
+  bool put(Path const & p, Value::Ref const & r);
 
   Value & operator[](std::string const & k);
   Value const & operator[](std::string const & k) const;
@@ -66,16 +64,12 @@ class Object : public Value {
 
   using Value::get;
 
-  Value & get(common::Path const & p, common::Path::const_iterator const & i);
-  Value const & get(common::Path const & p, common::Path::const_iterator const & i) const;
-
   void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r);
   void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const;
 
   void erase(std::string const & k);
   using Value::erase;
 
-  void erase(common::Path const & p, common::Path::const_iterator const & i);
   void erase(Path const & p, Path::const_iterator const & i);
 
   const_iterator begin() const;
@@ -87,7 +81,7 @@ class Object : public Value {
 
   explicit Object(std::string const & n);
 
-  bool put(common::Path const & p, common::Path::const_iterator const & i, Value::Ref const & r);
+  bool put(Path const & p, Path::const_iterator const & i, Value::Ref const & r);
 
   Content m_content;
 };

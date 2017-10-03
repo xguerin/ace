@@ -50,7 +50,7 @@ class Dependency : public Object, public Instance {
 
   // Object
 
-  tree::Path path() const;
+  tree::Path path(const bool local = false) const;
 
   virtual bool checkModel(tree::Value const & t) const;
   virtual void loadModel(tree::Value const & t);

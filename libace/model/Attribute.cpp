@@ -31,8 +31,8 @@ Attribute::Attribute(std::string const & n, bool opt, bool ovr)
 }
 
 tree::Path
-Attribute::path() const {
-  return m_parent->path();
+Attribute::path(const bool local) const {
+  return m_parent->path(local);
 }
 
 bool Attribute::merge(Attribute const & b) {
