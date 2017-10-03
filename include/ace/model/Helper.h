@@ -54,6 +54,38 @@ bool
 validate(std::string const & mp, std::string const & ver, const bool stct, tree::Value::Ref & svr);
 
 /**
+ * @brief Validate a configuration file for a model
+ *
+ * @tparam T the model to parse into
+ * @param file the file path
+ * @param stms alterations statements
+ * @param argc the number of argument to pass to the underlying engine
+ * @param argv the arguments to pass to the underlying engine
+ *
+ * @return True in case of success, false otherwise
+ */
+template<typename T, template <class, class> class C>
+typename T::Ref
+validateFile(std::string const & file,
+             C<std::string, StrAlloc> const & stms = C<std::string, StrAlloc>(),
+             const bool strict = false, int argc = 0, char ** argv = nullptr) {
+  if (not MASTER.hasScannerByExtension(file)) {
+    ACE_LOG(Error, "Unsupported configuration file format: ", file);
+    return nullptr;
+  }
+  tree::Value::Ref svr = MASTER.scannerByExtension(file).open(file, argc, argv);
+  if (svr == nullptr) {
+    ACE_LOG(Error, "Cannot open configuration file \"" + file + "\"");
+    return nullptr;
+  }
+  if (not tree::utils::apply(*svr, stms)) {
+    ACE_LOG(Error, "Alteration of instance failed");
+    return nullptr;
+  }
+  return validate(T::PATH, T::VERSION, strict, svr);
+}
+
+/**
  * @brief Parse a configuration file into a model
  *
  * @tparam T the model to parse into
@@ -87,6 +119,23 @@ parseFile(std::string const & file,
 }
 
 /**
+ * @brief Validate a configuration file for a model
+ *
+ * @tparam T the model to parse into
+ * @param file the file path
+ * @param argc the number of argument to pass to the underlying engine
+ * @param argv the arguments to pass to the underlying engine
+ *
+ * @return True in case of success, false otherwise
+ */
+template<typename T>
+typename T::Ref
+validateFile(std::string const & file, const bool strict = false,
+             int argc = 0, char ** argv = nullptr) {
+  return validateFile<T>(file, std::vector<std::string>(), strict, argc, argv);
+}
+
+/**
  * @brief Parse a configuration file into a model
  *
  * @tparam T the model to parse into
@@ -101,6 +150,46 @@ typename T::Ref
 parseFile(std::string const & file, const bool strict = false,
           int argc = 0, char ** argv = nullptr) {
   return parseFile<T>(file, std::vector<std::string>(), strict, argc, argv);
+}
+
+/**
+ * @brief Validate configuration files for a model
+ *
+ * @tparam T the model to parse into
+ * @param files the file paths
+ * @param stms alterations statements
+ * @param argc the number of argument to pass to the underlying engine
+ * @param argv the arguments to pass to the underlying engine
+ *
+ * @return True in case of success, false otherwise
+ */
+template<typename T, template<class, class> class C, template<class, class> class D>
+typename T::Ref
+validateFiles(C<std::string, StrAlloc> const & files,
+              D<std::string, StrAlloc> const & stms = D<std::string, StrAlloc>(),
+              const bool strict = false, int argc = 0, char ** argv = nullptr) {
+  tree::Value::Ref res = nullptr;
+  for (auto & file : files) {
+    if (not MASTER.hasScannerByExtension(file)) {
+      ACE_LOG(Error, "Unsupported configuration file format: ", file);
+      return nullptr;
+    }
+    tree::Value::Ref svr = MASTER.scannerByExtension(file).open(file, argc, argv);
+    if (svr == nullptr) {
+      ACE_LOG(Error, "Cannot open configuration file \"" + file + "\"");
+      return nullptr;
+    }
+    if (res == nullptr) {
+      res = svr;
+    } else {
+      res->merge(*svr);
+    }
+  }
+  if (not tree::utils::apply(*res, stms)) {
+    ACE_LOG(Error, "Alteration of instance failed");
+    return nullptr;
+  }
+  return validate(T::PATH, T::VERSION, strict, res);
 }
 
 /**
@@ -145,6 +234,23 @@ parseFiles(C<std::string, StrAlloc> const & files,
 }
 
 /**
+ * @brief Validate configuration files for a model
+ *
+ * @tparam T the model to parse into
+ * @param files the file paths
+ * @param argc the number of argument to pass to the underlying engine
+ * @param argv the arguments to pass to the underlying engine
+ *
+ * @return True in case of success, false otherwise
+ */
+template<typename T, template<class, class> class C>
+typename T::Ref
+validateFiles(C<std::string, StrAlloc> const & files,
+              const bool strict = false, int argc = 0, char ** argv = nullptr) {
+  return validateFiles<T>(files, std::vector<std::string>(), strict, argc, argv);
+}
+
+/**
  * @brief Parse configuration files into a model
  *
  * @tparam T the model to parse into
@@ -162,10 +268,43 @@ parseFiles(C<std::string, StrAlloc> const & files,
 }
 
 /**
- * @brief Parse a configuration file into a model
+ * @brief Validate a configuration string for a model
  *
  * @tparam T the model to parse into
- * @param path the file path
+ * @param str  the configuration string
+ * @param fmt  the format of the input
+ * @param stms alterations statements
+ * @param argc the number of argument to pass to the underlying engine
+ * @param argv the arguments to pass to the underlying engine
+ *
+ * @return True in case of success, false otherwise
+ */
+template<typename T, template <class, class> class C>
+typename T::Ref
+validateString(std::string const & str, std::string const & fmt,
+               C<std::string, StrAlloc> const & stms = std::vector<std::string>(),
+               const bool strict = false, int argc = 0, char ** argv = nullptr) {
+  if (not MASTER.hasScannerByName(fmt)) {
+    ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
+    return nullptr;
+  }
+  tree::Value::Ref svr = MASTER.scannerByName(fmt).parse(str, argc, argv);
+  if (svr.get() == nullptr) {
+    ACE_LOG(Error, "Cannot parse inline configuration");
+    return nullptr;
+  }
+  if (not tree::utils::apply(*svr, stms)) {
+    ACE_LOG(Error, "Alteration of inline configuration failed");
+    return nullptr;
+  }
+  validate(T::PATH, T::VERSION, strict, svr);
+}
+
+/**
+ * @brief Parse a configuration string into a model
+ *
+ * @tparam T the model to parse into
+ * @param str  the configuration string
  * @param fmt  the format of the input
  * @param stms alterations statements
  * @param argc the number of argument to pass to the underlying engine
@@ -196,10 +335,28 @@ parseString(std::string const & str, std::string const & fmt,
 }
 
 /**
- * @brief Parse a configuration file into a model
+ * @brief Validate a configuration string for a model
  *
  * @tparam T the model to parse into
- * @param path the file path
+ * @param str  the configuration string
+ * @param fmt  the format of the input
+ * @param argc the number of argument to pass to the underlying engine
+ * @param argv the arguments to pass to the underlying engine
+ *
+ * @return True in case of success, false otherwise
+ */
+template<typename T>
+typename T::Ref
+validateString(std::string const & str, std::string const & fmt,
+               const bool strict = false, int argc = 0, char ** argv = nullptr) {
+  return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc, argv);
+}
+
+/**
+ * @brief Parse a configuration string into a model
+ *
+ * @tparam T the model to parse into
+ * @param str  the configuration string
  * @param fmt  the format of the input
  * @param argc the number of argument to pass to the underlying engine
  * @param argv the arguments to pass to the underlying engine
