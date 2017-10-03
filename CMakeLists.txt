@@ -30,6 +30,7 @@ message(STATUS "Build version: " ${VERSION_SHORT})
 option(ACE_PLUGIN_JSON    "Enable JSON configuration plugin"    ON)
 option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"     ON)
 option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin"  ON)
+option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"    ON)
 option(ACE_BUILD_TESTS    "Build the Google tests suite"        OFF)
 
 #
@@ -125,12 +126,16 @@ if (ACE_PLUGIN_PYTHON OR ACE_BUILD_TESTS)
   add_subdirectory(formats/python)
 endif ()
 
+if (ACE_PLUGIN_TOML OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/toml)
+endif ()
+
 if (ACE_BUILD_TESTS)
   add_subdirectory(tests)
   enable_testing()
   add_test(NAME gtests WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests COMMAND ace-tests)
   set_property(TEST gtests PROPERTY ENVIRONMENT
-    "ACE_SCANNER_PATH=${CMAKE_CURRENT_BINARY_DIR}/formats/json:${CMAKE_CURRENT_BINARY_DIR}/formats/lua:${CMAKE_CURRENT_BINARY_DIR}/formats/python"
+    "ACE_SCANNER_PATH=${CMAKE_CURRENT_BINARY_DIR}/formats/json:${CMAKE_CURRENT_BINARY_DIR}/formats/lua:${CMAKE_CURRENT_BINARY_DIR}/formats/python:${CMAKE_CURRENT_BINARY_DIR}/formats/toml"
     "ACE_TESTS_PATH=${CMAKE_CURRENT_BINARY_DIR}/tests"
     )
 endif ()
