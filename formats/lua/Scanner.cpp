@@ -24,15 +24,10 @@
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
 #include <ace/engine/Master.h>
+#include <lua.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
-
-extern "C" {
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
-}
 
 namespace {
 
