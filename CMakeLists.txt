@@ -143,12 +143,20 @@ if (ACE_PLUGIN_TOML OR ACE_BUILD_TESTS)
 endif ()
 
 if (ACE_BUILD_TESTS)
-  add_subdirectory(tests)
+  add_subdirectory(tests/libace)
+  add_subdirectory(tests/codegen)
   enable_testing()
-  add_test(NAME gtests WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests COMMAND ace-tests)
-  set_property(TEST gtests PROPERTY ENVIRONMENT
+  #
+  add_test(NAME libace WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/libace COMMAND libace-tests)
+  set_property(TEST libace PROPERTY ENVIRONMENT
     "ACE_SCANNER_PATH=${CMAKE_CURRENT_BINARY_DIR}/formats/json:${CMAKE_CURRENT_BINARY_DIR}/formats/lua:${CMAKE_CURRENT_BINARY_DIR}/formats/python:${CMAKE_CURRENT_BINARY_DIR}/formats/toml"
-    "ACE_TESTS_PATH=${CMAKE_CURRENT_BINARY_DIR}/tests"
+    "ACE_TESTS_PATH=${CMAKE_CURRENT_BINARY_DIR}/tests/libace"
+    )
+  #
+  add_test(NAME codegen WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/codegen COMMAND codegen-tests)
+  set_property(TEST codegen PROPERTY ENVIRONMENT
+    "ACE_SCANNER_PATH=${CMAKE_CURRENT_BINARY_DIR}/formats/json:${CMAKE_CURRENT_BINARY_DIR}/formats/lua:${CMAKE_CURRENT_BINARY_DIR}/formats/python:${CMAKE_CURRENT_BINARY_DIR}/formats/toml"
+    "ACE_TESTS_PATH=${CMAKE_CURRENT_BINARY_DIR}/tests/codegen"
     )
 endif ()
 
@@ -159,4 +167,5 @@ endif ()
 install(
   DIRECTORY   include/ace
   DESTINATION include 
+  PATTERN     "formats" EXCLUDE
   )

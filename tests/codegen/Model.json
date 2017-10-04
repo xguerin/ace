@@ -1,0 +1,33 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "Ok model"
+  },
+  "templates": {
+    "tmpl0": {
+      "kind": "string", "arity": "*",
+      "doc": "a string template"
+    }
+  },
+  "body": {
+    "var0": {
+      "kind": "cpuid", "arity": "+",
+      "doc": "Valid CPUID option"
+    },
+    "var1": {
+      "kind": "class", "model": "Class.json", "arity": "+",
+      "doc": "Valid CLASS option"
+    },
+    "var2": {
+      "kind": "select", "arity": "1",
+      "either": [ "value1", "value2" ],
+      "size": "+", "template": "tmpl0",
+      "doc": "Valid select option"
+    },
+    "var3": {
+      "kind": "plugin", "model": "Class.json", "arity": "1",
+      "doc": "Valid CLASS option"
+    }
+  }
+}

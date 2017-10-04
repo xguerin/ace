@@ -287,7 +287,11 @@ Master::getInstance() {
     singleton = std::shared_ptr<Master>(new Master());
     std::string paths = fs::Utils::libraryPrefix() + "/lib/";
     char * env = getenv("ACE_SCANNER_PATH");
-    if (env != nullptr) paths = std::string(env);
+    if (env != nullptr) {
+      ACE_LOG(Warning, "Environment variable ACE_SCANNER_PATH is set");
+      ACE_LOG(Warning, "ACE_SCANNER_PATH = ", env);
+      paths = std::string(env);
+    }
     std::vector<std::string> elems;
     common::String::split(paths, ':', elems);
     for (auto & e : elems) if (not e.empty()) {

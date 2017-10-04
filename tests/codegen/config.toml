@@ -1,0 +1,10 @@
+var0 = [ 1 , 2 ]
+
+[[var1]]
+var0 = "hello"
+
+[[var1]]
+var0 = "hello"
+
+[var2]
+value1 = "world"

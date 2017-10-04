@@ -128,15 +128,10 @@ Log::Log()
   : m_lock(PTHREAD_MUTEX_INITIALIZER)
   , m_level()
   , m_channels() {
+  Level l = Warning;
   const char * d = getenv("ACE_LOG_LEVEL");
-  if (d == 0)                         m_level = Warning;
-  else if (strcmp(d, "ERROR") == 0)   m_level = Error;
-  else if (strcmp(d, "WARNING") == 0) m_level = Warning;
-  else if (strcmp(d, "INFO") == 0)    m_level = Info;
-  else if (strcmp(d, "DEBUG") == 0)   m_level = Debug;
-  else if (strcmp(d, "EXTRA") == 0)   m_level = Extra;
-  else if (strcmp(d, "ALL") == 0)     m_level = All;
-  else                                m_level = None;
+  if (d != 0) l = parseLogLevel(d);
+  setLogLevel(l);
 }
 
 Log::~Log() { }
@@ -151,10 +146,44 @@ Log::changeFileStreamDestination(std::string const & dest) {
   return channel().changeFileStreamDestination(dest);
 }
 
+bool
+Log::recycle() {
+  return channel(true).isFileStream() ;
+}
+
+Log::Level
+Log::parseLogLevel(std::string const & l) {
+  if (l == "ERROR")   return Error;
+  if (l == "WARNING") return Warning;
+  if (l == "INFO")    return Info;
+  if (l == "DEBUG")   return Debug;
+  if (l == "EXTRA")   return Extra;
+  if (l == "ALL")     return All;
+  return None;
+}
+
+void
+Log::setLogLevel(const Level l) {
+  m_level = l;
+}
+
 Log::Channel &
-Log::channel() {
+Log::channel(bool recycle) {
   static __thread Channel * c = 0;
-  if (c == 0) {
+  /**
+   * Recycle channel if requested
+   */
+  if (c != nullptr and recycle) {
+    pthread_t self = pthread_self();
+    pthread_mutex_lock(& m_lock);
+    m_channels.erase(m_channels.find(self));
+    pthread_mutex_unlock(& m_lock);
+    c = nullptr;
+  }
+  /**
+   * Create channel if it does not exist
+   */
+  if (c == nullptr) {
     pthread_t self = pthread_self();
     pthread_mutex_lock(& m_lock);
     /**

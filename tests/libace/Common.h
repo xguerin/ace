@@ -20,28 +20,10 @@
 
 #include <ace/common/Log.h>
 #include <gtest/gtest.h>
-#include <fcntl.h>
-#include <cstdlib>
 
-int main(int argc, char* argv[]) {
-  /**
-   * Get the target build path
-   */
-  char * build_path = getenv("ACE_TESTS_PATH");
-  if (build_path == NULL) {
-    std::cerr << "ACE_TESTS_PATH must be defined (check CMakeLists.txt)" << std::endl;
-    return 1;
-  }
-  std::string path_str(build_path);
-  /**
-   * Set LOG environment"
-   */
-  setenv("ACE_LOG_LEVEL", "INFO", 0);
-  setenv("ACE_LOG_STREAM", "FILE", 1);
-  ace::common::Log::get().changeFileStreamDestination(path_str + "/tests.log");
-  /**
-   * Initialize and run the tests
-   */
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+#ifndef TESTS_COMMON_H_
+#define TESTS_COMMON_H_
+
+#define WRITE_HEADER ACE_LOG(Info, "--> ", test_info_->name())
+
+#endif  // TESTS_COMMON_H_

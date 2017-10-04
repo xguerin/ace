@@ -76,6 +76,11 @@ class Log {
   template<typename... Args>
   void write(Level l, std::string const & f, int n, Args const & ... a);
 
+  bool recycle();
+
+  static Level parseLogLevel(std::string const & l);
+  void setLogLevel(const Level l);
+
  private:
 
   class Channel {
@@ -107,7 +112,7 @@ class Log {
 
   Log();
 
-  Channel & channel();
+  Channel & channel(bool recycle = false);
 
   void doHeader(Channel & c, Level l, std::string const & f, int n,
                  std::ostringstream & o);

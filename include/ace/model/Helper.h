@@ -65,22 +65,22 @@ validate(std::string const & mp, std::string const & ver, const bool stct, tree:
  * @return True in case of success, false otherwise
  */
 template<typename T, template <class, class> class C>
-typename T::Ref
+bool
 validateFile(std::string const & file,
              C<std::string, StrAlloc> const & stms = C<std::string, StrAlloc>(),
              const bool strict = false, int argc = 0, char ** argv = nullptr) {
   if (not MASTER.hasScannerByExtension(file)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", file);
-    return nullptr;
+    return false;
   }
   tree::Value::Ref svr = MASTER.scannerByExtension(file).open(file, argc, argv);
   if (svr == nullptr) {
     ACE_LOG(Error, "Cannot open configuration file \"" + file + "\"");
-    return nullptr;
+    return false;
   }
   if (not tree::utils::apply(*svr, stms)) {
     ACE_LOG(Error, "Alteration of instance failed");
-    return nullptr;
+    return false;
   }
   return validate(T::PATH, T::VERSION, strict, svr);
 }
@@ -129,7 +129,7 @@ parseFile(std::string const & file,
  * @return True in case of success, false otherwise
  */
 template<typename T>
-typename T::Ref
+bool
 validateFile(std::string const & file, const bool strict = false,
              int argc = 0, char ** argv = nullptr) {
   return validateFile<T>(file, std::vector<std::string>(), strict, argc, argv);
@@ -164,7 +164,7 @@ parseFile(std::string const & file, const bool strict = false,
  * @return True in case of success, false otherwise
  */
 template<typename T, template<class, class> class C, template<class, class> class D>
-typename T::Ref
+bool
 validateFiles(C<std::string, StrAlloc> const & files,
               D<std::string, StrAlloc> const & stms = D<std::string, StrAlloc>(),
               const bool strict = false, int argc = 0, char ** argv = nullptr) {
@@ -172,12 +172,12 @@ validateFiles(C<std::string, StrAlloc> const & files,
   for (auto & file : files) {
     if (not MASTER.hasScannerByExtension(file)) {
       ACE_LOG(Error, "Unsupported configuration file format: ", file);
-      return nullptr;
+      return false;
     }
     tree::Value::Ref svr = MASTER.scannerByExtension(file).open(file, argc, argv);
     if (svr == nullptr) {
       ACE_LOG(Error, "Cannot open configuration file \"" + file + "\"");
-      return nullptr;
+      return false;
     }
     if (res == nullptr) {
       res = svr;
@@ -187,7 +187,7 @@ validateFiles(C<std::string, StrAlloc> const & files,
   }
   if (not tree::utils::apply(*res, stms)) {
     ACE_LOG(Error, "Alteration of instance failed");
-    return nullptr;
+    return false;
   }
   return validate(T::PATH, T::VERSION, strict, res);
 }
@@ -244,7 +244,7 @@ parseFiles(C<std::string, StrAlloc> const & files,
  * @return True in case of success, false otherwise
  */
 template<typename T, template<class, class> class C>
-typename T::Ref
+bool
 validateFiles(C<std::string, StrAlloc> const & files,
               const bool strict = false, int argc = 0, char ** argv = nullptr) {
   return validateFiles<T>(files, std::vector<std::string>(), strict, argc, argv);
@@ -280,22 +280,22 @@ parseFiles(C<std::string, StrAlloc> const & files,
  * @return True in case of success, false otherwise
  */
 template<typename T, template <class, class> class C>
-typename T::Ref
+bool
 validateString(std::string const & str, std::string const & fmt,
                C<std::string, StrAlloc> const & stms = std::vector<std::string>(),
                const bool strict = false, int argc = 0, char ** argv = nullptr) {
   if (not MASTER.hasScannerByName(fmt)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
-    return nullptr;
+    return false;
   }
   tree::Value::Ref svr = MASTER.scannerByName(fmt).parse(str, argc, argv);
   if (svr.get() == nullptr) {
     ACE_LOG(Error, "Cannot parse inline configuration");
-    return nullptr;
+    return false;
   }
   if (not tree::utils::apply(*svr, stms)) {
     ACE_LOG(Error, "Alteration of inline configuration failed");
-    return nullptr;
+    return false;
   }
   validate(T::PATH, T::VERSION, strict, svr);
 }
@@ -346,7 +346,7 @@ parseString(std::string const & str, std::string const & fmt,
  * @return True in case of success, false otherwise
  */
 template<typename T>
-typename T::Ref
+bool
 validateString(std::string const & str, std::string const & fmt,
                const bool strict = false, int argc = 0, char ** argv = nullptr) {
   return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc, argv);
