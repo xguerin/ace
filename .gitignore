@@ -1,5 +1,4 @@
 .*.swp
-build.ninja
 *.pyc
 build*
 *.o
@@ -9,5 +8,3 @@ build*
 *.ac.*
 *.out
 *.dump.*
-.ycm_extra_conf.py
-tests.log

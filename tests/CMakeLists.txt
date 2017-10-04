@@ -9,8 +9,3 @@ add_test(gtest ace-tests)
 
 target_compile_features(ace-tests PRIVATE cxx_nullptr)
 target_link_libraries(ace-tests PRIVATE ace PUBLIC ${GTEST_LIBRARIES})
-
-install(
-  TARGETS ace-tests
-  RUNTIME DESTINATION bin
-  )
