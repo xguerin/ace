@@ -37,8 +37,7 @@ class Scanner {
 
   enum class Format {
     Compact,
-    Default,
-    Inlined
+    Default
   };
 
   Scanner() = default;

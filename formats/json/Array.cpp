@@ -45,31 +45,15 @@ build(std::string const & name, json_t * const ary) {
   return array;
 }
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o, int l, bool i) {
+json_t *
+dump(tree::Value const & v) {
   tree::Array const & ary = static_cast<tree::Array const &>(v);
-  bool inl = false;
-  if (not i) common::String::indent(o, l);
-  o << '[';
-  if (f == tree::Scanner::Format::Default) {
-    if (ary.size() != 0) o << std::endl;
-  } else {
-    o << ' ';
+  json_t * result = json_array();
+  for (auto const & e : ary) {
+    json_t * value = Common::dump(*e);
+    json_array_append_new(result, value);
   }
-  size_t count = 0;
-  for (auto & w : ary) {
-    Common::dump(*w, f, o, l + 2, inl);
-    inl = true;
-    if (count < ary.size() - 1) o << ", ";
-    count += 1;
-  }
-  if (f == tree::Scanner::Format::Default and ary.size() > 0) {
-    o << std::endl;
-    common::String::indent(o, l);
-  } else {
-    o << ' ';
-  }
-  o << ']';
+  return result;
 }
 
 } // namespace Array

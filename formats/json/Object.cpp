@@ -1,21 +1,23 @@
 /**
  * Copyright (c) 2016 Xavier R. Guerin
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this
- * software and associated documentation files (the "Software"), to deal in the Software
- * without restriction, including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
- * to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include <ace/formats/json/Object.h>
@@ -46,41 +48,15 @@ build(std::string const & name, json_t * const obj) {
   return object;
 }
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o, int l, bool i) {
+json_t *
+dump(tree::Value const & v) {
   tree::Object const & w = static_cast<tree::Object const &>(v);
-  if (not i and f == tree::Scanner::Format::Default) {
-    common::String::indent(o, l);
+  json_t * result = json_object();
+  for (auto const & e : w) {
+    json_t * value = Common::dump(*e.second);
+    json_object_set_new(result, e.first.c_str(), value);
   }
-  o << '{';
-  if (f == tree::Scanner::Format::Default) {
-    o << std::endl;
-  } else {
-    o << ' ';
-  }
-  size_t count = 0;
-  for (auto & e : w) {
-    if (f == tree::Scanner::Format::Default) {
-      common::String::indent(o, l + 2);
-    }
-    if (f == tree::Scanner::Format::Inlined) {
-      o << "\\\"" << e.first << "\\\": ";
-    } else {
-      o << '"' << e.first << "\": ";
-    }
-    Common::dump(*e.second, f, o, l + 2, true);
-    if (count < w.size() - 1) o << ",";
-    count += 1;
-    if (f == tree::Scanner::Format::Default) {
-      o << std::endl;
-    } else {
-      o << ' ';
-    }
-  }
-  if (f == tree::Scanner::Format::Default) {
-    common::String::indent(o, l);
-  }
-  o << '}';
+  return result;
 }
 
 } // namespace Object

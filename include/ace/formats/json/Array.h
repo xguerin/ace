@@ -32,8 +32,8 @@ namespace Array {
 tree::Value::Ref
 build(std::string const & name, json_t * const ary);
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o, int l, bool i);
+json_t *
+dump(tree::Value const & v);
 
 } // namespace Array
 } // namespace jsonfmt

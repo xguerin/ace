@@ -38,9 +38,8 @@ parseFile(std::string const & path);
 tree::Value::Ref
 parseString(std::string const & str);
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o, const int l,
-     const bool i);
+json_t *
+dump(tree::Value const & v);
 
 } // namespace Common
 } // namespace inifmt

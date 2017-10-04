@@ -42,8 +42,18 @@ Scanner::parse(std::string const & s, int argc, char ** argv) {
 
 void
 Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
-  Common::dump(v, f, o, 0, false);
-  if (f == Format::Default) o << std::endl;
+  char * data = nullptr;
+  json_t * result = Common::dump(v);
+  switch (f) {
+    case tree::Scanner::Format::Compact : {
+      data = json_dumps(result, JSON_COMPACT);
+    } break;
+    case tree::Scanner::Format::Default : {
+      data = json_dumps(result, JSON_INDENT(2));
+    } break;
+  }
+  json_decref(result);
+  o << data;
 }
 
 std::string
