@@ -34,9 +34,8 @@ namespace Primitive {
 tree::Value::Ref
 build(std::string const & name, toml::Value const & pri);
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o,
-     int l, bool i);
+toml::Value
+dump(tree::Value const & v);
 
 } // namespace Primitive
 } // namespace tomlfmt

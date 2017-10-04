@@ -47,9 +47,14 @@ build(std::string const & name, toml::Value const & ary) {
   return array;
 }
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o,
-     int l, bool i) {
+toml::Value
+dump(tree::Value const & v) {
+  tree::Array const & ary = static_cast<tree::Array const &>(v);
+  toml::Array array(ary.size());
+  for (size_t i = 0; i < ary.size(); i += 1) {
+    array[i] = Common::dump(*ary.at(i));
+  }
+  return array;
 }
 
 } // namespace Array

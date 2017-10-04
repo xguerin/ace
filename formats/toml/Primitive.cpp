@@ -49,9 +49,14 @@ build(std::string const & name, toml::Value const & pri) {
   return result;
 }
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o,
-     int l, bool i) {
+toml::Value
+dump(tree::Value const & v) {
+  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
+  if (p.is<bool>()) return toml::Value(p.value<bool>());
+  if (p.is<long>()) return toml::Value(static_cast<int64_t>(p.value<long>()));
+  if (p.is<double>()) return toml::Value(p.value<double>());
+  if (p.is<std::string>()) return toml::Value(p.value<std::string>());
+  return toml::Value();
 }
 
 } // namespace Primitive

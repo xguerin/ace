@@ -47,9 +47,14 @@ build(std::string const & name, toml::Value const & obj) {
   return object;
 }
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o,
-     int l, bool i) {
+toml::Value
+dump(tree::Value const & v) {
+  tree::Object const & w = static_cast<tree::Object const &>(v);
+  toml::Table table;
+  for (auto const & e : w) {
+    table[e.first] = Common::dump(*e.second);
+  }
+  return table;
 }
 
 } // namespace Object

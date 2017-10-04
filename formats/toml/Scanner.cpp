@@ -43,8 +43,8 @@ Scanner::parse(std::string const & s, int argc, char ** argv) {
 
 void
 Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
-  Common::dump(v, f, o, 0, false);
-  if (f == Format::Default) o << std::endl;
+  toml::Value result = Common::dump(v);
+  result.writeFormatted(&o, f == Format::Compact ? toml::FORMAT_NONE : toml::FORMAT_INDENT);
 }
 
 std::string

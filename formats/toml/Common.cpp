@@ -65,17 +65,16 @@ parseString(std::string const & str) {
   return result;
 }
 
-void
-dump(tree::Value const & v, const tree::Scanner::Format f, std::ostream & o, const int l,
-      const bool i) {
+toml::Value
+dump(tree::Value const & v) {
   switch (v.type()) {
     case tree::Value::Type::Boolean   :
     case tree::Value::Type::Float     :
     case tree::Value::Type::Integer   :
-    case tree::Value::Type::String    : return Primitive::dump(v, f, o, l, i);
-    case tree::Value::Type::Array     : return Array::dump(v, f, o, l, i);
-    case tree::Value::Type::Object    : return Object::dump(v, f, o, l, i);
-    default                           : break;
+    case tree::Value::Type::String    : return Primitive::dump(v);
+    case tree::Value::Type::Array     : return Array::dump(v);
+    case tree::Value::Type::Object    : return Object::dump(v);
+    default                           : return toml::Value();
   }
 }
 
