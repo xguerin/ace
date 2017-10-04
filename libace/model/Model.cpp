@@ -161,7 +161,7 @@ Model::loadModel(tree::Value const & t) {
   DEBUG("Load model body");
   m_body.loadModel(t["body"]);
   std::ostringstream oss;
-  MASTER.scannerByName("json").dump(t, tree::Scanner::Format::Inlined, oss);
+  MASTER.scannerByName("json").dump(t, tree::Scanner::Format::Compact, oss);
   m_source = oss.str();
 }
 
@@ -652,9 +652,9 @@ Model::generateImplementationSource(std::ostream & o) const {
   o << "const std::string I" << normalizedName() << "::PATH = \"" << filePath() << "\";";
   o << std::endl << std::endl;
 
-  o << "const std::string I" << normalizedName() << "::MODEL = ";
-  o << "\"" << m_source << "\";";
-  o << std::endl << std::endl;
+  o << "const std::string I" << normalizedName() << "::MODEL = {" << std::endl;
+  common::String::dumpCharArray(m_source, o);
+  o << "};" << std::endl << std::endl;
 
   o << "const std::string I" << normalizedName() << "::VERSION = \"" << ACE_VERSION << "\";";
   o << std::endl << std::endl;

@@ -128,6 +128,9 @@ trim(std::string & s);
 std::string
 camelify(std::string const & s);
 
+void
+dumpCharArray(std::string const & s, std::ostream & o);
+
 } // namespace String
 } // namespace common
 } // namespace ace
