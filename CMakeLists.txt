@@ -39,9 +39,9 @@ option(ACE_BUILD_TESTS    "Build the Google tests suite"        OFF)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-IF(NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release ... FORCE)
-ENDIF()
+endif()
 
 add_definitions(-DACE_VERSION="${VERSION_SHORT}")
 
@@ -51,11 +51,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Flags preferences
 #
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-parameter")
-ELSE()
+else()
   set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-parameter -pthread")
-ENDIF()
+endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
@@ -65,15 +65,15 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O3")
 # RPATHs handling
 #
 
-SET(CMAKE_SKIP_BUILD_RPATH            FALSE)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH    FALSE)
-SET(CMAKE_INSTALL_RPATH               "${CMAKE_INSTALL_PREFIX}/lib")
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_SKIP_BUILD_RPATH            FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH    FALSE)
+set(CMAKE_INSTALL_RPATH               "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-IF("${isSystemDir}" STREQUAL "-1")
-  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-ENDIF("${isSystemDir}" STREQUAL "-1")
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif("${isSystemDir}" STREQUAL "-1")
 
 #
 # Dependencies checks
@@ -113,20 +113,26 @@ endif ()
 add_subdirectory(libace)
 add_subdirectory(tools)
 
-if (ACE_PLUGIN_JSON)
+if (ACE_PLUGIN_JSON OR ACE_BUILD_TESTS)
   add_subdirectory(formats/json)
 endif ()
 
-if (ACE_PLUGIN_LUA)
+if (ACE_PLUGIN_LUA OR ACE_BUILD_TESTS)
   add_subdirectory(formats/lua)
 endif ()
 
-if (ACE_PLUGIN_PYTHON)
+if (ACE_PLUGIN_PYTHON OR ACE_BUILD_TESTS)
   add_subdirectory(formats/python)
 endif ()
 
 if (ACE_BUILD_TESTS)
   add_subdirectory(tests)
+  enable_testing()
+  add_test(NAME gtests WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests COMMAND ace-tests)
+  set_property(TEST gtests PROPERTY ENVIRONMENT
+    "ACE_SCANNER_PATH=${CMAKE_CURRENT_BINARY_DIR}/formats/json:${CMAKE_CURRENT_BINARY_DIR}/formats/lua:${CMAKE_CURRENT_BINARY_DIR}/formats/python"
+    "ACE_TESTS_PATH=${CMAKE_CURRENT_BINARY_DIR}/tests"
+    )
 endif ()
 
 #
