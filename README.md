@@ -1,5 +1,7 @@
 #### About
 
+[![Build Status](https://travis-ci.org/xguerin/ace.svg?branch=rpath)](https://travis-ci.org/xguerin/ace)
+
 ACE is a model-based configuration authoring and validation environment. It's aim is to bring determinism to tool configuration by externalizing the configuration definition into a separate model file. The model file can be seen as the expected layout of the configuration and declares valid options along with their types, arities, and documentations. It is used to externally check the validity of a configuration instance, browse legit options, and generate the necessary source code to access the options values.
 
 #### Documentation
