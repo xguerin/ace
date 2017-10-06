@@ -104,7 +104,18 @@ Header::checkModel(tree::Value const & t) const {
     }
     auto const & pri = static_cast<tree::Primitive const &>(*ex);
     if (pri.value<std::string>().empty()) {
-      ERROR(ERR_WRONG_TRIGGER_TYPE);
+      ERROR(ERR_EMPTY_TRIGGER);
+      return false;
+    }
+    try {
+      auto path = tree::Path::parse(pri.value<std::string>());
+      if (!path.global()) {
+        ERROR(ERR_WRONG_TRIGGER_SCOPE);
+        return false;
+      }
+    }
+    catch(std::invalid_argument const & e) {
+      ERROR(ERR_WRONG_TRIGGER_FORMAT);
       return false;
     }
   }
@@ -127,7 +138,8 @@ Header::loadModel(tree::Value const & t) {
     m_include.push_back(static_cast<tree::Primitive const &>(*ex).value<std::string>());
   }
   if (t.has("trigger")) for (auto & ex : static_cast<tree::Array const &>(t["trigger"])) {
-    m_trigger.push_back(static_cast<tree::Primitive const &>(*ex).value<std::string>());
+    auto path = tree::Path::parse(static_cast<tree::Primitive const &>(*ex).value<std::string>());
+    m_trigger.push_back(path);
   }
 }
 
@@ -169,7 +181,7 @@ Header::include() const {
   return m_include;
 }
 
-std::list<std::string> const &
+std::list<tree::Path> const &
 Header::trigger() const {
   return m_trigger;
 }

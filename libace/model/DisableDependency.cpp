@@ -91,7 +91,7 @@ DisableDependency::expandInstance(tree::Object & r, tree::Value & v) {
   Body * body = bodyFor(this);
   for (auto & dep : m_deps) {
     tree::Path dest;
-    buildModelPath(dep, dest);
+    buildModelPath(dep, r, dest);
     if (body->has(dest)) {
       INFO("Disable ", dest);
       body->disable(dest);
@@ -106,7 +106,7 @@ DisableDependency::flattenInstance(tree::Object & r, tree::Value & v) {
   Body * body = bodyFor(this);
   for (auto & dep : m_deps) {
     tree::Path dest;
-    buildModelPath(dep, dest);
+    buildModelPath(dep, r, dest);
     std::list<BasicType::Ref> lasso;
     body->get(dest, lasso);
     for (auto & e : lasso) if (not e->disabled()) {

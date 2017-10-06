@@ -3,7 +3,7 @@
     "author": { "name": "John Doe", "email": "jdoe@acme.com" },
     "version": "1.0",
     "include": [ "Base.json" ],
-    "trigger": [ ".*.'p'." ],
+    "trigger": [ "$.*.p" ],
     "doc": "Trigger model"
   },
   "body": {

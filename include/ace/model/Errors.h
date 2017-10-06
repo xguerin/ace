@@ -99,6 +99,7 @@
 // Dependency attribute
 
 #define ERR_DEPS_NOT_AN_ARRAY                 "Deps attribute must be an array" // NOLINT
+#define ERR_DEPS_PATH_GLOBAL(_d)              "Deps path \"", _d, "\" is not local" // NOLINT
 #define ERR_EMPTY_DEPS                        "Dependency list cannot be empty" // NOLINT
 
 // Dependency
@@ -149,6 +150,9 @@
 #define ERR_WRONG_INCLUDE_TYPE                "Attribute \"include\" element must be of type String" // NOLINT
 #define ERR_WRONG_INCLUDE_VALUE               "Attribute \"include\" element cannot be empty" // NOLINT
 #define ERR_WRONG_TRIGGER_TYPE                "Attribute \"trigger\" element must be of type String" // NOLINT
+#define ERR_WRONG_TRIGGER_FORMAT              "Invalid format for attribute \"trigger\"" // NOLINT
+#define ERR_WRONG_TRIGGER_SCOPE               "Path for attribute \"trigger\" must be global" // NOLINT
+#define ERR_EMPTY_TRIGGER                     "Attribute \"trigger\" cannot be empty" // NOLINT
 #define ERR_WRONG_NS_TYPE                     "Attribute \"namespace\" element must be of type String" // NOLINT
 #define ERR_WRONG_PACKAGE_TYPE                "Attribute \"package\" element must be of type String" // NOLINT
 

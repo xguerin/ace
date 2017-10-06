@@ -24,6 +24,7 @@
 #include "Author.h"
 #include "Coach.h"
 #include "Object.h"
+#include <ace/tree/Path.h>
 #include <list>
 #include <string>
 #include <vector>
@@ -47,7 +48,7 @@ class Header : public Object, public Coach {
   Author const & author() const;
   std::list<std::string> const & nameSpace() const;
   std::list<std::string> const & include() const;
-  std::list<std::string> const & trigger() const;
+  std::list<tree::Path> const & trigger() const;
   std::string const & version() const;
   std::string const & doc() const;
 
@@ -57,7 +58,7 @@ class Header : public Object, public Coach {
   Author                    m_author;
   std::list<std::string>    m_nameSpace;
   std::list<std::string>    m_include;
-  std::list<std::string>    m_trigger;
+  std::list<tree::Path>     m_trigger;
   std::string               m_version;
   std::string               m_doc;
 };

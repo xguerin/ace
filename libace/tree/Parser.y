@@ -1,21 +1,23 @@
 /**
  * Copyright (c) 2016 Xavier R. Guerin
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this
- * software and associated documentation files (the "Software"), to deal in the Software
- * without restriction, including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
- * to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 %extra_argument       { ace::tree::Path ** ppPath }
@@ -64,7 +66,11 @@
 }
 
 %syntax_error {
-  ACE_LOG(Error, "invalid JSONPath format");
+  ACE_LOG(Error, "Recoverable JSONPath syntax error");
+}
+
+%parse_failure {
+  ACE_LOG(Error, "Critical JSONPath syntax error");
 }
 
 // Path definition
@@ -81,17 +87,13 @@ path ::= root(A) accessorL(B).
 
 root(A) ::= GROOT.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "root ::= GROOT" << std::endl;
-#endif
+  ACE_LOG(Debug, "root ::= GROOT");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Global);
 }
 
 root(A) ::= LROOT.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "root ::= LROOT" << std::endl;
-#endif
+  ACE_LOG(Debug, "root ::= LROOT");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Local);
 }
 
@@ -104,18 +106,14 @@ accessorL(A) ::= .
 
 accessorL(A) ::= accessorL(B) member(C).
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "accessor ::= accessorL member" << std::endl;
-#endif
+  ACE_LOG(Debug, "accessor ::= accessorL member");
   B->push_back(C);
   A = B;
 }
 
 accessorL(A) ::= accessorL(B) DOT member(C).
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "accessor ::= accessorL DOT member" << std::endl;
-#endif
+  ACE_LOG(Debug, "accessor ::= accessorL DOT member");
   C->setRecursive();
   B->push_back(C);
   A = B;
@@ -125,42 +123,32 @@ accessorL(A) ::= accessorL(B) DOT member(C).
 
 member(A) ::= DOT MEMBER(B).
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "member ::= DOT MEMBER" << std::endl;
-#endif
+  ACE_LOG(Debug, "member ::= DOT MEMBER");
   auto const & n = dynamic_cast<MemberToken *>(B)->value;
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Named, n);
 }
 
 member(A) ::= index(B).
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "member ::= index" << std::endl;
-#endif
+  ACE_LOG(Debug, "member ::= index");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Indexed, *B);
 }
 
 member(A) ::= range(B).
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "member ::= MEMBER range" << std::endl;
-#endif
+  ACE_LOG(Debug, "member ::= MEMBER range");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Ranged, *B);
 }
 
 member(A) ::= OPENC WILDCARD CLOSEC.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "member ::= OPENC WILDCARD CLOSEC " << std::endl;
-#endif
+  ACE_LOG(Debug, "member ::= OPENC WILDCARD CLOSEC");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Any);
 }
 
 member(A) ::= DOT WILDCARD.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "member ::= DOT WILDCARD" << std::endl;
-#endif
+  ACE_LOG(Debug, "member ::= DOT WILDCARD");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Any);
 }
 
@@ -168,9 +156,7 @@ member(A) ::= DOT WILDCARD.
 
 index(A) ::= OPENC entries(B) CLOSEC.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "index ::= [a,b,..]" << std::endl;
-#endif
+  ACE_LOG(Debug, "index ::= [a,b,..]");
   A = B;
 }
 
@@ -178,9 +164,7 @@ index(A) ::= OPENC entries(B) CLOSEC.
 
 range(A) ::= OPENC INDEX(B) SLICE INDEX(C) CLOSEC.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "index ::= [i:j]" << std::endl;
-#endif
+  ACE_LOG(Debug, "index ::= [i:j]");
   A = new ace::tree::path::Item::Range {
     dynamic_cast<IndexToken *>(B)->value,
     dynamic_cast<IndexToken *>(C)->value,
@@ -190,9 +174,7 @@ range(A) ::= OPENC INDEX(B) SLICE INDEX(C) CLOSEC.
 
 range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
 {
-#ifdef ACE_PARSER_DEBUG
-  std::cout << "index ::= [i:j:k]" << std::endl;
-#endif
+  ACE_LOG(Debug, "index ::= [i:j:k]");
   A = new ace::tree::path::Item::Range {
     dynamic_cast<IndexToken *>(B)->value,
     dynamic_cast<IndexToken *>(C)->value,
@@ -204,12 +186,14 @@ range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
 
 entries(A) ::= INDEX(B).
 {
+  ACE_LOG(Debug, "entry");
   A = new std::vector<size_t>();
   A->push_back(dynamic_cast<IndexToken *>(B)->value);
 }
 
 entries(A) ::= entries(B) COMMA INDEX(C).
 {
+  ACE_LOG(Debug, "entries, entry");
   B->push_back(dynamic_cast<IndexToken *>(C)->value);
   A = B;
 }

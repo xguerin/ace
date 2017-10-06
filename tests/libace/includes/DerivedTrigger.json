@@ -3,7 +3,7 @@
     "author": { "name": "John Doe", "email": "jdoe@acme.com" },
     "version": "1.0",
     "include": [ "Plugin.json" ],
-    "trigger": [ ".*.'d'." ],
+    "trigger": [ "$.*.d" ],
     "doc": "Plugin model"
   },
   "body": {

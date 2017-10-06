@@ -79,7 +79,7 @@ class Dependency : public Object, public Instance {
   bool hasPlaceHolder(std::string const & d) const;
   std::string expandPlaceHolder(std::string const & d, std::string const & v) const;
 
-  bool buildModelPath(std::string const & d, tree::Path & r) const;
+  bool buildModelPath(std::string const & d, tree::Object const & o, tree::Path & r) const;
 
   tree::Checker::Schema m_schm;
   std::set<std::string> m_deps;

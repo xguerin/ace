@@ -92,7 +92,7 @@ RequireDependency::expandInstance(tree::Object & r, tree::Value & v) {
   Body * body = bodyFor(this);
   for (auto & dep : m_deps) {
     tree::Path dest;
-    if (buildModelPath(dep, dest) and body->has(dest)) {
+    if (buildModelPath(dep, r, dest) and body->has(dest)) {
       INFO("Promote ", dest);
       body->promoteArity(dest);
     }
@@ -105,7 +105,7 @@ RequireDependency::resolveInstance(tree::Object const & r, tree::Value const & v
   int score = 0;
   for (auto & dep : m_deps) {
     tree::Path p;
-    if (not buildModelPath(dep, p)) {
+    if (not buildModelPath(dep, r, p)) {
       return false;
     }
     if (not r.has(p)) {

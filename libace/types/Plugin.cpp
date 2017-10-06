@@ -44,7 +44,7 @@ Plugin::Plugin()
 bool
 Plugin::match(tree::Path const & path) const {
   for (auto & e : m_plugins) {
-    if (common::Regex::match(path.toString(true), e.first)) {
+    if (e.first.match(path)) {
       return true;
     }
   }
@@ -53,7 +53,7 @@ Plugin::match(tree::Path const & path) const {
 
 Class const &
 Plugin::getClassFor(tree::Path const & path) const {
-  for (auto & e : m_plugins) if (common::Regex::match(path.toString(true), e.first)) {
+  for (auto & e : m_plugins) if (e.first.match(path)) {
     return *e.second;;
   }
   throw std::invalid_argument(path);
@@ -100,7 +100,7 @@ Plugin::loadModel(tree::Value const & t) {
     Model::Ref child = Model::load(nullptr, ch);
     for (auto & tr : child->header().trigger()) {
       DEBUG("Build plugin model \"", ch, "\" for trigger \"", tr, "\"");
-      Class::Ref cref = Class::build(tr, this, ch, m_targetArity);
+      Class::Ref cref = Class::build("_", this, ch, m_targetArity);
       if (cref != nullptr) m_plugins[tr] = cref;
     }
   }
@@ -158,7 +158,7 @@ Plugin::checkInstance(tree::Object const & r, tree::Value const & v) const {
     bool matchFound = false;
     Class::Ref target = nullptr;
     for (auto & p: m_plugins) {
-      if (common::Regex::match(e.second->path().toString(true), p.first)) {
+      if (p.first.match(e.second->path())) {
         target = p.second;
         matchFound = true;
         break;
@@ -181,13 +181,16 @@ Plugin::expandInstance(tree::Object & r, tree::Value & v) {
   Type::expandInstance(r, v);
   tree::Object & o = static_cast<tree::Object &>(v);
   for (auto & e : o) {
-    if (m_instances.count(e.first) == 0) for (auto & p: m_plugins) {
-      if (common::Regex::match(e.second->path().toString(true), p.first)) {
-        m_instances[e.first] = std::static_pointer_cast<Class>(p.second->clone(e.first));
-        m_instances[e.first]->setParent(this);
+    auto path = e.second->path();
+    if (m_instances.count(path) == 0) {
+      for (auto & p: m_plugins) {
+        if (p.first.match(path)) {
+          m_instances[path] = std::static_pointer_cast<Class>(p.second->clone(e.first));
+          m_instances[path]->setParent(this);
+        }
       }
     }
-    m_instances[e.first]->expandInstance(r, *e.second);
+    m_instances[path]->expandInstance(r, *e.second);
   }
 }
 
@@ -196,8 +199,11 @@ Plugin::flattenInstance(tree::Object & r, tree::Value & v) {
   if (not Type::flattenInstance(r, v)) return false;
   int score = 0;
   tree::Object & o = static_cast<tree::Object &>(v);
-  for (auto & e : o) if (not m_instances[e.first]->flattenInstance(r, *e.second)) {
-    score += 1;
+  for (auto & e : o) {
+    auto path = e.second->path();
+    if (not m_instances[path]->flattenInstance(r, *e.second)) {
+      score += 1;
+    }
   }
   return score == 0;
 }
@@ -207,8 +213,11 @@ Plugin::resolveInstance(tree::Object const & r, tree::Value const & v) const {
   if (not Type::resolveInstance(r, v)) return false;
   int score = 0;
   tree::Object const & o = static_cast<tree::Object const &>(v);
-  for (auto & e : o) if (not m_instances.at(e.first)->resolveInstance(r, *e.second)) {
-    score += 1;
+  for (auto & e : o) {
+    auto path = e.second->path();
+    if (not m_instances.at(path)->resolveInstance(r, *e.second)) {
+      score += 1;
+    }
   }
   return score == 0;
 }
@@ -244,12 +253,10 @@ Plugin::explain(tree::Path const & p, tree::Path::const_iterator const & i) cons
   } else {
     switch ((*i)->type()) {
       case tree::path::Item::Type::Named : {
-        if (m_plugins.find((*i)->value()) != m_plugins.end()) {
-          return m_plugins.at((*i)->value())->explain(p, p.down(i));
-        } else if ((*i)->value() == "_") {
+        if ((*i)->value() == "_") {
           return m_model->explain(p, p.down(i));
         } else {
-          for (auto & e: m_plugins) if (common::Regex::match(p.toString(true), e.first)) {
+          for (auto & e: m_plugins) if (e.first.match(p)) {
             return e.second->explain(p, p.down(i));
           }
         }
@@ -261,7 +268,9 @@ Plugin::explain(tree::Path const & p, tree::Path::const_iterator const & i) cons
           Coach::explain(p, p.down(i));
           size_t maxSize = 0;
           for (auto & e : m_plugins) {
-            if (e.first.length() > maxSize) maxSize = e.first.length();
+            if (e.first.toString().length() > maxSize) {
+              maxSize = e.first.toString().length();
+            }
           }
           for (auto & e : m_plugins) {
             std::cout << std::setw(maxSize + 2) << std::left << e.first << " : ";
@@ -470,13 +479,9 @@ Plugin::has(tree::Path const & p, tree::Path::const_iterator const & i) const {
   size_t result = 0;
   switch ((*i)->type()) {
     case tree::path::Item::Type::Named: {
-      if (m_instances.find((*i)->value()) != m_instances.end()) {
-        result += m_instances.at((*i)->value())->has(p, p.down(i)) ? 1 : 0;
-      } else {
-        auto subp = p.sub(p.begin(), p.down(i));
-        for (auto & e: m_instances) if (common::Regex::match(subp.toString(true), e.first)) {
-          result += e.second->has(p, p.down(i)) ? 1 : 0;
-        }
+      auto subp = p.sub(p.begin(), p.down(i));
+      if (m_instances.find(subp) != m_instances.end()) {
+        result += m_instances.at(subp)->has(p, p.down(i)) ? 1 : 0;
       }
     } break;
     case tree::path::Item::Type::Any: {
@@ -502,20 +507,12 @@ Plugin::get(tree::Path const & p, tree::Path::const_iterator const & i,
   if (i == p.end()) return;
   switch ((*i)->type()) {
     case tree::path::Item::Type::Named: {
-      if (m_instances.find((*i)->value()) != m_instances.end()) {
+      auto subp = p.sub(p.begin(), p.down(i));
+      if (m_instances.find(subp) != m_instances.end()) {
         if (p.down(i) == p.end()) {
-          r.push_back(m_instances.at((*i)->value()));
+          r.push_back(m_instances.at(subp));
         } else {
-          m_instances.at((*i)->value())->get(p, p.down(i), r);
-        }
-      } else {
-        auto subp = p.sub(p.begin(), p.down(i));
-        for (auto & e: m_instances) if (common::Regex::match(subp.toString(true), e.first)) {
-          if (p.down(i) == p.end()) {
-            r.push_back(e.second);
-          } else {
-            e.second->get(p, p.down(i), r);
-          }
+          m_instances.at(subp)->get(p, p.down(i), r);
         }
       }
     } break;
@@ -541,14 +538,9 @@ Plugin::promoteArity(tree::Path const & p, tree::Path::const_iterator const & i)
   if (i == p.end()) return;
   switch ((*i)->type()) {
     case tree::path::Item::Type::Named: {
-      if (m_instances.find((*i)->value()) != m_instances.end()) {
-        m_instances[(*i)->value()]->promoteArity(p, p.down(i));
-        return;
-      }
       auto subp = p.sub(p.begin(), p.down(i));
-      for (auto & e: m_instances) if (common::Regex::match(subp.toString(), e.first)) {
-        e.second->promoteArity(p, p.down(i));
-        break;
+      if (m_instances.find(subp) != m_instances.end()) {
+        m_instances[subp]->promoteArity(p, p.down(i));
       }
     } break;
     case tree::path::Item::Type::Any: {
@@ -569,14 +561,9 @@ Plugin::disable(tree::Path const & p, tree::Path::const_iterator const & i) {
   if (i == p.end()) return;
   switch ((*i)->type()) {
     case tree::path::Item::Type::Named: {
-      if (m_instances.find((*i)->value()) != m_instances.end()) {
-        m_instances[(*i)->value()]->disable(p, p.down(i));
-        return;
-      }
       auto subp = p.sub(p.begin(), p.down(i));
-      for (auto & e: m_instances) if (common::Regex::match(subp.toString(), e.first)) {
-        e.second->disable(p, p.down(i));
-        break;
+      if (m_instances.find(subp) != m_instances.end()) {
+        m_instances[subp]->disable(p, p.down(i));
       }
     } break;
     case tree::path::Item::Type::Any: {
@@ -621,12 +608,12 @@ Plugin::model() const {
   return *m_model;
 }
 
-std::map<std::string, Class::Ref> &
+std::map<tree::Path, Class::Ref> &
 Plugin::plugins() {
   return m_plugins;
 }
 
-std::map<std::string, Class::Ref> const &
+std::map<tree::Path, Class::Ref> const &
 Plugin::plugins() const {
   return m_plugins;
 }

@@ -124,7 +124,7 @@ Dependency::flattenInstance(tree::Object & r, tree::Value & v) {
   Model * model = modelFor(this);
   for (auto & dep : m_deps) {
     tree::Path dest;
-    if (not buildModelPath(dep, dest)) {
+    if (not buildModelPath(dep, r, dest)) {
       return false;
     }
     if (not body->has(dest)) {
@@ -161,9 +161,16 @@ Dependency::expandPlaceHolder(std::string const & d, std::string const & v) cons
 }
 
 bool
-Dependency::buildModelPath(std::string const & d, tree::Path & r) const {
+Dependency::buildModelPath(std::string const & d, tree::Object const & o,
+                           tree::Path & r) const {
   if (not d.empty()) try {
-    r = tree::Path::parse(d);
+    auto prefix = o.path();
+    auto path = tree::Path::parse(d);
+    if (path.global()) {
+      ERROR(ERR_DEPS_PATH_GLOBAL(d));
+      return false;
+    }
+    r = prefix.merge(path);
   } catch (std::invalid_argument const &) {
     ERROR(ERR_INVALID_PATH_FORMAT(d));
     return false;

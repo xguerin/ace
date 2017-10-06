@@ -107,7 +107,7 @@ bool
 ConstraintGuard<T, D>::flattenInstance(tree::Object & r, tree::Value & v) {
   for (auto & dep : this->m_deps) {
     tree::Path tgtPath;
-    if (not this->buildModelPath(dep, tgtPath)) return false;
+    if (not this->buildModelPath(dep, r, tgtPath)) return false;
     if (not check(tgtPath)) return false;
     if (not apply(tgtPath)) return false;
   }
