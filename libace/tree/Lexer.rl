@@ -143,8 +143,9 @@ Scan::parse(std::string const & str) {
   ace::tree::Path * path = nullptr;
   Parse(lparser, 0, 0, &path);
   if (path == nullptr) throw std::invalid_argument(str);
-  ace::tree::Path::Ref pref(path);
-  return *path;
+  ace::tree::Path result(*path);
+  delete path;
+  return result;
 }
 
 } // namespace path
