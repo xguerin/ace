@@ -20,25 +20,26 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_TOML_OBJECT_H_
-#define ACE_FORMATS_TOML_OBJECT_H_
+#pragma once
 
-#include "Toml.h"
 #include <ace/tree/Scanner.h>
 #include <string>
 
 namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace jsonfmt {
 
-tree::Value::Ref
-build(std::string const & name, toml::Value const & value);
+class Scanner : public tree::Scanner {
+ public:
 
-toml::Value
-dump(tree::Value const & v);
+  Scanner() = default;
 
-} // namespace Object
-} // namespace tomlfmt
+  tree::Value::Ref open(std::string const & fn, int argc, char ** argv);
+  tree::Value::Ref parse(std::string const & s, int argc, char ** argv);
+  void dump(tree::Value const & v, const Format f, std::ostream & o) const;
+
+  std::string name() const;
+  std::string extension() const;
+};
+
+} // namespace jsonfmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_TOML_OBJECT_H_

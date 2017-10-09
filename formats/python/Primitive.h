@@ -20,25 +20,19 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_TOML_PRIMITIVE_H_
-#define ACE_FORMATS_TOML_PRIMITIVE_H_
+#pragma once
 
-#include "Toml.h"
-#include <ace/tree/Scanner.h> // NOLINT
+#include <Python.h>
+#include <ace/tree/Primitive.h> // NOLINT
 #include <string>
 
 namespace ace {
-namespace tomlfmt {
+namespace pyfmt {
 namespace Primitive {
 
-tree::Value::Ref
-build(std::string const & name, toml::Value const & pri);
-
-toml::Value
-dump(tree::Value const & v);
+tree::Value::Ref build(std::string const & n, PyObject * o);
+void dump(tree::Value const & v, std::ostream & o, int l, bool i);
 
 } // namespace Primitive
-} // namespace tomlfmt
+} // namespace pyfmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_TOML_PRIMITIVE_H_

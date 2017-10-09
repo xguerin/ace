@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/ini/Primitive.h>
+#include "Primitive.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
 #include <ace/tree/Primitive.h> // NOLINT

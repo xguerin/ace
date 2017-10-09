@@ -20,30 +20,22 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_TOML_SCANNER_H_
-#define ACE_FORMATS_TOML_SCANNER_H_
+#pragma once
 
 #include "Toml.h"
-#include <ace/tree/Scanner.h>  // NOLINT(build/include_type), cpplint is confused
+#include <ace/tree/Scanner.h>
 #include <string>
 
 namespace ace {
 namespace tomlfmt {
+namespace Array {
 
-class Scanner : public tree::Scanner {
- public:
+tree::Value::Ref
+build(std::string const & name, toml::Value const & ary);
 
-  Scanner() = default;
+toml::Value
+dump(tree::Value const & v);
 
-  tree::Value::Ref open(std::string const & fn, int argc, char ** argv);
-  tree::Value::Ref parse(std::string const & s, int argc, char ** argv);
-  void dump(tree::Value const & v, const Format f, std::ostream & o) const;
-
-  std::string name() const;
-  std::string extension() const;
-};
-
+} // namespace Array
 } // namespace tomlfmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_TOML_SCANNER_H_

@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/ini/Common.h>
-#include <ace/formats/ini/Lexer.h>
-#include <ace/formats/ini/Array.h>
-#include <ace/formats/ini/Object.h>
-#include <ace/formats/ini/Primitive.h>
+#include "Common.h"
+#include "Lexer.h"
+#include "Array.h"
+#include "Object.h"
+#include "Primitive.h"
 #include <ace/tree/Array.h>
 #include <ace/tree/Object.h>
 #include <ace/tree/Primitive.h>

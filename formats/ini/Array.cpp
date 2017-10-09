@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/ini/Array.h>
-#include <ace/formats/ini/Common.h>
+#include "Array.h"
+#include "Common.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
 #include <ace/tree/Array.h> // NOLINT

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/ini/Ini.h>
+#include "Ini.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
 #include <array>

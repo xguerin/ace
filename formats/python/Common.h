@@ -20,25 +20,21 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_TOML_ARRAY_H_
-#define ACE_FORMATS_TOML_ARRAY_H_
+#pragma once
 
-#include "Toml.h"
-#include <ace/tree/Scanner.h>
+#include "Array.h"
+#include "Object.h"
+#include "Primitive.h"
 #include <string>
 
 namespace ace {
-namespace tomlfmt {
-namespace Array {
+namespace pyfmt {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & ary);
+build_value(std::string const & n, PyObject * o);
 
-toml::Value
-dump(tree::Value const & v);
+void
+dump_value(tree::Value const & v, std::ostream & o, int l, bool i);
 
-} // namespace Array
-} // namespace tomlfmt
+} // namespace inifmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_TOML_ARRAY_H_

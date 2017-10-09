@@ -20,8 +20,7 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_TYPES_PLUGIN_H_
-#define ACE_TYPES_PLUGIN_H_
+#pragma once
 
 #include <ace/model/FlagAttribute.h>
 #include <ace/model/FormatChecker.h>
@@ -126,5 +125,3 @@ class Plugin : public Type<void, FormatChecker<void>> {
 
 } // namespace model
 } // namespace ace
-
-#endif  // ACE_TYPES_PLUGIN_H_

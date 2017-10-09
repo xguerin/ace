@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/ini/Object.h>
-#include <ace/formats/ini/Common.h>
+#include "Object.h"
+#include "Common.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
 #include <ace/tree/Object.h>  // NOLINT

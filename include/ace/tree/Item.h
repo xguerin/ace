@@ -20,8 +20,7 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_TREE_ITEM_H_
-#define ACE_TREE_ITEM_H_
+#pragma once
 
 #include <memory>
 #include <string>
@@ -91,5 +90,3 @@ operator<<(std::ostream & o, Item const & p);
 } // namespace path
 } // namespace tree
 } // namespace ace
-
-#endif  // ACE_TREE_ITEM_H_

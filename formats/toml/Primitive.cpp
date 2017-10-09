@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/toml/Primitive.h>
+#include "Primitive.h"
 #include <ace/common/String.h>
-#include <ace/tree/Primitive.h> // NOLINT
+#include <ace/tree/Primitive.h>
 #include <sstream>
 #include <string>
 

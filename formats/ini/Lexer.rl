@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-#include <ace/formats/ini/Lexer.h>
-#include <ace/formats/ini/Ini.h>
+#include "Lexer.h"
+#include "Ini.h"
 #include <iostream>
 #include <stdexcept>
 #include <string>

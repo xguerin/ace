@@ -172,5 +172,4 @@ endif ()
 install(
   DIRECTORY   include/ace
   DESTINATION include 
-  PATTERN     "formats" EXCLUDE
   )

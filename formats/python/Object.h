@@ -20,31 +20,19 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_TOML_COMMON_H_
-#define ACE_FORMATS_TOML_COMMON_H_
+#pragma once
 
-#include "Toml.h"
-#include <ace/tree/Scanner.h>
+#include <Python.h>
+#include <ace/tree/Object.h>
 #include <string>
 
 namespace ace {
-namespace tomlfmt {
-namespace Common {
+namespace pyfmt {
+namespace Object {
 
-tree::Value::Ref
-build(std::string const & name, toml::Value const & value);
+tree::Value::Ref build(std::string const & n, PyObject * o);
+void dump(tree::Value const & v, std::ostream & o, int l, bool i);
 
-tree::Value::Ref
-parseFile(std::string const & path);
-
-tree::Value::Ref
-parseString(std::string const & str);
-
-toml::Value
-dump(tree::Value const & v);
-
-} // namespace Common
-} // namespace inifmt
+} // namespace Object
+} // namespace pyfmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_TOML_COMMON_H_

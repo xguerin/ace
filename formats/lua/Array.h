@@ -20,25 +20,24 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_JSON_OBJECT_H_
-#define ACE_FORMATS_JSON_OBJECT_H_
+#pragma once
 
-#include <ace/tree/Scanner.h>
+#include <ace/tree/Array.h> // NOLINT
 #include <string>
-#include <jansson.h>
+
+extern "C" {
+#include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+}
 
 namespace ace {
-namespace jsonfmt {
-namespace Object {
+namespace luafmt {
+namespace Array {
 
-tree::Value::Ref
-build(std::string const & name, json_t * const value);
+tree::Value::Ref build(std::string const & n, lua_State * L);
+void dump(tree::Value const & v, std::ostream & o, int l, bool i);
 
-json_t *
-dump(tree::Value const & v);
-
-} // namespace Object
-} // namespace jsonfmt
+} // namespace Array
+} // namespace luafmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_JSON_OBJECT_H_

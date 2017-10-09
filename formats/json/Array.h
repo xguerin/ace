@@ -20,25 +20,22 @@
  * SOFTWARE.
  */
 
-#ifndef ACE_FORMATS_JSON_PRIMITIVE_H_
-#define ACE_FORMATS_JSON_PRIMITIVE_H_
+#pragma once
 
-#include <ace/tree/Scanner.h> // NOLINT
+#include <ace/tree/Scanner.h>
 #include <string>
 #include <jansson.h>
 
 namespace ace {
 namespace jsonfmt {
-namespace Primitive {
+namespace Array {
 
 tree::Value::Ref
-build(std::string const & name, json_t * const pri);
+build(std::string const & name, json_t * const ary);
 
 json_t *
 dump(tree::Value const & v);
 
-} // namespace Primitive
+} // namespace Array
 } // namespace jsonfmt
 } // namespace ace
-
-#endif  // ACE_FORMATS_JSON_PRIMITIVE_H_
