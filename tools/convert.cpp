@@ -45,7 +45,7 @@ load(std::string const & path, int argc, char * argv[]) {
   }
   ace::tree::Value::Ref svr = MASTER.scannerByExtension(path).open(path, argc, argv);
   if (svr.get() == nullptr) {
-    ACE_LOG(Error, "Can!open configuration file \"" + path + "\"");
+    ACE_LOG(Error, "Cannot open configuration file \"" + path + "\"");
     return ace::tree::Value::Ref();
   }
   return svr;

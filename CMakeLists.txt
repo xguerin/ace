@@ -39,11 +39,12 @@ message(STATUS "Build version: " ${VERSION_SHORT})
 # Options
 #
 
-option(ACE_PLUGIN_JSON    "Enable JSON configuration plugin"    ON)
-option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"     ON)
-option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin"  ON)
-option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"    ON)
-option(ACE_BUILD_TESTS    "Build the Google tests suite"        OFF)
+option(ACE_PLUGIN_JSON    "Enable JSON configuration plugin"   ON)
+option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"    ON)
+option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
+option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
+option(ACE_PLUGIN_INI     "Enable INI configuration plugin"    ON)
+option(ACE_BUILD_TESTS    "Build the Google tests suite"       OFF)
 
 #
 # Global definitions
@@ -140,6 +141,10 @@ endif ()
 
 if (ACE_PLUGIN_TOML OR ACE_BUILD_TESTS)
   add_subdirectory(formats/toml)
+endif ()
+
+if (ACE_PLUGIN_INI OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/ini)
 endif ()
 
 if (ACE_BUILD_TESTS)
