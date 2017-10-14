@@ -74,7 +74,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
   # Get some packages from brew
   #
-  brew install cmake lua51 python tclap re2 ragel jansson
+  brew install cmake lua python tclap re2 ragel jansson
 
   # Access the package directory
   #
@@ -98,7 +98,7 @@ else
 
   # Get some packages from apt
   #
-  sudo apt-get install liblua5.1-0-dev libtclap-dev libjansson-dev
+  sudo apt-get install liblua5.2-dev libtclap-dev libjansson-dev
 
   # Access the package directory
   #

@@ -60,7 +60,7 @@ Scanner::open(std::string const & fn, int argc, char ** argv) {
     return nullptr;
   }
   tree::Value::Ref obj;
-  lua_State * L = lua_open();
+  lua_State * L = luaL_newstate();
   luaL_openlibs(L);
   shift(fn, argc, argv);
   build_args(L, argc, argv);
@@ -92,7 +92,7 @@ Scanner::parse(std::string const & s, int argc, char ** argv) {
     return nullptr;
   }
   tree::Value::Ref obj;
-  lua_State * L = lua_open();
+  lua_State * L = luaL_newstate();
   luaL_openlibs(L);
   shift("", argc, argv);
   build_args(L, argc, argv);

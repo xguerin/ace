@@ -109,7 +109,7 @@ if (ACE_PLUGIN_JSON)
 endif ()
 
 if (ACE_PLUGIN_LUA)
-  find_package(Lua51 REQUIRED)
+  find_package(Lua52 REQUIRED)
 endif ()
 
 if (ACE_PLUGIN_PYTHON)

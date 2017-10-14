@@ -37,6 +37,16 @@ import ycm_core
 # compilation database set (by default, one is not set).
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
 flags = [
+  '-isystem',
+  '/Library/Developer/CommandLineTools/usr/include/c++/v1',
+  '-isystem',
+  '/usr/local/include',
+  '-isystem',
+  '/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include',
+  '-isystem',
+  '/Library/Developer/CommandLineTools/usr/include',
+  '-isystem',
+  '/usr/include'
 ]
 
 # Clang automatically sets the '-std=' flag to 'c++14' for MSVC 2015 or later,
