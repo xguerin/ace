@@ -59,7 +59,7 @@ class Master {
 
  public:
 
-  void addModelDirectory(common::Path const & p);
+  void addModelDirectory(fs::Path const & p);
   bool addInlinedModel(std::string const & k, std::string const & s);
 
   bool hasModel(std::string const & n) const;
@@ -73,7 +73,7 @@ class Master {
   bool addChildForPath(std::string const & path, std::string const & ch);
   std::set<std::string> childrenForPath(std::string const & p);
 
-  common::Path modelPathFor(common::Path const & p) const;
+  fs::Path modelPathFor(fs::Path const & p) const;
   std::string const & modelSourceFor(std::string const & n) const;
 
   bool addModelPathIntoContext(std::string const & mdp);

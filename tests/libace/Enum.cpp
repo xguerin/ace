@@ -26,7 +26,7 @@ class Enum : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("enum/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("enum/");
     MASTER.addModelDirectory(incPath);
   }
 

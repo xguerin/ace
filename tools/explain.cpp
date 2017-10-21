@@ -22,8 +22,8 @@
 
 #include <ace/common/Arguments.h>
 #include <ace/common/Log.h>
-#include <ace/common/Path.h>
 #include <ace/engine/Master.h>
+#include <ace/filesystem/Path.h>
 #include <ace/model/Model.h>
 #include <tclap/CmdLine.h>
 #include <iostream>
@@ -49,7 +49,7 @@ int main(int argc, char * argv[]) try {
   // update parameters
 
   for (auto & p : libPath.getValue()) {
-    MASTER.addModelDirectory(ace::common::Path(p, true));
+    MASTER.addModelDirectory(ace::fs::Path(p, true));
   }
 
   // Load the models

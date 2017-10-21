@@ -38,7 +38,7 @@
 namespace {
 
 static bool checkFileFormat(std::string const & n, std::string const & b) {
-  ace::common::Path nodePath(b);
+  ace::fs::Path nodePath(b);
   if (nodePath.isDirectory()) {
     ACE_LOG(Error, "uri \"", n, "\": ", ERR_FILE_URI_PATH_NOT_A_FILE(b));
     return false;

@@ -81,9 +81,9 @@ int main(int argc, char * argv[]) try {
   /**
    * Compute generation path
    */
-  ace::common::Path oPath(ace::fs::Directory().path());
+  ace::fs::Path oPath(ace::fs::Directory().path());
   if (genA.isSet()) {
-    oPath = ace::common::Path(genA.getValue(), true);
+    oPath = ace::fs::Path(genA.getValue(), true);
     if (!ace::fs::Directory(oPath).isValid()) {
       ACE_LOG(Error, "Invalid output directory \"", oPath, "\"");
       return -1;
@@ -95,7 +95,7 @@ int main(int argc, char * argv[]) try {
   for (auto & m : mdlA.getValue()) {
     MASTER.reset();
     for (auto & p : libA.getValue()) {
-      MASTER.addModelDirectory(ace::common::Path(p, true));
+      MASTER.addModelDirectory(ace::fs::Path(p, true));
     }
     ace::model::Model::Ref mdl = ace::model::Model::load(m);
     if (mdl == nullptr) {
@@ -109,7 +109,7 @@ int main(int argc, char * argv[]) try {
       mdl->collectModelFileDependencies(deps);
       auto generator = [&depOut, &oPath, &deps, &mdl](std::string const & p) {
         depOut << (oPath / p).compress() << ":";
-        ace::common::Path srcpath = MASTER.modelPathFor(mdl->filePath());
+        ace::fs::Path srcpath = MASTER.modelPathFor(mdl->filePath());
         depOut << "  \\" << std::endl;
         depOut << "  " << srcpath.compress();
         for (auto & d : deps) {

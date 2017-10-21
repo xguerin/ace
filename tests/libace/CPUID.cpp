@@ -26,7 +26,7 @@ class CPUID : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("cpuid/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("cpuid/");
     MASTER.addModelDirectory(incPath);
   }
 

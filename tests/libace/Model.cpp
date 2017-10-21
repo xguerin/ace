@@ -26,7 +26,7 @@ class Model : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("model/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("model/");
     MASTER.addModelDirectory(incPath);
   }
 

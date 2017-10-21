@@ -26,7 +26,7 @@ class Float : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("float/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("float/");
     MASTER.addModelDirectory(incPath);
   }
 

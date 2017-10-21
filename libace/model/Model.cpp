@@ -328,7 +328,7 @@ Model::implementationIncludeStatement(bool global) const {
 std::string
 Model::headerGuard(std::string const & n) const {
   std::ostringstream oss;
-  common::Path p(m_header.package());
+  fs::Path p(m_header.package());
   for (auto & e : p) if (not e.empty()) oss << common::String::normalize(e) << "_";
   oss << n << "_AC_H_";
   std::string hdr(oss.str());
@@ -361,7 +361,7 @@ Model::check(const Object * o, std::string const & n) {
     ACE_LOG(Debug, "Check inlined model \"", n, "\"");
     root = MASTER.scannerByExtension(n).parse(MASTER.modelSourceFor(n), 0, nullptr);
   } else if (MASTER.hasModel(n)) {
-    common::Path path = MASTER.modelPathFor(n);
+    fs::Path path = MASTER.modelPathFor(n);
     ACE_LOG(Debug, "Check model \"", n, "\" @ PATH -> ", path);
     root = MASTER.scannerByExtension(n).open(path.toString(), 0, nullptr);
   }
@@ -369,7 +369,7 @@ Model::check(const Object * o, std::string const & n) {
     ACE_LOG(Warning, "Model \"", n, "\" not found, either inline or in the search path");
     return false;
   }
-  Model aModel(*common::Path(n).rbegin());
+  Model aModel(*fs::Path(n).rbegin());
   aModel.setParent(o);
   if (not aModel.checkModel(*root)) return false;
   return true;
@@ -382,11 +382,11 @@ Model::load(Object * o, std::string const & n) {
     ACE_LOG(Debug, "Load inlined model \"", n, "\"");
     root = MASTER.scannerByExtension(n).parse(MASTER.modelSourceFor(n), 0, nullptr);
   } else if (MASTER.hasModel(n)) {
-    common::Path path = MASTER.modelPathFor(n);
+    fs::Path path = MASTER.modelPathFor(n);
     ACE_LOG(Debug, "Load model \"", n, "\" @ PATH -> ", path);
     root = MASTER.scannerByExtension(n).open(path.toString(), 0, nullptr);
   }
-  Model::Ref aModel(new Model(*common::Path(n).rbegin()));
+  Model::Ref aModel(new Model(*fs::Path(n).rbegin()));
   aModel->setParent(o);
   aModel->loadModel(*root);
   return aModel;
@@ -447,10 +447,10 @@ Model::isAnAncestor(Model const & m) const {
 }
 
 void
-Model::generateInterface(common::Path const & p) const {
+Model::generateInterface(fs::Path const & p) const {
   fs::Directory dir(p);
-  if (not dir.isValid()) dir = fs::Directory((common::Path(".", true)));
-  std::string hp = (dir.path() / common::Path(interfaceHeaderName())).toString();
+  if (not dir.isValid()) dir = fs::Directory((fs::Path(".", true)));
+  std::string hp = (dir.path() / fs::Path(interfaceHeaderName())).toString();
   std::ofstream hofs;
   hofs.open(hp, std::ofstream::trunc);
   generateInterfaceHeader(hofs);
@@ -458,15 +458,15 @@ Model::generateInterface(common::Path const & p) const {
 }
 
 void
-Model::generateImplementation(common::Path const & p) const {
+Model::generateImplementation(fs::Path const & p) const {
   fs::Directory dir(p);
-  if (not dir.isValid()) dir = fs::Directory((common::Path(".", true)));
-  std::string hp = (dir.path() / common::Path(implementationHeaderName())).toString();
+  if (not dir.isValid()) dir = fs::Directory((fs::Path(".", true)));
+  std::string hp = (dir.path() / fs::Path(implementationHeaderName())).toString();
   std::ofstream hofs;
   hofs.open(hp, std::ofstream::trunc);
   generateImplementationHeader(hofs);
   hofs.close();
-  std::string cp = (dir.path() / common::Path(implementationSourceName())).toString();
+  std::string cp = (dir.path() / fs::Path(implementationSourceName())).toString();
   std::ofstream cofs;
   cofs.open(cp, std::ofstream::trunc);
   generateImplementationSource(cofs);

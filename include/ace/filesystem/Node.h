@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <ace/common/Path.h>
+#include <ace/filesystem/Path.h>
 #include <string>
 #include <sys/stat.h>
 
@@ -64,28 +64,28 @@ class Node {
   virtual ~Node();
 
   virtual bool isValid() const;
-  common::Path const & path() const;
+  fs::Path const & path() const;
 
   Type type() const;
-  static Type type(common::Path const & p, const bool follow = true);
+  static Type type(fs::Path const & p, const bool follow = true);
 
   Permission permissions() const;
-  static Permission permissions(common::Path const & p, const bool follow = true);
+  static Permission permissions(fs::Path const & p, const bool follow = true);
 
   static Type parseType(std::string const & s);
   static std::string toString(const Type t);
 
   uid_t userID() const;
-  static uid_t userID(common::Path const & p, const bool follow = true);
+  static uid_t userID(fs::Path const & p, const bool follow = true);
 
   gid_t groupID() const;
-  static gid_t groupID(common::Path const & p, const bool follow = true);
+  static gid_t groupID(fs::Path const & p, const bool follow = true);
 
   bool readable() const;
-  static bool readable(common::Path const & p, const bool follow = true);
+  static bool readable(fs::Path const & p, const bool follow = true);
 
   bool writeable() const;
-  static bool writeable(common::Path const & p, const bool follow = true);
+  static bool writeable(fs::Path const & p, const bool follow = true);
 
   Node parent() const;
 
@@ -97,7 +97,7 @@ class Node {
   static Permission permissions(mode_t mode);
 
   int           m_fd;
-  common::Path  m_path;
+  fs::Path  m_path;
 };
 
 std::ostream &

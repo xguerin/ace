@@ -22,8 +22,8 @@
 
 #include <ace/engine/Master.h>
 #include <ace/common/Log.h>
-#include <ace/common/Path.h>
 #include <ace/common/String.h>
+#include <ace/filesystem/Path.h>
 #include <ace/filesystem/Utils.h>
 #include <ace/model/Model.h>
 #include <ace/tree/Array.h>
@@ -91,7 +91,7 @@ Master::Master()
 }
 
 void
-Master::addModelDirectory(common::Path const & p) {
+Master::addModelDirectory(fs::Path const & p) {
   if (p.isDirectory()) {
     fs::Directory adir(p);
     if (adir.isValid()) {
@@ -120,7 +120,7 @@ Master::addInlinedModel(std::string const & k, std::string const & s) {
 bool
 Master::hasModel(std::string const & n) const {
   if (m_inlineModels.find(n) != m_inlineModels.end()) return true;
-  common::Path path(n);
+  fs::Path path(n);
   for (auto & e : m_modelDirs) if (e.has(path)) return true;
   return false;
 }
@@ -162,12 +162,12 @@ Master::childrenForPath(std::string const & p) {
   return result;
 }
 
-common::Path
-Master::modelPathFor(common::Path const & p) const {
+fs::Path
+Master::modelPathFor(fs::Path const & p) const {
   for (auto & e : m_modelDirs) if (e.has(p)) {
     return e.path() / p;
   }
-  return common::Path();
+  return fs::Path();
 }
 
 std::string const &
@@ -338,7 +338,7 @@ Master::pushUnexpected(std::string const & p) {
 
 void
 Master::loadPluginsAtPath(std::string const & path) {
-  common::Path libpath(path);
+  fs::Path libpath(path);
   fs::Directory dir(libpath);
   dir.each([&](ace::fs::Node const & node) {
     if (ace::fs::Node::type(node.path(), false) != ace::fs::Node::Type::Regular) {

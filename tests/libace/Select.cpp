@@ -26,9 +26,9 @@ class Select : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("select/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("select/");
     MASTER.addModelDirectory(incPath);
-    incPath = ace::fs::Directory().path() / ace::common::Path("includes/");
+    incPath = ace::fs::Directory().path() / ace::fs::Path("includes/");
     MASTER.addModelDirectory(incPath);
   }
 

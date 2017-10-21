@@ -26,9 +26,9 @@ class Plugin : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("plugin/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("plugin/");
     MASTER.addModelDirectory(incPath);
-    incPath = ace::fs::Directory().path() / ace::common::Path("includes/");
+    incPath = ace::fs::Directory().path() / ace::fs::Path("includes/");
     MASTER.addModelDirectory(incPath);
   }
 
@@ -152,9 +152,9 @@ class PluginWithPreload : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("plugin/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("plugin/");
     MASTER.addModelDirectory(incPath);
-    incPath = ace::fs::Directory().path() / ace::common::Path("includes/");
+    incPath = ace::fs::Directory().path() / ace::fs::Path("includes/");
     MASTER.addModelDirectory(incPath);
   }
 

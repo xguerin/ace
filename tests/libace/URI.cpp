@@ -26,7 +26,7 @@ class URI : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("uri/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("uri/");
     MASTER.addModelDirectory(incPath);
   }
 

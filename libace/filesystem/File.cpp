@@ -31,16 +31,16 @@
 namespace ace {
 namespace fs {
 
-File::File(common::Path const & p) : Node() {
+File::File(fs::Path const & p) : Node() {
   if (not p.empty() and not p.isDirectory()) {
-    common::Path fullPath(p);
+    fs::Path fullPath(p);
     if (not p.isAbsolute()) {
       char buffer[PATH_MAX];
       bzero(buffer, PATH_MAX);
       getcwd(buffer, PATH_MAX);
       std::string base(buffer);
       if (*base.rbegin() != '/') base += "/";
-      fullPath = common::Path(base) / p;
+      fullPath = fs::Path(base) / p;
     }
     m_fd = open(fullPath.toString().c_str(), 0, O_RDWR);
     m_path = fullPath;
@@ -50,7 +50,7 @@ File::File(common::Path const & p) : Node() {
 Node
 File::parent() const {
   if (m_fd == -1) return Node();
-  common::Path up("/");
+  fs::Path up("/");
   if (m_path != up) up = m_path.prune();
   return fs::Directory(up);
 }

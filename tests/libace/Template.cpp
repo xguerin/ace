@@ -26,7 +26,7 @@ class Template : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("template/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("template/");
     MASTER.addModelDirectory(incPath);
   }
 

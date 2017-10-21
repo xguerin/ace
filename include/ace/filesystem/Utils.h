@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <ace/common/Path.h>
+#include <ace/filesystem/Path.h>
 #include <string>
 
 namespace ace {
@@ -30,7 +30,7 @@ namespace fs {
 namespace Utils {
 
 bool
-canSelfCreate(common::Path const & p);
+canSelfCreate(fs::Path const & p);
 
 /**
  * @brief Get the prefix of the running process

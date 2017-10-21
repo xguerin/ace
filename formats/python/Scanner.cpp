@@ -25,9 +25,9 @@
 #include "Common.h"
 #include "Object.h"
 #include <ace/common/Log.h>
-#include <ace/common/Path.h>
 #include <ace/common/String.h>
 #include <ace/engine/Master.h>
+#include <ace/filesystem/Path.h>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -48,7 +48,7 @@ Scanner::open(std::string const & fn, int argc, char ** argv) {
   shift(fn, argc, argv);
   PySys_SetArgv(argc, argv);
 
-  common::Path fnPath(fn), container = fnPath.prune();
+  fs::Path fnPath(fn), container = fnPath.prune();
   std::string path = container.toString();
   if (path.empty()) path = ".";
   path = path + ":" + std::string(Py_GetPath());

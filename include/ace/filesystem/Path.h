@@ -5,7 +5,7 @@
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+filesystem* copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in
@@ -27,7 +27,7 @@
 #include <vector>
 
 namespace ace {
-namespace common {
+namespace fs {
 
 class Path {
  public:
@@ -98,5 +98,5 @@ class Path {
 std::ostream &
 operator<<(std::ostream & o, Path const & p);
 
-} // namespace json
+} // namespace fs
 } // namespace ace

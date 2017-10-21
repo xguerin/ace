@@ -21,7 +21,7 @@
  */
 
 #include "Node.h"
-#include <ace/common/Path.h>
+#include <ace/filesystem/Path.h>
 
 namespace ace {
 namespace fs {
@@ -30,7 +30,7 @@ class File : public Node {
  public:
 
   File() = default;
-  explicit File(common::Path const & p);
+  explicit File(fs::Path const & p);
 
   Node parent() const;
 };

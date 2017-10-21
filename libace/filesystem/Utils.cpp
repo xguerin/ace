@@ -39,8 +39,8 @@ namespace fs {
 namespace Utils {
 
 bool
-canSelfCreate(common::Path const & p) {
-  common::Path fullPath(p);
+canSelfCreate(fs::Path const & p) {
+  fs::Path fullPath(p);
   if (not p.isAbsolute()) fullPath = fs::Directory().path() / p;
 
   if (fullPath.isDirectory() and fs::Directory(fullPath).isValid()) {
@@ -61,7 +61,7 @@ canSelfCreate(common::Path const & p) {
       if (dir.userID() == uid and dir.permissions() & Node::Permission::UserWrite) return true;
       return false;
     }
-  } while (fullPath != common::Path("/"));
+  } while (fullPath != fs::Path("/"));
 
   return false;
 }

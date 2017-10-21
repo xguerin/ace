@@ -26,7 +26,7 @@ class Range : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("range/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("range/");
     MASTER.addModelDirectory(incPath);
   }
 

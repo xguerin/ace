@@ -26,7 +26,6 @@
 #include "Object.h"
 #include "Primitive.h"
 #include <ace/common/Log.h>
-#include <ace/common/Path.h>
 #include <ace/common/Regex.h>
 #include <ace/engine/Master.h>
 #include <cstdlib>

@@ -27,7 +27,7 @@
 #include "Header.h"
 #include "Instance.h"
 #include "Object.h"
-#include <ace/common/Path.h>
+#include <ace/filesystem/Path.h>
 #include <list>
 #include <memory>
 #include <set>
@@ -87,8 +87,8 @@ class Model : public Object, public Instance, public Coach {
   std::string interfaceIncludeStatement(bool global) const;
   std::string implementationIncludeStatement(bool global) const;
 
-  void generateInterface(common::Path const & path) const;
-  void generateImplementation(common::Path const & path) const;
+  void generateInterface(fs::Path const & path) const;
+  void generateImplementation(fs::Path const & path) const;
 
   void collectModelFileDependencies(std::set<std::string> & d) const;
 

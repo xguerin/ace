@@ -26,7 +26,7 @@ class MAC : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("mac/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("mac/");
     MASTER.addModelDirectory(incPath);
   }
 

@@ -23,7 +23,7 @@
 #pragma once
 
 #include "Node.h"
-#include <ace/common/Path.h>
+#include <ace/filesystem/Path.h>
 #include <functional>
 
 namespace ace {
@@ -33,10 +33,10 @@ class Directory : public Node {
  public:
 
   Directory();
-  explicit Directory(common::Path const & p);
+  explicit Directory(fs::Path const & p);
 
-  bool has(common::Path const & fp) const;
-  Node get(common::Path const & fp) const;
+  bool has(fs::Path const & fp) const;
+  Node get(fs::Path const & fp) const;
 
   void each(std::function<void(Node const &)> op) const;
 
@@ -44,7 +44,7 @@ class Directory : public Node {
 
  private:
 
-  bool has(common::Path const & p, common::Path::const_iterator const & i) const;
+  bool has(fs::Path const & p, fs::Path::const_iterator const & i) const;
 };
 
 } // namespace fs

@@ -40,20 +40,20 @@ Directory::Directory() : Node() {
   getcwd(buffer, PATH_MAX);
   std::string base(buffer);
   if (*base.rbegin() != '/') base += "/";
-  m_path = common::Path(base);
+  m_path = fs::Path(base);
   m_fd = open(m_path.toString().c_str(), 0, O_RDWR);
 }
 
-Directory::Directory(common::Path const & p) : Node() {
+Directory::Directory(fs::Path const & p) : Node() {
   if (not p.empty() and p.isDirectory()) {
-    common::Path fullPath(p);
+    fs::Path fullPath(p);
     if (not p.isAbsolute()) {
       char buffer[PATH_MAX];
       bzero(buffer, PATH_MAX);
       getcwd(buffer, PATH_MAX);
       std::string base(buffer);
       if (*base.rbegin() != '/') base += "/";
-      fullPath = common::Path(base) / p;
+      fullPath = fs::Path(base) / p;
     }
     DIR * dir = opendir(fullPath.toString().c_str());
     if (dir != nullptr) {
@@ -64,7 +64,7 @@ Directory::Directory(common::Path const & p) : Node() {
   }
 }
 
-bool Directory::has(common::Path const & p) const {
+bool Directory::has(fs::Path const & p) const {
   return has(p, p.begin());
 }
 
@@ -80,9 +80,9 @@ void Directory::each(std::function<void(Node const &)> op) const {
   rewinddir(dir);
   while ((ep = readdir(dir)) != nullptr) {
     if (ep->d_type == DT_DIR) {
-      op(fs::Directory(m_path / common::Path(ep->d_name, true)));
+      op(fs::Directory(m_path / fs::Path(ep->d_name, true)));
     } else {
-      op(fs::File(m_path / common::Path(ep->d_name)));
+      op(fs::File(m_path / fs::Path(ep->d_name)));
     }
   }
   /**
@@ -93,7 +93,7 @@ void Directory::each(std::function<void(Node const &)> op) const {
   close(ofd);
 }
 
-bool Directory::has(common::Path const & p, common::Path::const_iterator const & i) const {
+bool Directory::has(fs::Path const & p, fs::Path::const_iterator const & i) const {
   if (p.isAbsolute()) return false;
   if (i->empty()) return true;
   int ofd = dup(m_fd);
@@ -108,7 +108,7 @@ bool Directory::has(common::Path const & p, common::Path::const_iterator const &
   struct dirent * ep;
   while ((ep = readdir(dir)) != nullptr) if (*i == ep->d_name) {
     if (p.down(i) != p.end()) {
-      result = Directory(m_path / common::Path(*i, true)).has(p, p.down(i));
+      result = Directory(m_path / fs::Path(*i, true)).has(p, p.down(i));
       break;
     } else {
       result = ep->d_type != DT_DIR;
@@ -127,7 +127,7 @@ bool Directory::has(common::Path const & p, common::Path::const_iterator const &
 Node
 Directory::parent() const {
   if (m_fd == -1) return Node();
-  common::Path up("/");
+  fs::Path up("/");
   if (m_path != up) up = m_path.prune();
   return fs::Directory(up);
 }

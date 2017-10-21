@@ -26,7 +26,7 @@ class Default : public ::testing::Test {
  public:
   static void SetUpTestCase() {
     MASTER.reset();
-    ace::common::Path incPath = ace::fs::Directory().path() / ace::common::Path("default/");
+    ace::fs::Path incPath = ace::fs::Directory().path() / ace::fs::Path("default/");
     MASTER.addModelDirectory(incPath);
   }
 

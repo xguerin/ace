@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) try {
   // Update parameters
 
   for (auto & p : libPath.getValue()) {
-    MASTER.addModelDirectory(ace::common::Path(p, true));
+    MASTER.addModelDirectory(ace::fs::Path(p, true));
   }
 
   // Load the models

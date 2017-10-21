@@ -44,7 +44,7 @@ namespace model {
 bool
 FileTypeCompare::operator() (std::string const & a, std::string const & b) const {
   if (a == "auto") return true;
-  common::Path path(a);
+  fs::Path path(a);
   fs::Node::Type t = fs::Node::type(a);
   if (t != fs::Node::Type::Unknown) {
     return fs::Node::toString(t) == b;
@@ -74,7 +74,7 @@ bool
 FileFormatChecker::checkFormat(std::string const & n, std::string const & b) const {
   File const & file = *dynamic_cast<const File *>(m_owner);
   int flags = file.fileModeAttribute().flags();
-  auto path = common::Path(b);
+  auto path = fs::Path(b);
   switch (fs::Node::type(path)) {
     case fs::Node::Type::Unknown : {
       if ((flags & O_CREAT) == 0) {

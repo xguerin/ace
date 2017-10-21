@@ -44,7 +44,7 @@ Node::isValid() const {
   return m_fd != -1;
 }
 
-common::Path const &
+fs::Path const &
 Node::path() const {
   return m_path;
 }
@@ -66,7 +66,7 @@ Node::permissions() const {
 }
 
 Node::Type
-Node::type(common::Path const & p, const bool follow) {
+Node::type(fs::Path const & p, const bool follow) {
   struct stat st;
   if (follow) {
     if (stat(p.toString().c_str(), & st) != 0) return Type::Unknown;
@@ -77,7 +77,7 @@ Node::type(common::Path const & p, const bool follow) {
 }
 
 Node::Permission
-Node::permissions(common::Path const & p, const bool follow) {
+Node::permissions(fs::Path const & p, const bool follow) {
   struct stat st;
   if (follow) {
     if (stat(p.toString().c_str(), & st) != 0) return Permission::None;
@@ -122,7 +122,7 @@ Node::userID() const {
 }
 
 uid_t
-Node::userID(common::Path const & p, const bool follow) {
+Node::userID(fs::Path const & p, const bool follow) {
   struct stat st;
   if (follow) {
     if (stat(p.toString().c_str(), & st) != 0) return -1;
@@ -141,7 +141,7 @@ Node::groupID() const {
 }
 
 gid_t
-Node::groupID(common::Path const & p, const bool follow) {
+Node::groupID(fs::Path const & p, const bool follow) {
   struct stat st;
   if (follow) {
     if (stat(p.toString().c_str(), & st) != 0) return -1;
@@ -169,7 +169,7 @@ Node::readable() const {
 }
 
 bool
-Node::readable(common::Path const & p, const bool follow) {
+Node::readable(fs::Path const & p, const bool follow) {
   auto perms = permissions(p, follow);
   if (perms & Permission::OtherRead) {
     return true;
@@ -203,7 +203,7 @@ Node::writeable() const {
 }
 
 bool
-Node::writeable(common::Path const & p, const bool follow) {
+Node::writeable(fs::Path const & p, const bool follow) {
   auto perms = permissions(p, follow);
   if (perms & Permission::OtherWrite) {
     return true;

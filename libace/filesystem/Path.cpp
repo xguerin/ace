@@ -20,18 +20,18 @@
  * SOFTWARE.
  */
 
-#include <ace/common/Path.h>
+#include <ace/filesystem/Path.h>
 #include <ace/common/String.h>
 #include <sstream>
 #include <string>
 #include <vector>
 
 namespace ace {
-namespace common {
+namespace fs {
 
 Path::Path(std::string const & v, bool enforceDir) : Path() {
   std::vector<std::string> elems;
-  String::split(v, '/', elems);
+  common::String::split(v, '/', elems);
   for (size_t i = 0; i < elems.size(); i += 1) {
     if (not elems[i].empty() || (elems[i].empty() && (i == 0 or i == elems.size() -1))) {
       m_elements.push_back(elems[i]);
@@ -256,5 +256,5 @@ Path::down(const_reverse_iterator const & i) const {
   return --n;
 }
 
-} // namespace json
+} // namespace fs
 } // namespace ace
