@@ -100,7 +100,7 @@ build(std::string const & name, sexp::Value::Ref const & v) {
       } else {
         return Array::build(name, v);
       }
-    } break;
+    }
   }
   return nullptr;
 }
@@ -111,25 +111,25 @@ dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
   switch (v.type()) {
     case tree::Value::Type::Boolean : {
       return sexpfmt::Primitive::dump(v, f, indent, o);
-    } break;
+    }
     case tree::Value::Type::String : {
       return sexpfmt::Primitive::dump(v, f, indent, o);
-    } break;
+    }
     case tree::Value::Type::Integer : {
       return sexpfmt::Primitive::dump(v, f, indent, o);
-    } break;
+    }
     case tree::Value::Type::Float : {
       return sexpfmt::Primitive::dump(v, f, indent, o);
-    } break;
+    }
     case tree::Value::Type::Object : {
       return sexpfmt::Object::dump(v, f, indent, o);
-    } break;
+    }
     case tree::Value::Type::Array : {
       return sexpfmt::Array::dump(v, f, indent, o);
-    } break;
+    }
     default : {
       return 0;
-    } break;
+    }
   }
 }
 

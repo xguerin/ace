@@ -56,7 +56,7 @@ Plugin::match(tree::Path const & path) const {
 Class const &
 Plugin::getClassFor(tree::Path const & path) const {
   for (auto & e : m_plugins) if (e.first.match(path)) {
-    return *e.second;;
+    return *e.second;
   }
   throw std::invalid_argument(path);
 }

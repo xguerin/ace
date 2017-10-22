@@ -45,7 +45,7 @@ build(std::string const & n, lua_State * L) {
     case LUA_TBOOLEAN: {
       bool v = lua_toboolean(L, -1);
       return tree::Primitive::build(n, v);
-    } break;
+    }
     case LUA_TNUMBER: {
       std::string v(lua_tostring(L, -1));
       if (common::String::is<double>(v)) {
@@ -55,13 +55,12 @@ build(std::string const & n, lua_State * L) {
         long w = common::String::value<long>(v);
         return tree::Primitive::build(n, w);
       }
-    } break;
+    }
     case LUA_TSTRING: {
       std::string v(lua_tostring(L, -1));
       return tree::Primitive::build(n, v);
-    } break;
-    default:
-      break;
+    }
+    default: break;
   }
   return tree::Value::Ref();
 }

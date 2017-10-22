@@ -79,8 +79,6 @@ parse(std::vector<std::string> const & paths) {
           std::cout << e->range().steps;
           std::cout << ")";
         } break;
-        default : {
-        } break;
       }
     }
     std::cout << std::endl;

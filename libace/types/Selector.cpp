@@ -194,11 +194,12 @@ Selector::explain(tree::Path const & p, tree::Path::const_iterator const & i) co
         std::string const & n = templateAttribute().head();
         return model->templates().get(n).explain(p, p.down(i));
       }
-    } break;
+      break;
+    }
     case tree::path::Item::Type::Any : {
       std::string const & n = templateAttribute().head();
       return model->templates().get(n).explain(p, p.down(i));
-    } break;
+    }
     default: break;
   }
   return false;
