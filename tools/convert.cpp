@@ -52,14 +52,15 @@ load(std::string const & path, int argc, char * argv[]) {
 }
 
 static bool
-convert(std::string const & filename, ace::tree::Value const & v) {
+convert(std::string const & filename, ace::tree::Value const & v, const bool c) {
   std::ofstream ofs;
   ofs.open(filename);
   if (ofs.fail()) {
     ACE_LOG(Error, "Can!open file ", filename, " for writing");
     return false;
   }
-  MASTER.scannerByExtension(filename).dump(v, ace::tree::Scanner::Format::Default, ofs);
+  auto f = c ? ace::tree::Scanner::Format::Compact : ace::tree::Scanner::Format::Default;
+  MASTER.scannerByExtension(filename).dump(v, f, ofs);
   ofs.close();
   return true;
 }
@@ -71,6 +72,7 @@ template<typename T> using UA = TCLAP::UnlabeledValueArg<T>;
 
 int main(int argc, char * argv[]) try {
   TCLAP::CmdLine cmd("Advanced Configuration Converter", ' ', ACE_VERSION);
+  SA              comA("c", "compact", "Compact output", cmd);
   VA<std::string> outA("o", "output", "Output file", true, "", "NAME.EXT", cmd);
   SA              vrbA("v", "verbose", "Verbose mode", cmd);
   UA<std::string> cfgA("config", "Configuration file", true, "", "string", cmd);
@@ -95,7 +97,7 @@ int main(int argc, char * argv[]) try {
   /**
    * convert the file
    */
-  return convert(outA.getValue(), *root) ? 0 : 1;
+  return convert(outA.getValue(), *root, comA.isSet()) ? 0 : 1;
 }
 catch (TCLAP::ArgException const & e) {
   ACE_LOG(Error, e.error(), " for argument ", e.argId());

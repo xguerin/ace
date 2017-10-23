@@ -45,6 +45,8 @@ flags = [
 if platform.system() != 'Windows':
   flags.append( '-std=c++11' )
 
+def DirectoryOfThisScript():
+  return os.path.dirname( os.path.abspath( __file__ ) )
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
 # compile_commands.json file to use that instead of 'flags'. See here for
@@ -56,7 +58,7 @@ if platform.system() != 'Windows':
 #
 # Most projects will NOT need to set this to anything; you can just change the
 # 'flags' list of compilation flags. Notice that YCM itself uses that approach.
-compilation_database_folder = '_build'
+compilation_database_folder = DirectoryOfThisScript() + '/_build'
 
 if os.path.exists( compilation_database_folder ):
   database = ycm_core.CompilationDatabase( compilation_database_folder )
@@ -64,10 +66,6 @@ else:
   database = None
 
 SOURCE_EXTENSIONS = [ '.cpp', '.c' ]
-
-def DirectoryOfThisScript():
-  return os.path.dirname( os.path.abspath( __file__ ) )
-
 
 def IsHeaderFile( filename ):
   extension = os.path.splitext( filename )[ 1 ]

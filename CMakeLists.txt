@@ -44,6 +44,7 @@ option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"    ON)
 option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
 option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
 option(ACE_PLUGIN_INI     "Enable INI configuration plugin"    ON)
+option(ACE_PLUGIN_SEXP    "Enable SEXP configuration plugin"   ON)
 option(ACE_BUILD_TESTS    "Build the Google tests suite"       OFF)
 
 #
@@ -145,6 +146,10 @@ endif ()
 
 if (ACE_PLUGIN_INI OR ACE_BUILD_TESTS)
   add_subdirectory(formats/ini)
+endif ()
+
+if (ACE_PLUGIN_SEXP OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/sexp)
 endif ()
 
 if (ACE_BUILD_TESTS)
