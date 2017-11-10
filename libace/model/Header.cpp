@@ -35,7 +35,7 @@
 namespace ace {
 namespace model {
 
-Header::Header() : m_author(), m_version(), m_doc() {
+Header::Header() : m_hasAuthor(false), m_author(), m_version(), m_doc() {
   m_author.setParent(this);
 }
 
@@ -48,7 +48,7 @@ bool
 Header::checkModel(tree::Value const & t) const {
   const ace::tree::Checker::Schema jsonSchema = {
     { "package"  , { ace::tree::Value::Type::Array , true  } },
-    { "author"   , { ace::tree::Value::Type::Object, false } },
+    { "author"   , { ace::tree::Value::Type::Object, true  } },
     { "namespace", { ace::tree::Value::Type::Array , true  } },
     { "include"  , { ace::tree::Value::Type::Array , true  } },
     { "trigger"  , { ace::tree::Value::Type::Array , true  } },
@@ -57,7 +57,7 @@ Header::checkModel(tree::Value const & t) const {
   };
   ace::tree::Checker chk(path(), t);
   if (not chk.validate(jsonSchema)) return false;
-  if (not m_author.checkModel(t["author"])) return false;
+  if (t.has("author") and not m_author.checkModel(t["author"])) return false;
   if (static_cast<tree::Primitive const &>(t["doc"]).value<std::string>().empty()) {
     ERROR(ERR_EMPTY_DOC);
     return false;
@@ -127,7 +127,10 @@ Header::checkModel(tree::Value const & t) const {
 void
 Header::loadModel(tree::Value const & t) {
   m_include.clear();
-  m_author.loadModel(t["author"]);
+  if (t.has("author")) {
+    m_hasAuthor = true;
+    m_author.loadModel(t["author"]);
+  }
   m_version = static_cast<tree::Primitive const &>(t["version"]).value<std::string>();
   m_doc = static_cast<tree::Primitive const &>(t["doc"]).value<std::string>();
   if (t.has("package")) for (auto & ex : static_cast<tree::Array const &>(t["package"])) {
@@ -156,7 +159,9 @@ Header::explain(tree::Path const & p, tree::Path::const_iterator const & i) cons
     }
     std::cout << std::endl;
   }
-  std::cout << " * Author  : " << m_author << std::endl;
+  if (m_hasAuthor) {
+    std::cout << " * Author  : " << m_author << std::endl;
+  }
   std::cout << " * Summary : " << m_doc << std::endl;
   return true;
 }
@@ -166,6 +171,11 @@ Header::package() const {
   std::ostringstream oss;
   for (auto & e : m_package) oss << e << "/";
   return oss.str();
+}
+
+bool
+Header::hasAuthor() const {
+  return m_hasAuthor;
 }
 
 Author const &

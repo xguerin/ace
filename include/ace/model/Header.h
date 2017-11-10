@@ -46,6 +46,7 @@ class Header : public Object, public Coach {
   bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
 
   std::string package() const;
+  bool hasAuthor() const;
   Author const & author() const;
   std::list<std::string> const & nameSpace() const;
   std::list<std::string> const & include() const;
@@ -56,6 +57,7 @@ class Header : public Object, public Coach {
  private:
 
   std::vector<std::string>  m_package;
+  bool                      m_hasAuthor;
   Author                    m_author;
   std::list<std::string>    m_nameSpace;
   std::list<std::string>    m_include;
