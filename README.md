@@ -7,3 +7,7 @@ ACE is a model-based authoring and validation environment for configurations. It
 #### Documentation
 
 The complete documentation can be found [here](http://xguer.in/ace).
+
+#### Appreciation
+
+Tokens of appreciation are gladly accepted in the form of [virtual coffee](https://buymeacoff.ee/xguerin).
