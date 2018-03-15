@@ -147,7 +147,7 @@ Selector::flattenInstance(tree::Object & r, tree::Value & v) {
   int score = 0;
   tree::Object & o = static_cast<tree::Object &>(v);
   /**
-   * We check the size of the objec there, and not in checkInstance because objects
+   * We check the size of the object there, and not in checkInstance because objects
    * can be automatically defaulted to empty objects when all there values can be
    * defaulted, and this step happens in Body::flattenInstance.
    */

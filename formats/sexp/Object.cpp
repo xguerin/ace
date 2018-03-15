@@ -42,6 +42,9 @@ is(sexp::Value::Ref const & v) {
   if (v == nullptr) {
     return false;
   }
+  if (sexp::List::NIL(v)) {
+    return false;
+  }
   /**
    * Now check all the entries
    */
@@ -55,7 +58,7 @@ is(sexp::Value::Ref const & v) {
     /**
      * E is a list, is it NIL ?
      */
-    if (e == sexp::List::NIL) {
+    if (sexp::List::NIL(e)) {
       break;
     }
     /**
@@ -109,7 +112,7 @@ build(std::string const & name, sexp::Value::Ref const & v) {
     /**
      * E is a list, is it NIL ?
      */
-    if (e == sexp::List::NIL) {
+    if (sexp::List::NIL(e)) {
       break;
     }
     /**

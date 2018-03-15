@@ -1,0 +1,18 @@
+{
+  "formats/*.cpp": {
+    "alternate": "formats/{}.h",
+    "type": "source"
+  },
+  "formats/*.h": {
+    "alternate": "formats/{}.cpp",
+    "type": "header"
+  },
+  "libace/*.cpp": {
+    "alternate": "include/ace/{}.h",
+    "type": "source"
+  },
+  "include/ace/*.h": {
+    "alternate": "src/{}.cpp",
+    "type": "header"
+  }
+}

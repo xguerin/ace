@@ -39,11 +39,11 @@ build(std::string const & name, sexp::Value::Ref const & v) {
   /**
    * Check all entries in the assoc list
    */
-  while (e != sexp::List::NIL) {
+  while (!sexp::List::NIL(e)) {
     switch (e->type()) {
       case sexp::Value::Type::Atom: {
         array->push_back(Common::build(std::to_string(index), e));
-        e = sexp::List::NIL;
+        e = sexp::Value::Ref(new sexp::List);
         index += 1;
       } break;
       case sexp::Value::Type::List: {

@@ -75,6 +75,11 @@ expr(A) ::= value_list(B).
 
 // Value list definition
 
+value_list(A) ::= OPENP CLOSEP.
+{
+  A = new ace::sexp::List;
+}
+
 value_list(A) ::= OPENP value_list_items(B) CLOSEP.
 {
   A = B;

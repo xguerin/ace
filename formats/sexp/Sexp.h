@@ -154,25 +154,24 @@ class Symbol : public Atom {
   std::string m_value;
 };
 
-
 /**
  * List class
  */
 class List : public Value {
  public:
 
-  static Value::Ref NIL;
-
+  List();
   List(Value::Ref const & v);
 
+  size_t     len() const;
   Value::Ref car() const;
   Value::Ref cdr() const;
 
   void append(Value::Ref const & v);
 
- private:
+  static bool NIL(Value::Ref const & r);
 
-  List();
+ private:
 
   Value::Ref m_car;
   Value::Ref m_cdr;

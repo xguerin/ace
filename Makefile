@@ -1,7 +1,8 @@
-BUILD_DIR     ?= _build
-CMAKE_OPTIONS ?= 
-MAKE_OPTIONS  ?= -j 4
-GTEST_ROOT    ?= $(HOME)/.local
+BUILD_DIR      ?= build
+INSTALL_PREFIX ?= /usr/local
+CMAKE_OPTIONS  ?= -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
+MAKE_OPTIONS   ?= -j 4
+GTEST_ROOT     ?= $(HOME)/.local
 
 default: build
 
@@ -11,7 +12,7 @@ clean:
 	@rm -rf $(BUILD_DIR)
 
 prepare:
-	@if [ ! -e $(BUILD_DIR) ];			\
+	@if [ ! -e $(BUILD_DIR) ];		\
  	then													\
 		mkdir -p $(BUILD_DIR);			\
 		cd $(BUILD_DIR);						\
@@ -19,11 +20,11 @@ prepare:
 	fi
 
 prepare-test:
-	@if [ ! -e $(BUILD_DIR) ];																											\
-	then																																					\
-		mkdir -p $(BUILD_DIR);																											\
- 		cd $(BUILD_DIR);																														\
-  	cmake $(CMAKE_OPTIONS) -DACE_BUILD_TESTS=ON -DGTEST_ROOT=$(GTEST_ROOT) ..;	\
+	@if [ ! -e $(BUILD_DIR) ];																																						\
+	then																																																	\
+		mkdir -p $(BUILD_DIR);																																							\
+ 		cd $(BUILD_DIR);																																										\
+  	cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -DACE_BUILD_TESTS=ON -DGTEST_ROOT=$(GTEST_ROOT) ..;	\
  	fi
 
 build: prepare
@@ -34,6 +35,9 @@ test: prepare-test build
 
 lint: prepare
 	@BUILD_DIR=$(BUILD_DIR) .travis/lint.sh
+
+install: build
+	@cd $(BUILD_DIR) && make install
 
 info:
 	@echo "         clean: clean the build directory"
