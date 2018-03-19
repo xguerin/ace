@@ -33,8 +33,14 @@ namespace Common {
 tree::Value::Ref
 parseFile(std::string const & path);
 
+bool
+parseFile(std::string const & path, std::list<tree::Value::Ref> & r);
+
 tree::Value::Ref
 parseString(std::string const & str);
+
+bool
+parseString(std::string const & str, std::list<tree::Value::Ref> & r);
 
 tree::Value::Ref
 build(std::string const & name, YAML::Node const & n);

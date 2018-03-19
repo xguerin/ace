@@ -46,6 +46,38 @@ Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
   Common::dump(v, o);
 }
 
+bool
+Scanner::openAll(std::string const & fn, int argc, char ** argv,
+                 std::list<tree::Value::Ref> & values) {
+  auto res = open(fn, argc, argv);
+  if (res == nullptr) {
+    return false;
+  }
+  values.push_back(res);
+  return true;
+}
+
+bool
+Scanner::parseAll(std::string const & s, int argc, char ** argv,
+                  std::list<tree::Value::Ref> & values) {
+  auto res = parse(s, argc, argv);
+  if (res == nullptr) {
+    return false;
+  }
+  values.push_back(res);
+  return true;
+}
+
+bool
+Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
+                 std::ostream & o) const {
+  if (values.size() != 1) {
+    return false;
+  }
+  dump(*values.front(), f, o);
+  return true;
+}
+
 std::string
 Scanner::name() const {
   return "ini";

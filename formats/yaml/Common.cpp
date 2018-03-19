@@ -42,10 +42,36 @@ parseFile(std::string const & path) {
   return build("", node);
 }
 
+bool
+parseFile(std::string const & path, std::list<tree::Value::Ref> & r) {
+  auto nodes = YAML::LoadAllFromFile(path);
+  for (auto & node: nodes) {
+    auto res = build("", node);
+    if (res == nullptr) {
+      return false;
+    }
+    r.push_back(res);
+  }
+  return true;
+}
+
 tree::Value::Ref
 parseString(std::string const & str) {
   auto node = YAML::Load(str);
   return build("", node);
+}
+
+bool
+parseString(std::string const & str, std::list<tree::Value::Ref> & r) {
+  auto nodes = YAML::LoadAll(str);
+  for (auto & node: nodes) {
+    auto res = build("", node);
+    if (res == nullptr) {
+      return false;
+    }
+    r.push_back(res);
+  }
+  return true;
 }
 
 tree::Value::Ref

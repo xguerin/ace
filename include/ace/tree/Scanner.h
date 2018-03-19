@@ -23,6 +23,7 @@
 #pragma once
 
 #include "Object.h"
+#include <list>
 #include <memory>
 #include <string>
 
@@ -48,6 +49,13 @@ class Scanner {
   virtual Value::Ref open(std::string const & fn, int argc, char ** argv) = 0;
   virtual Value::Ref parse(std::string const & s, int argc, char ** argv) = 0;
   virtual void dump(Value const & v, const Format f, std::ostream & o) const = 0;
+
+  virtual bool openAll(std::string const & fn, int argc, char ** argv,
+                       std::list<Value::Ref> & values) = 0;
+  virtual bool parseAll(std::string const & s, int argc, char ** argv,
+                       std::list<Value::Ref> & values) = 0;
+  virtual bool dumpAll(std::list<Value::Ref> & values, const Format f,
+                       std::ostream & o) const = 0;
 
   virtual std::string name() const = 0;
   virtual std::string extension() const = 0;

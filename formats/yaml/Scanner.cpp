@@ -50,6 +50,40 @@ Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
   o << e.c_str();
 }
 
+bool
+Scanner::openAll(std::string const & fn, int argc, char ** argv,
+                 std::list<tree::Value::Ref> & values) {
+  return false;
+}
+
+bool
+Scanner::parseAll(std::string const & s, int argc, char ** argv,
+                  std::list<tree::Value::Ref> & values) {
+  return false;
+}
+
+bool
+Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
+                 std::ostream & o) const {
+  /*
+   * Make sure there is something to dump.
+   */
+  if (values.empty()) {
+    return false;
+  }
+  /*
+   * Dump the values.
+   */
+  YAML::Emitter e;
+  for (auto const & r : values) {
+    e << YAML::BeginDoc;
+    Common::dump(*r, e);
+    e << YAML::EndDoc;
+  }
+  o << e.c_str();
+  return true;
+}
+
 std::string
 Scanner::name() const {
   return "yaml";
