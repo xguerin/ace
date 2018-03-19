@@ -1,5 +1,4 @@
-/**
- * Copyright (c) 2016 Xavier R. Guerin
+/** Copyright (c) 2016 Xavier R. Guerin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +19,52 @@
  * SOFTWARE.
  */
 
-#include "Object.h"
+#include "Scanner.h"
 #include "Common.h"
+#include "Object.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>
+#include <ace/engine/Master.h>
 #include <string>
+#include <vector>
 
 namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace yamlfmt {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & obj) {
-  tree::Object::Ref object = tree::Object::build(name);
-  const toml::Table & tb = obj.as<toml::Table>();
-  for (auto const & e : tb) {
-    std::string skey(e.first);
-    tree::Value::Ref v = Common::build(skey, e.second);
-    if (v == nullptr) {
-      ACE_LOG(Error, "skipping unsupported value format for key: ", skey);
-    } else {
-      object->put(skey, v);
-    }
-  }
-  return object;
+Scanner::open(std::string const & fn, int argc, char ** argv) {
+  return Common::parseFile(fn);
 }
 
-toml::Value
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
-  toml::Table table;
-  for (auto const & e : w) {
-    table[e.first] = Common::dump(*e.second);
-  }
-  return table;
+tree::Value::Ref
+Scanner::parse(std::string const & s, int argc, char ** argv) {
+  return Common::parseString(s);
 }
 
-} // namespace Object
-} // namespace tomlfmt
+void
+Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
+  YAML::Emitter e;
+  e << YAML::BeginDoc;
+  Common::dump(v, e);
+  e << YAML::EndDoc;
+  o << e.c_str();
+}
+
+std::string
+Scanner::name() const {
+  return "yaml";
+}
+
+std::string
+Scanner::extension() const {
+  return "yaml";
+}
+
+} // namespace yamlfmt
 } // namespace ace
+
+extern "C" {
+void * loadPlugin() {
+  return new ace::yamlfmt::Scanner();
+}
+}

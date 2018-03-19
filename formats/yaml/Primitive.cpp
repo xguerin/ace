@@ -20,43 +20,48 @@
  * SOFTWARE.
  */
 
-#include "Object.h"
-#include "Common.h"
+#include "Primitive.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>
+#include <ace/tree/Primitive.h>
+#include <sstream>
 #include <string>
 
 namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace yamlfmt {
+namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & obj) {
-  tree::Object::Ref object = tree::Object::build(name);
-  const toml::Table & tb = obj.as<toml::Table>();
-  for (auto const & e : tb) {
-    std::string skey(e.first);
-    tree::Value::Ref v = Common::build(skey, e.second);
-    if (v == nullptr) {
-      ACE_LOG(Error, "skipping unsupported value format for key: ", skey);
-    } else {
-      object->put(skey, v);
-    }
+build(std::string const & name, YAML::Node const & r) {
+  std::string value = r.as<std::string>();
+  if (common::String::is<long>(value)) {
+    long v = common::String::value<long>(value);
+    return tree::Primitive::build(name, v);
+  } else if (common::String::is<double>(value)) {
+    double v = common::String::value<double>(value);
+    return tree::Primitive::build(name, v);
+  } else if (common::String::is<bool>(value)) {
+    bool v = common::String::value<bool>(value);
+    return tree::Primitive::build(name, v);
+  } else {
+    return tree::Primitive::build(name, value);
   }
-  return object;
 }
 
-toml::Value
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
-  toml::Table table;
-  for (auto const & e : w) {
-    table[e.first] = Common::dump(*e.second);
+void
+dump(tree::Value const & v, YAML::Emitter & e) {
+  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
+  if (p.is<long>()) {
+    e << p.value<long>();
+  } else if (p.is<double>()) {
+    e << p.value<double>();
+  } else if (p.is<bool>()) {
+    e << p.value<bool>();
+  } else {
+    e << p.value<std::string>();
   }
-  return table;
 }
 
-} // namespace Object
-} // namespace tomlfmt
+} // namespace Primitive
+} // namespace yamlfmt
 } // namespace ace

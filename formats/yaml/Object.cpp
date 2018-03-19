@@ -26,37 +26,35 @@
 #include <ace/common/String.h>
 #include <ace/tree/Object.h>
 #include <string>
+#include <iomanip>
 
 namespace ace {
-namespace tomlfmt {
+namespace yamlfmt {
 namespace Object {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & obj) {
-  tree::Object::Ref object = tree::Object::build(name);
-  const toml::Table & tb = obj.as<toml::Table>();
-  for (auto const & e : tb) {
-    std::string skey(e.first);
-    tree::Value::Ref v = Common::build(skey, e.second);
-    if (v == nullptr) {
-      ACE_LOG(Error, "skipping unsupported value format for key: ", skey);
-    } else {
-      object->put(skey, v);
-    }
+build(std::string const & name, YAML::Node const & p) {
+  tree::Object::Ref res = tree::Object::build(name);
+  for (auto const & e: p) {
+    std::string key =  e.first.as<std::string>();
+    auto v = Common::build(key, e.second);
+    res->put(key, v);
   }
-  return object;
+  return res;
 }
 
-toml::Value
-dump(tree::Value const & v) {
+void
+dump(tree::Value const & v, YAML::Emitter & e) {
   tree::Object const & w = static_cast<tree::Object const &>(v);
-  toml::Table table;
-  for (auto const & e : w) {
-    table[e.first] = Common::dump(*e.second);
+  e << YAML::BeginMap;
+  for (auto const & i : w) {
+    e << YAML::Key << i.first;
+    e << YAML::Value;
+    Common::dump(*i.second, e);
   }
-  return table;
+  e << YAML::EndMap;
 }
 
 } // namespace Object
-} // namespace tomlfmt
+} // namespace yamlfmt
 } // namespace ace

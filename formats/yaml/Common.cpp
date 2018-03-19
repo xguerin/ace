@@ -20,43 +20,74 @@
  * SOFTWARE.
  */
 
-#include "Object.h"
 #include "Common.h"
+#include "Array.h"
+#include "Object.h"
+#include "Primitive.h"
+#include <ace/tree/Array.h>
+#include <ace/tree/Object.h>
+#include <ace/tree/Primitive.h>
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>
+#include <cstdio>
 #include <string>
 
 namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace yamlfmt {
+namespace Common {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & obj) {
-  tree::Object::Ref object = tree::Object::build(name);
-  const toml::Table & tb = obj.as<toml::Table>();
-  for (auto const & e : tb) {
-    std::string skey(e.first);
-    tree::Value::Ref v = Common::build(skey, e.second);
-    if (v == nullptr) {
-      ACE_LOG(Error, "skipping unsupported value format for key: ", skey);
-    } else {
-      object->put(skey, v);
+parseFile(std::string const & path) {
+  auto node = YAML::LoadFile(path);
+  return build("", node);
+}
+
+tree::Value::Ref
+parseString(std::string const & str) {
+  auto node = YAML::Load(str);
+  return build("", node);
+}
+
+tree::Value::Ref
+build(std::string const & name, YAML::Node const & n) {
+  switch (n.Type()) {
+    case YAML::NodeType::Map: {
+      return Object::build(name, n);
+    }
+    case YAML::NodeType::Sequence: {
+      return Array::build(name, n);
+    }
+    case YAML::NodeType::Scalar: {
+      return Primitive::build(name, n);
+    }
+    default: {
+      break;
     }
   }
-  return object;
+  return nullptr;
 }
 
-toml::Value
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
-  toml::Table table;
-  for (auto const & e : w) {
-    table[e.first] = Common::dump(*e.second);
+void
+dump(tree::Value const & v, YAML::Emitter & e) {
+  switch (v.type()) {
+    case tree::Value::Type::Array: {
+      return Array::dump(v, e);
+    }
+    case tree::Value::Type::Object: {
+      return Object::dump(v, e);
+    }
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::Float:
+    case tree::Value::Type::String: {
+      return Primitive::dump(v, e);
+    }
+    default: {
+    }
   }
-  return table;
 }
 
-} // namespace Object
-} // namespace tomlfmt
+} // namespace Common
+} // namespace yamlfmt
 } // namespace ace
+

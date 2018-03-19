@@ -20,43 +20,28 @@
  * SOFTWARE.
  */
 
-#include "Object.h"
-#include "Common.h"
-#include <ace/common/Log.h>
-#include <ace/common/String.h>
-#include <ace/tree/Object.h>
+#pragma once
+
+#include <ace/tree/Scanner.h>
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace yamlfmt {
+namespace Common {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & obj) {
-  tree::Object::Ref object = tree::Object::build(name);
-  const toml::Table & tb = obj.as<toml::Table>();
-  for (auto const & e : tb) {
-    std::string skey(e.first);
-    tree::Value::Ref v = Common::build(skey, e.second);
-    if (v == nullptr) {
-      ACE_LOG(Error, "skipping unsupported value format for key: ", skey);
-    } else {
-      object->put(skey, v);
-    }
-  }
-  return object;
-}
+parseFile(std::string const & path);
 
-toml::Value
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
-  toml::Table table;
-  for (auto const & e : w) {
-    table[e.first] = Common::dump(*e.second);
-  }
-  return table;
-}
+tree::Value::Ref
+parseString(std::string const & str);
 
-} // namespace Object
-} // namespace tomlfmt
+tree::Value::Ref
+build(std::string const & name, YAML::Node const & n);
+
+void
+dump(tree::Value const & v, YAML::Emitter & e);
+
+} // namespace Common
+} // namespace yamlfmt
 } // namespace ace

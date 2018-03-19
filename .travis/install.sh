@@ -70,6 +70,18 @@ function install_googletest {
   cd ..
 }
 
+function install_yaml {
+  echo "Installing YAML-CPP"
+  [[ -e yaml-cpp ]] && rm -rf yaml-cpp
+  git clone https://github.com/jbeder/yaml-cpp.git
+  mkdir -p yaml-cpp/build
+  cd yaml-cpp/build
+  cmake -DBUILD_SHARED_LIBS=ON ..
+  make -j ${NUMPROC}
+  sudo make install
+  cd ../..
+}
+
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
   # Get some packages from brew
@@ -89,6 +101,10 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   # Install GoogleTest
   #
   install_googletest
+
+  # Install YAML-CPP
+  #
+  install_yaml
 
   # Go back and remote TMPDIR
   #
@@ -117,6 +133,10 @@ else
   # Install GoogleTest
   #
   install_googletest
+
+  # Install YAML-CPP
+  #
+  install_yaml
 
   # Go back and remote TMPDIR
   #

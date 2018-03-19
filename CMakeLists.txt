@@ -45,6 +45,7 @@ option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
 option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
 option(ACE_PLUGIN_INI     "Enable INI configuration plugin"    ON)
 option(ACE_PLUGIN_SEXP    "Enable SEXP configuration plugin"   ON)
+option(ACE_PLUGIN_YAML    "Enable YAML configuration plugin"   ON)
 option(ACE_BUILD_TESTS    "Build the Google tests suite"       OFF)
 
 #
@@ -117,6 +118,10 @@ if (ACE_PLUGIN_PYTHON)
   find_package(PythonLibs 2.7 REQUIRED)
 endif ()
 
+if (ACE_PLUGIN_YAML)
+  find_package(YamlCpp REQUIRED)
+endif ()
+
 if (ACE_BUILD_TESTS)
   find_package(GTest REQUIRED)
 endif ()
@@ -150,6 +155,10 @@ endif ()
 
 if (ACE_PLUGIN_SEXP OR ACE_BUILD_TESTS)
   add_subdirectory(formats/sexp)
+endif ()
+
+if (ACE_PLUGIN_YAML OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/yaml)
 endif ()
 
 if (ACE_BUILD_TESTS)
