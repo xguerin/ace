@@ -19,6 +19,14 @@ prepare:
 		cmake $(CMAKE_OPTIONS) ..;	\
 	fi
 
+prepare-lite:
+	@if [ ! -e $(BUILD_DIR) ];																								\
+ 	then																																			\
+		mkdir -p $(BUILD_DIR);																									\
+		cd $(BUILD_DIR);																												\
+		cmake $(CMAKE_OPTIONS) -DACE_PLUGIN_LUA=OFF -DACE_PLUGIN_PYTHON=OFF ..;	\
+	fi
+
 prepare-test:
 	@if [ ! -e $(BUILD_DIR) ];																																						\
 	then																																																	\
@@ -28,6 +36,9 @@ prepare-test:
  	fi
 
 build: prepare
+	@cd $(BUILD_DIR) && make $(MAKE_OPTIONS)
+
+build-lite: prepare-lite
 	@cd $(BUILD_DIR) && make $(MAKE_OPTIONS)
 
 test: prepare-test build
