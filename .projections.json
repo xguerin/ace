@@ -12,7 +12,7 @@
     "type": "source"
   },
   "include/ace/*.h": {
-    "alternate": "src/{}.cpp",
+    "alternate": "libace/{}.cpp",
     "type": "header"
   }
 }

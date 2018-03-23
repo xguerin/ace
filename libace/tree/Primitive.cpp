@@ -38,27 +38,27 @@ Primitive::Primitive(std::string const & n, char const & v)
 
 template<>
 Primitive::Primitive(std::string const & n, unsigned char const & v)
-  : Value(n, Type::String), m_content(new TypedContent<unsigned short>(v)) {
+  : Value(n, Type::String), m_content(new TypedContent<long>(v)) {
 }
 
 template<>
 Primitive::Primitive(std::string const & n, short const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<short>(v)) {
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
 }
 
 template<>
 Primitive::Primitive(std::string const & n, unsigned short const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<unsigned short>(v)) {
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
 }
 
 template<>
 Primitive::Primitive(std::string const & n, int const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<int>(v)) {
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
 }
 
 template<>
 Primitive::Primitive(std::string const & n, unsigned int const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<unsigned int>(v)) {
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
 }
 
 template<>
@@ -68,12 +68,12 @@ Primitive::Primitive(std::string const & n, long const & v)
 
 template<>
 Primitive::Primitive(std::string const & n, unsigned long const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<unsigned long>(v)) {
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
 }
 
 template<>
 Primitive::Primitive(std::string const & n, float const & v)
-  : Value(n, Type::Float), m_content(new TypedContent<float>(v)) {
+  : Value(n, Type::Float), m_content(new TypedContent<double>(v)) {
 }
 
 template<>

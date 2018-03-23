@@ -204,15 +204,6 @@ template<>
 bool
 Primitive::is<std::string>() const;
 
-template<typename T>
-T
-Primitive::value() const {
-  if (Primitive::typeOf<T>() == m_type) {
-    return static_cast<TypedContent<T> const &>(*m_content).value();
-  }
-  throw std::logic_error("Bad type conversion");
-}
-
 template<>
 double
 Primitive::value() const;
@@ -228,6 +219,13 @@ inline
 Value::Type
 Primitive::typeOf<bool>() {
   return Value::Type::Boolean;
+}
+
+template<>
+inline
+Value::Type
+Primitive::typeOf<short>() {
+  return Value::Type::Integer;
 }
 
 template<>
@@ -263,6 +261,75 @@ inline
 Value::Type
 Primitive::typeOf<std::string>() {
   return Value::Type::String;
+}
+
+template<typename T>
+T
+Primitive::value() const {
+  throw std::logic_error("Bad type conversion");
+}
+
+template<>
+inline
+bool
+Primitive::value() const {
+  if (Primitive::typeOf<bool>() == m_type) {
+    return static_cast<TypedContent<bool> const &>(*m_content).value();
+  }
+  throw std::logic_error("Bad type conversion");
+}
+
+template<>
+inline
+short
+Primitive::value() const {
+  if (Primitive::typeOf<short>() == m_type) {
+    auto const & c = static_cast<TypedContent<long> const &>(*m_content);
+    return static_cast<short>(c.value());
+  }
+  throw std::logic_error("Bad type conversion");
+}
+
+template<>
+inline
+int
+Primitive::value() const {
+  if (Primitive::typeOf<int>() == m_type) {
+    auto const & c = static_cast<TypedContent<long> const &>(*m_content);
+    return static_cast<int>(c.value());
+  }
+  throw std::logic_error("Bad type conversion");
+}
+
+template<>
+inline
+long
+Primitive::value() const {
+  if (Primitive::typeOf<long>() == m_type) {
+    return static_cast<TypedContent<long> const &>(*m_content).value();
+  }
+  throw std::logic_error("Bad type conversion");
+}
+
+template<>
+inline
+float
+Primitive::value() const {
+  if (Primitive::typeOf<float>() == m_type) {
+    auto const & c = static_cast<TypedContent<double> const &>(*m_content);
+    return static_cast<float>(c.value());
+  }
+  throw std::logic_error("Bad type conversion");
+}
+
+template<>
+inline
+std::string
+Primitive::value() const {
+  if (Primitive::typeOf<std::string>() == m_type) {
+    return static_cast<TypedContent<std::string> const &>(*m_content).value();
+  }
+  throw std::logic_error("Bad type conversion");
 }
 
 } // namespace tree
