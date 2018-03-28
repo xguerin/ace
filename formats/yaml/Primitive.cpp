@@ -34,6 +34,16 @@ namespace Primitive {
 tree::Value::Ref
 build(std::string const & name, YAML::Node const & r) {
   std::string value = r.as<std::string>();
+  /*
+   * If the node is an escaped string then it would have a tag starting with !.
+   * In that case, return the string verbatim.
+   */
+  if (r.Tag().length() > 0 && r.Tag()[0] == '!') {
+    return tree::Primitive::build(name, value);
+  }
+  /*
+   * Process the content of the string.
+   */
   if (common::String::is<long>(value)) {
     long v = common::String::value<long>(value);
     return tree::Primitive::build(name, v);
@@ -58,7 +68,18 @@ dump(tree::Value const & v, YAML::Emitter & e) {
   } else if (p.is<bool>()) {
     e << p.value<bool>();
   } else {
-    e << p.value<std::string>();
+    auto const & v = p.value<std::string>();
+    /*
+     * If the string can be decoded as another primitive type, then quote it.
+     */
+    if (common::String::is<long>(v) || common::String::is<double>(v) ||
+        common::String::is<bool>(v)) {
+      e << YAML::DoubleQuoted;
+    }
+    /*
+     * Emit the value.
+     */
+    e << v << YAML::Auto;
   }
 }
 
