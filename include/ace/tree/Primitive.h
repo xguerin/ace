@@ -44,6 +44,8 @@ class Primitive : public Value {
   template<typename T> static Ref build(std::string const & n, T const & v);
   template<size_t N, typename T> static Ref build(const char (&n)[N], T const & v);
 
+  Value::Ref clone() const;
+
   template<typename T> bool is() const;
   template<typename T> T value() const;
 
@@ -56,6 +58,7 @@ class Primitive : public Value {
    public:
     using Ref = std::unique_ptr<Content>;
     virtual ~Content() { }
+    virtual Ref clone() const = 0;
     virtual std::string toString() const = 0;
   };
 
@@ -69,6 +72,10 @@ class Primitive : public Value {
       return m_value;
     }
 
+    Ref clone() const {
+      return Ref(new TypedContent<T>(m_value));
+    }
+
     std::string toString() const {
       return common::String::from<T>(m_value);
     }
@@ -79,6 +86,7 @@ class Primitive : public Value {
     }
 
    private:
+
     T m_value;
   };
 
@@ -86,6 +94,8 @@ class Primitive : public Value {
 
   template<typename T> Primitive(std::string const & n, T const & v);
   template<size_t N> Primitive(std::string const & n, const char (&v)[N]);
+
+  Primitive(Primitive const & p);
 
   Content::Ref  m_content;
 };

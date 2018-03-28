@@ -233,6 +233,11 @@ Value::path() const {
   return apath;
 }
 
+bool
+Value::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r) {
+  return false;
+}
+
 } // namespace tree
 } // namespace ace
 

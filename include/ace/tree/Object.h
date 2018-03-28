@@ -43,6 +43,8 @@ class Object : public Value {
   Object() = delete;
   static Ref build(std::string const & n = "");
 
+  Value::Ref clone() const;
+
   void merge(Value const & o);
 
   bool has(std::string const & k) const;
@@ -80,6 +82,7 @@ class Object : public Value {
 
  private:
 
+  Object(Object const & o);
   explicit Object(std::string const & n);
 
   bool put(Path const & p, Path::const_iterator const & i, Value::Ref const & r);

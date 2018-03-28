@@ -96,6 +96,15 @@ Primitive::Primitive(std::string const & n, std::string const & v)
   : Value(n, Type::String), m_content(new TypedContent<std::string>(v)) {
 }
 
+Primitive::Primitive(Primitive const & p)
+  : Value(p), m_content(p.m_content->clone()) {
+}
+
+Value::Ref
+Primitive::clone() const {
+  return Value::Ref(new Primitive(*this));
+}
+
 template<>
 bool
 Primitive::is<bool>() const {

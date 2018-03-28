@@ -72,6 +72,11 @@ class Value {
    */
   virtual void merge(Value const & o);
 
+  /**
+   * @brief Clone the value.
+   */
+  virtual Ref clone() const = 0;
+
   // Path crawlers
 
   using callback = std::function<void(Value &)>;
@@ -130,6 +135,8 @@ class Value {
   Value() = default;
   explicit Value(Value const &) = default;
   explicit Value(std::string const & name, Type type);
+
+  virtual bool put(Path const & p, Path::const_iterator const & i, Value::Ref const & r);
 
   std::string m_name;
   Type        m_type;

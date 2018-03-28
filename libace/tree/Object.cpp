@@ -36,9 +36,23 @@ namespace tree {
 Object::Object(std::string const & n)
     : Value(n, Type::Object), m_content() { }
 
+Object::Object(Object const & o)
+  : Value(o), m_content() {
+  for (auto const & e: o.m_content) {
+    auto n = e.second->clone();
+    n->m_parent = this;
+    m_content[e.first] = n;
+  }
+}
+
 Object::Ref
 Object::build(std::string const & n) {
   return Ref(new Object(n));
+}
+
+Value::Ref
+Object::clone() const {
+  return Value::Ref(new Object(*this));
 }
 
 void
@@ -255,12 +269,7 @@ Object::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r
       put(tmp);
     }
     Value::Ref vr = m_content[id];
-    if (vr->type() != Value::Type::Object) {
-      ACE_LOG(Error, "Cannot put a value to \"", p, "\", ", id, " is not an object");
-      return false;
-    }
-    Object::Ref oref = std::static_pointer_cast<Object>(vr);
-    return oref->put(p, p.down(i), r);
+    return vr->put(p, p.down(i), r);
   } else {
     if (r == nullptr) {
       m_content.erase(id);

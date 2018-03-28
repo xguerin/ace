@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+#include <ace/common/Log.h>
 #include <ace/tree/Array.h>
 #include <ace/tree/Object.h>
 #include <ace/tree/Primitive.h>
@@ -32,7 +33,21 @@ namespace ace {
 namespace tree {
 
 Array::Array(std::string const & n)
-    : Value(n, Type::Array), m_content() { }
+  : Value(n, Type::Array), m_content() { }
+
+Array::Array(Array const & a)
+  : Value(a), m_content() {
+  for (auto const & e: a.m_content) {
+    auto n = e->clone();
+    n->m_parent = this;
+    m_content.push_back(n);
+  }
+}
+
+Value::Ref
+Array::clone() const {
+  return Value::Ref(new Array(*this));
+}
 
 Array::Ref
 Array::build(std::string const & n) {
@@ -110,6 +125,43 @@ Array::size() const {
 Value::Ref const &
 Array::at(const size_t idx) const {
   return m_content[idx];
+}
+
+bool
+Array::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r) {
+  if (i == p.end()) return false;
+  if (p.down(i) == p.end()) {
+    ACE_LOG(Warning, "Cannot `put` directly in an array");
+    return false;
+  }
+  switch ((*i)->type()) {
+    case path::Item::Type::Indexed: {
+      for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
+        m_content[idx]->put(p, p.down(i), r->clone());
+      }
+    } break;
+    case path::Item::Type::Ranged: {
+      auto const & rng = (*i)->range();
+      if (rng.low < m_content.size() and rng.high <= m_content.size()) {
+        for (size_t idx = rng.low; idx < rng.high; idx += rng.steps) {
+          m_content[idx]->put(p, p.down(i), r->clone());
+        }
+      }
+    } break;
+    case path::Item::Type::Any: {
+      for (auto & e : m_content) {
+        e->put(p, p.down(i), r->clone());
+      }
+    } break;
+    default: {
+      ACE_LOG(Error, "Invalid index type (", (*i)->toString(), ")");
+      return false;
+    }
+  }
+  if ((*i)->recursive()) for (auto & e : m_content) {
+    e->put(p, i, r);
+  }
+  return true;
 }
 
 Value &

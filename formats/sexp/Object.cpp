@@ -178,8 +178,8 @@ dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
     if (f == tree::Scanner::Format::Default) {
       o << std::setw(max) << std::left;
     }
-    o << it->first << " ";
-    Common::dump(*it->second, f, nindent + max + 2, o);
+    o << it->first << " . ";
+    Common::dump(*it->second, f, nindent + max + 4, o);
     o << ")";
     ++it;
     if (it != w.end()) {

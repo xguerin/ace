@@ -38,7 +38,9 @@ build(std::string const & name, YAML::Node const & p) {
   for (auto const & e: p) {
     std::string key =  e.first.as<std::string>();
     auto v = Common::build(key, e.second);
-    res->put(key, v);
+    if (v != nullptr) {
+      res->put(key, v);
+    }
   }
   return res;
 }

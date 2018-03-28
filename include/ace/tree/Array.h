@@ -43,6 +43,8 @@ class Array : public Value {
   Array() = delete;
   static Ref build(std::string const & n = "");
 
+  Value::Ref clone() const;
+
   void merge(Value const & o);
 
   void each(Callback c);
@@ -79,7 +81,10 @@ class Array : public Value {
 
  private:
 
+  Array(Array const & o);
   explicit Array(std::string const & n);
+
+  bool put(Path const & p, Path::const_iterator const & i, Value::Ref const & r);
 
   Content m_content;
 };

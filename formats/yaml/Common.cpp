@@ -86,7 +86,12 @@ build(std::string const & name, YAML::Node const & n) {
     case YAML::NodeType::Scalar: {
       return Primitive::build(name, n);
     }
-    default: {
+    case YAML::NodeType::Null: {
+      ACE_LOG(Warning, "Null type not supported");
+      break;
+    }
+    case YAML::NodeType::Undefined: {
+      ACE_LOG(Warning, "Undefined YAML type");
       break;
     }
   }
