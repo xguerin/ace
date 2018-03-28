@@ -137,20 +137,23 @@ Array::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r)
   switch ((*i)->type()) {
     case path::Item::Type::Indexed: {
       for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
-        m_content[idx]->put(p, p.down(i), r->clone());
+        auto n = r == nullptr ? nullptr : r->clone();
+        m_content[idx]->put(p, p.down(i), n);
       }
     } break;
     case path::Item::Type::Ranged: {
       auto const & rng = (*i)->range();
       if (rng.low < m_content.size() and rng.high <= m_content.size()) {
         for (size_t idx = rng.low; idx < rng.high; idx += rng.steps) {
-          m_content[idx]->put(p, p.down(i), r->clone());
+          auto n = r == nullptr ? nullptr : r->clone();
+          m_content[idx]->put(p, p.down(i), n);
         }
       }
     } break;
     case path::Item::Type::Any: {
       for (auto & e : m_content) {
-        e->put(p, p.down(i), r->clone());
+        auto n = r == nullptr ? nullptr : r->clone();
+        e->put(p, p.down(i), n);
       }
     } break;
     default: {
