@@ -54,16 +54,20 @@ build(std::string const & name, toml::Value const & value) {
 tree::Value::Ref
 parseFile(std::string const & path) {
   std::ifstream ifs(path);
+  if (ifs.fail()) {
+    ACE_LOG(Error, "Cannot open file: ", path);
+    return nullptr;
+  }
   toml::ParseResult pr = toml::parse(ifs);
-  auto result = build("", pr.value);
-  return result;
+  return build("", pr.value);
 }
 
 tree::Value::Ref
 parseString(std::string const & str) {
   std::istringstream iss(str);
+  tree::Value::Ref result = nullptr;
   toml::ParseResult pr = toml::parse(iss);
-  auto result = build("", pr.value);
+  result = build("", pr.value);
   return result;
 }
 
