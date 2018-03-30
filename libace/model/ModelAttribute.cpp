@@ -64,11 +64,6 @@ ModelAttribute::validateModel() {
   return m_model->validateModel();
 }
 
-bool
-ModelAttribute::validate(tree::Object const & r, tree::Value const & v) const {
-  return true;
-}
-
 ModelAttribute::operator tree::Checker::Pattern() const {
   return tree::Checker::Pattern(tree::Value::Type::String, false);
 }

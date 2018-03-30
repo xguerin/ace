@@ -46,7 +46,6 @@ class FlagAttribute : public Attribute {
   bool flattenModel();
 
   void load(Attribute const & a);
-  bool validate(tree::Object const & r, tree::Value const & v) const;
   bool check(T const & v) const;
 
   bool merge(Attribute const & b);
@@ -112,12 +111,6 @@ void
 FlagAttribute<T, O, C>::load(Attribute const & a) {
   FlagAttribute<T, O, C> const & ra = static_cast<FlagAttribute<T, O, C> const &>(a);
   m_values = ra.m_values;
-}
-
-template<typename T, bool O, typename C>
-bool
-FlagAttribute<T, O, C>::validate(tree::Object const & r, tree::Value const & v) const {
-  return true;
 }
 
 template<typename T, bool O, typename C>

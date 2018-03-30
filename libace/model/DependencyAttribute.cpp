@@ -89,11 +89,6 @@ DependencyAttribute<>::load(Attribute const & a) {
 }
 
 bool
-DependencyAttribute<>::validate(tree::Object const & r, tree::Value const & v) const {
-  return true;
-}
-
-bool
 DependencyAttribute<>::merge(Attribute const & b) {
   if (not Attribute::merge(b)) return false;
   Dependencies extra;

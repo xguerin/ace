@@ -42,7 +42,7 @@ struct AttributeLess : public std::binary_function<Attribute::Ref, Attribute::Re
 
 // Attribute set
 
-class AttributeSet : public Object {
+class AttributeSet : public Object, public Instance {
  public:
 
   using Map = std::map<std::string, Attribute::Ref>;
@@ -57,12 +57,19 @@ class AttributeSet : public Object {
 
   tree::Path path(const bool local = false) const;
 
+  // Object operations
+
   bool checkModel(tree::Value const & t) const;
   void loadModel(tree::Value const & t);
   bool flattenModel();
   bool validateModel();
 
-  bool validate(tree::Object const & r, tree::Value const & v) const;
+  // Instance operations
+
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  void expandInstance(tree::Object & r, tree::Value & v);
+  bool flattenInstance(tree::Object & r, tree::Value & v);
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
 
   // Set operation
 

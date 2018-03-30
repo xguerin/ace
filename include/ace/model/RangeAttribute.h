@@ -48,8 +48,10 @@ class RangeAttribute : public Attribute {
 
   // Instance
 
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+
   void load(Attribute const & a);
-  bool validate(tree::Object const & r, tree::Value const & v) const;
   bool check(T const & v) const;
 
   // Attribute
@@ -65,6 +67,8 @@ class RangeAttribute : public Attribute {
   Attribute::Ref clone() const;
 
  private:
+
+  bool validate(tree::Object const & r, tree::Value const & v) const;
 
   common::Range<T, C> m_range;
 };
@@ -92,6 +96,18 @@ template<typename T, typename C, bool O>
 void RangeAttribute<T, C, O>::loadModel(tree::Value const & t) {
   auto const & pri = static_cast<tree::Primitive const &>(t);
   common::Range<T, C>::parse(pri.value<std::string>(), m_range);
+}
+
+template<typename T, typename C, bool O>
+bool
+RangeAttribute<T, C, O>::checkInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
+}
+
+template<typename T, typename C, bool O>
+bool
+RangeAttribute<T, C, O>::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
 }
 
 template<typename T, typename C, bool O>

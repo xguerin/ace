@@ -46,6 +46,16 @@ ArityAttribute::loadModel(tree::Value const & t) {
   Arity::parse(static_cast<tree::Primitive const &>(t).value<std::string>(), m_arity);
 }
 
+bool
+ArityAttribute::checkInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
+}
+
+bool
+ArityAttribute::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
+}
+
 void
 ArityAttribute::load(Attribute const & a) {
   ArityAttribute const & ra = static_cast<ArityAttribute const &>(a);

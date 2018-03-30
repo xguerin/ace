@@ -48,7 +48,6 @@ class ModelAttribute : public Attribute {
   // Instance
 
   void load(Attribute const & a);
-  bool validate(tree::Object const & r, tree::Value const & v) const;
 
   // Attribute
 

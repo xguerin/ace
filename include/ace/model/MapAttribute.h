@@ -51,8 +51,10 @@ class MapAttribute : public Attribute {
 
   // Instance
 
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+
   void load(Attribute const & a);
-  bool validate(tree::Object const & r, tree::Value const & v) const;
   bool check(std::string const & v) const;
 
   // Attribute
@@ -71,6 +73,8 @@ class MapAttribute : public Attribute {
   std::map<std::string, T> const & values() const;
 
  private:
+
+  bool validate(tree::Object const & r, tree::Value const & v) const;
 
   std::map<std::string, T>  m_values;
 };
@@ -103,6 +107,18 @@ void MapAttribute<T, O>::loadModel(tree::Value const & t) {
   for (auto & m : static_cast<tree::Object const &>(t)) {
     m_values[m.first] = static_cast<tree::Primitive const &>(*m.second).value<T>();
   }
+}
+
+template<typename T, bool O>
+bool
+MapAttribute<T, O>::checkInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
+}
+
+template<typename T, bool O>
+bool
+MapAttribute<T, O>::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
 }
 
 template<typename T, bool O>

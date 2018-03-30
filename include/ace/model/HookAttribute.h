@@ -3,7 +3,7 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without reexaction, including without limitation the rights
+ * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
@@ -22,35 +22,47 @@
 
 #pragma once
 
-#include <ace/tree/Object.h>
-#include <ace/tree/Path.h>
-#include <string>
+#include "Attribute.h"
+#include <ace/model/Hook.h>
 
 namespace ace {
 namespace model {
 
-class Hook {
+class HookAttribute : public Attribute {
  public:
 
-  Hook() : m_exact(false) { }
+  HookAttribute() = delete;
+  HookAttribute(std::string const & n, bool o);
 
-  static bool validate(tree::Object const & r);
-  void load(tree::Object const & r);
+  // Object
 
-  bool match(std::string const & s) const;
-  bool transform(std::string const & v, std::string & r) const;
+  bool checkModel(tree::Value const & t) const;
+  void loadModel(tree::Value const & t);
 
-  tree::Path const & path() const;
-  std::string const & pattern() const;
-  std::string const & value() const;
-  bool exact() const;
+  // Instance
+
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  bool flattenInstance(tree::Object & r, tree::Value & v);
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+
+  void load(Attribute const & a);
+
+  // Attribute
+
+  bool merge(Attribute const & b);
+
+  operator tree::Checker::Pattern() const;
+  operator std::string() const;
+
+  Attribute::Ref clone() const;
+
+  // Accessors
+
+  Hook const & hook() const;
 
  private:
 
-  tree::Path  m_path;
-  std::string m_pattern;
-  std::string m_value;
-  bool        m_exact;
+  Hook m_hook;
 };
 
 } // namespace model

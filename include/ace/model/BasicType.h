@@ -30,7 +30,7 @@
 #include "DependencyAttribute.h"
 #include "FlagAttribute.h"
 #include "Generator.h"
-#include "Hook.h"
+#include "HookAttribute.h"
 #include "Instance.h"
 #include "Object.h"
 #include <ace/common/String.h>
@@ -83,7 +83,7 @@ class BasicType : public Object, public Instance, public Coach, public Generator
   /**
    * @brief The "hook" attribute type
    */
-  using HookAttributeType = FlagAttribute<std::string>;
+  using HookAttributeType = HookAttribute;
 
   /**
    * @brief The "inherit" attribute type
@@ -381,7 +381,6 @@ class BasicType : public Object, public Instance, public Coach, public Generator
   Kind          m_kind;
   std::string   m_arityMap;
   bool          m_mayInherit;
-  Hook          m_hook;
   std::string   m_doc;
   AttributeSet  m_attributes;
 

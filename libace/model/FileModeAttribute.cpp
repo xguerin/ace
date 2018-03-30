@@ -85,11 +85,6 @@ FileModeAttribute::load(Attribute const & a) {
   m_flags = ra.m_flags;
 }
 
-bool
-FileModeAttribute::validate(tree::Object const & r, tree::Value const & v) const {
-  return true;
-}
-
 FileModeAttribute::operator tree::Checker::Pattern() const {
   return tree::Checker::Pattern(tree::Value::Type::String, false);
 }

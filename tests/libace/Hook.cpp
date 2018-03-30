@@ -47,6 +47,7 @@ TEST_F(Hook, Pass_Ok) {
 TEST_F(Hook, Pass_Ok_All) {
   WRITE_HEADER;
   auto res = ace::model::Model::load("01_Ok.json");
+  ASSERT_NE(res.get(), nullptr);
   auto svr = res->validate("hook/01_Ok.lua", 1, const_cast<char **>(&prgnam));
   ASSERT_NE(svr.get(), nullptr);
 }
@@ -54,6 +55,7 @@ TEST_F(Hook, Pass_Ok_All) {
 TEST_F(Hook, Fail_Ok_MissingMatch) {
   WRITE_HEADER;
   auto res = ace::model::Model::load("01_Ok.json");
+  ASSERT_NE(res.get(), nullptr);
   auto svr = res->validate("hook/01_MissingMatch.lua", 1, const_cast<char **>(&prgnam));
   ASSERT_EQ(svr.get(), nullptr);
 }
@@ -67,6 +69,7 @@ TEST_F(Hook, Pass_GlobalPath) {
 TEST_F(Hook, Pass_GlobalPath_All) {
   WRITE_HEADER;
   auto res = ace::model::Model::load("02_GlobalPath.json");
+  ASSERT_NE(res.get(), nullptr);
   auto svr = res->validate("hook/02_Ok.lua", 1, const_cast<char **>(&prgnam));
   ASSERT_NE(svr.get(), nullptr);
 }
@@ -74,6 +77,7 @@ TEST_F(Hook, Pass_GlobalPath_All) {
 TEST_F(Hook, Fail_GlobalPath_All) {
   WRITE_HEADER;
   auto res = ace::model::Model::load("02_GlobalPath.json");
+  ASSERT_NE(res.get(), nullptr);
   auto svr = res->validate("hook/02_Error.lua", 1, const_cast<char **>(&prgnam));
   ASSERT_EQ(svr.get(), nullptr);
 }

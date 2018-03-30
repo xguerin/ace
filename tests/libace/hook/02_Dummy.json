@@ -7,7 +7,7 @@
   "body": {
     "var0": {
       "kind": "string", "arity": "?",
-      "hook": "$.var1.var2:(.*):\\1_world",
+      "hook": { "path": "$.var1.var2", "from": "(.*)", "to": "\\1_world" },
       "doc": "a float entry"
     }
   }

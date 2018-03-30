@@ -47,8 +47,10 @@ class ArityAttribute : public Attribute {
 
   // Instance
 
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+
   void load(Attribute const & a);
-  bool validate(tree::Object const & r, tree::Value const & v) const;
   bool check(const size_t v) const;
 
   // Attribute
@@ -64,6 +66,8 @@ class ArityAttribute : public Attribute {
   Attribute::Ref clone() const;
 
  private:
+
+  bool validate(tree::Object const & r, tree::Value const & v) const;
 
   Arity m_arity;
 };

@@ -48,8 +48,10 @@ class ListAttribute : public Attribute {
 
   // Instance
 
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+
   void load(Attribute const & a);
-  bool validate(tree::Object const & r, tree::Value const & v) const;
   bool check(T const & v) const;
 
   // Attribute
@@ -71,6 +73,8 @@ class ListAttribute : public Attribute {
   std::list<T> const & values() const;
 
  private:
+
+  bool validate(tree::Object const & r, tree::Value const & v) const;
 
   std::list<T>  m_values;
   C             m_comparator;
@@ -104,6 +108,18 @@ void ListAttribute<T, C, O>::loadModel(tree::Value const & t) {
   for (auto & m : static_cast<tree::Array const &>(t)) {
     m_values.push_back(static_cast<tree::Primitive const &>(*m).value<T>());
   }
+}
+
+template<typename T, typename C, bool O>
+bool
+ListAttribute<T, C, O>::checkInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
+}
+
+template<typename T, typename C, bool O>
+bool
+ListAttribute<T, C, O>::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+  return validate(r, v);
 }
 
 template<typename T, typename C, bool O>

@@ -3,7 +3,7 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
+ * in the Software without reexaction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
@@ -25,47 +25,53 @@
 #include <ace/common/Log.h>
 #include <ace/common/Regex.h>
 #include <ace/common/String.h>
+#include <ace/tree/Checker.h>
+#include <ace/tree/Primitive.h>
 #include <string>
 #include <vector>
 
 namespace ace {
 namespace model {
 
+static tree::Checker::Schema schema = {
+  { "path"  , tree::Checker::Pattern(tree::Value::Type::String, false) },
+  { "from"  , tree::Checker::Pattern(tree::Value::Type::String, false) },
+  { "to"    , tree::Checker::Pattern(tree::Value::Type::String, false) },
+  { "exact", tree::Checker::Pattern(tree::Value::Type::Boolean, true ) }
+};
+
 bool
-Hook::validate(std::string const & s) {
-  std::vector<std::string> elems;
-  common::String::split(s, ':', elems);
-  if (elems.size() != 3) {
+Hook::validate(tree::Object const & r) {
+  tree::Checker checker("", r);
+  if (!checker.validate(schema)) {
+    ACE_LOG(Debug, "Hook schema verification failed");
     return false;
   }
-  if (elems[0].length() == 0) {
-    ACE_LOG(Error, "Hook path cannot be empty");
-    return false;
-  }
-  if (elems[1].length() == 0) {
-    ACE_LOG(Error, "Hook match regex cannot be empty");
-    return false;
-  }
-  if (elems[2].length() == 0) {
-    ACE_LOG(Error, "Hook replacement regex cannot be empty");
-    return false;
-  }
+  auto const & p = r.get("path");
+  auto const & v = static_cast<tree::Primitive const &>(p);
   try {
-    tree::Path::parse(elems[0]);
+    tree::Path::parse(v.value<std::string>());
   } catch (std::invalid_argument const &) {
     return false;
   }
-  ACE_LOG(Debug, s);
   return true;
 }
 
 void
-Hook::load(std::string const & s) {
-  std::vector<std::string> elems;
-  common::String::split(s, ':', elems);
-  m_path = tree::Path::parse(elems[0]);
-  m_pattern = elems[1];
-  m_value = elems[2];
+Hook::load(tree::Object const & r) {
+  auto const & p = static_cast<tree::Primitive const &>(r.get("path"));
+  auto const & f = static_cast<tree::Primitive const &>(r.get("from"));
+  auto const & t = static_cast<tree::Primitive const &>(r.get("to"));
+  m_path = tree::Path::parse(p.value<std::string>());
+  m_pattern = f.value<std::string>();
+  m_value = t.value<std::string>();
+  /*
+   * Check if the exact mode is defined.
+   */
+  if (r.has("exact")) {
+    auto const & s = static_cast<tree::Primitive const &>(r.get("exact"));
+    m_exact = s.value<bool>();
+  }
 }
 
 bool
@@ -91,6 +97,11 @@ Hook::pattern() const {
 std::string const &
 Hook::value() const {
   return m_value;
+}
+
+bool
+Hook::exact() const {
+  return m_exact;
 }
 
 } // namespace model

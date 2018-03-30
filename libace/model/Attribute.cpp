@@ -37,6 +37,25 @@ Attribute::path(const bool local) const {
   return m_parent->path(local);
 }
 
+bool
+Attribute::checkInstance(tree::Object const & r, tree::Value const & v) const {
+  return true;
+}
+
+bool
+Attribute::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+  return true;
+}
+
+void
+Attribute::expandInstance(tree::Object & r, tree::Value & v) {
+}
+
+bool
+Attribute::flattenInstance(tree::Object & r, tree::Value & v) {
+  return true;
+}
+
 bool Attribute::merge(Attribute const & b) {
   if (m_optional != b.m_optional) return false;
   if (m_override != b.m_override) return false;

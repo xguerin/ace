@@ -42,7 +42,6 @@ BasicType::BasicType(const Kind k, std::string const & a)
     m_kind(k),
     m_arityMap(a),
     m_mayInherit(false),
-    m_hook(),
     m_doc(),
     m_attributes() {
   m_attributes.setParent(this);
@@ -64,7 +63,6 @@ BasicType::BasicType(BasicType const & o)
     m_kind(o.m_kind),
     m_arityMap(o.m_arityMap),
     m_mayInherit(o.m_mayInherit),
-    m_hook(o.m_hook),
     m_doc(o.m_doc),
     m_attributes(o.m_attributes) {
   m_attributes.setParent(this);
@@ -95,13 +93,6 @@ BasicType::checkModel(tree::Value const & t) const {
     ERROR(ERR_UNEXPECTED_TYPE(value));
     return false;
   }
-  if (t.has("hook")) {
-    value = static_cast<tree::Primitive const &>(t["hook"]).value<std::string>();
-    if (not Hook::validate(value)) {
-      ERROR(ERR_INVALID_HOOK_FORMAT(value));
-      return false;
-    }
-  }
   return true;
 }
 
@@ -110,10 +101,6 @@ BasicType::loadModel(tree::Value const & t) {
   m_attributes.loadModel(t);
   m_doc = static_cast<DocAttributeType const &>(*m_attributes["doc"]).head();
   Attribute::Ref ar = m_attributes["arity"];
-  if (m_attributes.has("hook")) {
-    ar = m_attributes["hook"];
-    m_hook.load(static_cast<HookAttributeType const &>(*ar).head());
-  }
   if (m_attributes.has("inherit")) {
     ar = m_attributes["inherit"];
     m_mayInherit = static_cast<InheritAttributeType const &>(*ar).head();
@@ -446,92 +433,25 @@ BasicType::checkInstance(tree::Object const & r, tree::Value const & v) const {
   /**
    * Validate the attributes once to make sure that bounds are respected
    */
-  return m_attributes.validate(r, v);
+  return m_attributes.checkInstance(r, v);
 }
 
 void
 BasicType::expandInstance(tree::Object & r, tree::Value & v) {
+  return m_attributes.expandInstance(r, v);
 }
 
 bool
 BasicType::flattenInstance(tree::Object & r, tree::Value & v) {
-  if (not hasHook()) return true;
-  Model & model = *static_cast<Model *>(owner());
-  tree::Path const & p = m_hook.path();
-  if (not model.body().has(p)) {
-    ERROR(ERR_INVALID_HOOK_SOURCE(p));
-    return false;
-  }
-  std::list<BasicType::Ref> lasso;
-  model.body().get(p, lasso);
-  for (auto & e : lasso) {
-    if (not e->isEnumerated() and not e->isMapped()) {
-      ERROR(ERR_HOOKED_VALUE_NOT_ENUMERATED);
-      return false;
-    }
-    if (e->optional() and not optional()) {
-      ERROR(ERR_HOOKED_VALUE_ARITY_MISMATCH(e->path()));
-      return false;
-    }
-  }
-  return true;
+  return m_attributes.flattenInstance(r, v);
 }
 
 bool
 BasicType::resolveInstance(tree::Object const & r, tree::Value const & v) const {
-  if (hasHook()) {
-    tree::Path const & p = m_hook.path();
-    if (not r.has(p)) {
-      ERROR(ERR_NO_HOOKED_VALUE_IN_INSTANCE(m_hook.path()));
-      return false;
-    }
-    std::set<std::string> mv, hv;
-    v.each([&](tree::Value const & w) {
-      if (w.type() == tree::Value::Type::Object) {
-        tree::Object const & o = static_cast<tree::Object const &>(w);
-        for (auto & e : o) mv.insert(e.first);
-      } else {
-        tree::Primitive const & p = static_cast<tree::Primitive const &>(w);
-        mv.insert(p.value());
-      }
-    });
-    r.get(p, [&](tree::Value const & val) {
-      val.each([&](tree::Value const & w) {
-        if (w.type() == tree::Value::Type::Object) {
-          tree::Object const & o = static_cast<tree::Object const &>(w);
-          for (auto & e : o) hv.insert(e.first);
-        } else {
-          tree::Primitive const & p = static_cast<tree::Primitive const &>(w);
-          hv.insert(p.value());
-        }
-      });
-    });
-    std::set<std::string> txv;
-    for (auto & e : hv) {
-      if (not m_hook.match(e)) {
-        ERROR(ERR_EMPTY_HOOK_MATCH(name(), e));
-        return false;
-      }
-      std::string to;
-      if (not m_hook.transform(e, to)) {
-        ERROR(ERR_EMPTY_HOOK_MATCH(name(), e));
-        return false;
-      }
-      txv.insert(to);
-    }
-    for (auto & e: mv) if (txv.find(e) == txv.end()) {
-      ERROR(ERR_NO_HOOKED_VALUE_MATCH(e));
-      return false;
-    }
-    for (auto & e: txv) if (mv.count(e) == 0) {
-      ERROR(ERR_NO_HOOKED_VALUE_MATCH(e));
-      return false;
-    }
-  }
   /**
    * Validate the attributes twice to make sure that dynamic constraints are respected
    */
-  return m_attributes.validate(r, v);
+  return m_attributes.resolveInstance(r, v);
 }
 
 void
@@ -631,7 +551,7 @@ BasicType::hasHook() const {
 
 Hook const &
 BasicType::hook() const {
-  return m_hook;
+  return static_cast<HookAttributeType const &>(*m_attributes["hook"]).hook();
 }
 
 bool

@@ -43,7 +43,7 @@ AttributeSet::AttributeSet()
     : m_schema(), m_schemaSet(), m_instances(), m_instanceSet() { }
 
 AttributeSet::AttributeSet(AttributeSet const & o)
-    : Object(o),
+    : Object(o), Instance(o),
     m_schema(), m_schemaSet(), m_instances(), m_instanceSet() {
   for (auto & r : o.m_schemaSet) {
     Attribute::Ref ar(r->clone());
@@ -119,8 +119,29 @@ AttributeSet::validateModel() {
 }
 
 bool
-AttributeSet::validate(tree::Object const & r, tree::Value const & v) const {
-  for (auto & a : m_instanceSet) if (not a->validate(r, v)) {
+AttributeSet::checkInstance(tree::Object const & r, tree::Value const & v) const {
+  for (auto & a : m_instanceSet) if (not a->checkInstance(r, v)) {
+    return false;
+  }
+  return true;
+}
+
+void
+AttributeSet::expandInstance(tree::Object & r, tree::Value & v) {
+  for (auto & a : m_instanceSet) a->expandInstance(r, v);
+}
+
+bool
+AttributeSet::flattenInstance(tree::Object & r, tree::Value & v) {
+  for (auto & a : m_instanceSet) if (not a->flattenInstance(r, v)) {
+    return false;
+  }
+  return true;
+}
+
+bool
+AttributeSet::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+  for (auto & a : m_instanceSet) if (not a->resolveInstance(r, v)) {
     return false;
   }
   return true;

@@ -52,7 +52,7 @@ TrueCompare<T>::operator() (T const & a, T const & b) const {
 
 // Attribute
 
-class Attribute : public Object {
+class Attribute : public Object, public Instance {
  public:
 
    /**
@@ -66,11 +66,21 @@ class Attribute : public Object {
 
   tree::Path path(const bool local = false) const;
 
+  // Object operations
+
   using Object::loadModel;
   using Object::checkModel;
 
+  // Instance operations
+
+  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  void expandInstance(tree::Object & r, tree::Value & v);
+  bool flattenInstance(tree::Object & r, tree::Value & v);
+  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+
+  // Class operations
+
   virtual void load(Attribute const & a) = 0;
-  virtual bool validate(tree::Object const & r, tree::Value const & v) const = 0;
 
   virtual bool merge(Attribute const & b);
   virtual bool override(Attribute const & b);
