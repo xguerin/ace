@@ -90,8 +90,11 @@ Model::Model(std::string const & fn)
   common::String::split(fn, '.', elems);
   m_ext = *elems.rbegin();
   setName(*(++elems.rbegin()));
+  m_header.setName("header");
   m_header.setParent(this);
+  m_templates.setName("templates");
   m_templates.setParent(this);
+  m_body.setName("body");
   m_body.setParent(this);
 }
 

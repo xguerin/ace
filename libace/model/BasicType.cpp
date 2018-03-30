@@ -456,14 +456,14 @@ BasicType::expandInstance(tree::Object & r, tree::Value & v) {
 bool
 BasicType::flattenInstance(tree::Object & r, tree::Value & v) {
   if (not hasHook()) return true;
-  Body & body = *static_cast<Body *>(m_parent);
+  Model & model = *static_cast<Model *>(owner());
   tree::Path const & p = m_hook.path();
-  if (not body.has(p)) {
+  if (not model.body().has(p)) {
     ERROR(ERR_INVALID_HOOK_SOURCE(p));
     return false;
   }
   std::list<BasicType::Ref> lasso;
-  body.get(p, lasso);
+  model.body().get(p, lasso);
   for (auto & e : lasso) {
     if (not e->isEnumerated() and not e->isMapped()) {
       ERROR(ERR_HOOKED_VALUE_NOT_ENUMERATED);

@@ -59,8 +59,7 @@
 #define ERR_INVALID_HOOK_FORMAT(_h)           "Invalid hook format \"", _h, "\""  // NOLINT
 #define ERR_INVALID_HOOK_SOURCE(_h)           "Invalid hook source \"", _h, "\""  // NOLINT
 #define ERR_NO_HOOKED_VALUE_IN_INSTANCE(_h)   "Hook source \"", _h, "\" has no value"  // NOLINT
-#define ERR_NO_HOOKED_VALUE_MATCH(_e)         "No hooked value match for value \"", _e, "\"" // NOLINT
-#define ERR_NO_HOOKED_VALUE_MATCH(_e)         "No hooked value match for value \"", _e, "\"" // NOLINT
+#define ERR_NO_HOOKED_VALUE_MATCH(_e)         "Value \"", _e, "\" outside of the hooked scope" // NOLINT
 #define ERR_HOOKED_VALUE_ARITY_MISMATCH(_h)   "Required type cannot be hooked on optional type \"", _h, "\""  // NOLINT
 #define ERR_HOOK_GENERATIVE_PATH              "Hook path cannot be generative"  // NOLINT
 #define ERR_HOOKED_VALUE_NOT_ENUMERATED       "Hook source must be enumerated or mapped"
