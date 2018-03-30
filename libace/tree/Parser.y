@@ -87,13 +87,13 @@ path ::= root(A) accessorL(B).
 
 root(A) ::= GROOT.
 {
-  ACE_LOG(Debug, "root ::= GROOT");
+  ACE_LOG(Extra, "root ::= GROOT");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Global);
 }
 
 root(A) ::= LROOT.
 {
-  ACE_LOG(Debug, "root ::= LROOT");
+  ACE_LOG(Extra, "root ::= LROOT");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Local);
 }
 
@@ -106,14 +106,14 @@ accessorL(A) ::= .
 
 accessorL(A) ::= accessorL(B) member(C).
 {
-  ACE_LOG(Debug, "accessor ::= accessorL member");
+  ACE_LOG(Extra, "accessor ::= accessorL member");
   B->push_back(C);
   A = B;
 }
 
 accessorL(A) ::= accessorL(B) DOT member(C).
 {
-  ACE_LOG(Debug, "accessor ::= accessorL DOT member");
+  ACE_LOG(Extra, "accessor ::= accessorL DOT member");
   C->setRecursive();
   B->push_back(C);
   A = B;
@@ -123,32 +123,32 @@ accessorL(A) ::= accessorL(B) DOT member(C).
 
 member(A) ::= DOT MEMBER(B).
 {
-  ACE_LOG(Debug, "member ::= DOT MEMBER");
+  ACE_LOG(Extra, "member ::= DOT MEMBER");
   auto const & n = dynamic_cast<MemberToken *>(B)->value;
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Named, n);
 }
 
 member(A) ::= index(B).
 {
-  ACE_LOG(Debug, "member ::= index");
+  ACE_LOG(Extra, "member ::= index");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Indexed, *B);
 }
 
 member(A) ::= range(B).
 {
-  ACE_LOG(Debug, "member ::= MEMBER range");
+  ACE_LOG(Extra, "member ::= MEMBER range");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Ranged, *B);
 }
 
 member(A) ::= OPENC WILDCARD CLOSEC.
 {
-  ACE_LOG(Debug, "member ::= OPENC WILDCARD CLOSEC");
+  ACE_LOG(Extra, "member ::= OPENC WILDCARD CLOSEC");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Any);
 }
 
 member(A) ::= DOT WILDCARD.
 {
-  ACE_LOG(Debug, "member ::= DOT WILDCARD");
+  ACE_LOG(Extra, "member ::= DOT WILDCARD");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Any);
 }
 
@@ -156,7 +156,7 @@ member(A) ::= DOT WILDCARD.
 
 index(A) ::= OPENC entries(B) CLOSEC.
 {
-  ACE_LOG(Debug, "index ::= [a,b,..]");
+  ACE_LOG(Extra, "index ::= [a,b,..]");
   A = B;
 }
 
@@ -164,7 +164,7 @@ index(A) ::= OPENC entries(B) CLOSEC.
 
 range(A) ::= OPENC INDEX(B) SLICE INDEX(C) CLOSEC.
 {
-  ACE_LOG(Debug, "index ::= [i:j]");
+  ACE_LOG(Extra, "index ::= [i:j]");
   A = new ace::tree::path::Item::Range {
     dynamic_cast<IndexToken *>(B)->value,
     dynamic_cast<IndexToken *>(C)->value,
@@ -174,7 +174,7 @@ range(A) ::= OPENC INDEX(B) SLICE INDEX(C) CLOSEC.
 
 range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
 {
-  ACE_LOG(Debug, "index ::= [i:j:k]");
+  ACE_LOG(Extra, "index ::= [i:j:k]");
   A = new ace::tree::path::Item::Range {
     dynamic_cast<IndexToken *>(B)->value,
     dynamic_cast<IndexToken *>(C)->value,
@@ -186,14 +186,14 @@ range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
 
 entries(A) ::= INDEX(B).
 {
-  ACE_LOG(Debug, "entry");
+  ACE_LOG(Extra, "entry");
   A = new std::vector<size_t>();
   A->push_back(dynamic_cast<IndexToken *>(B)->value);
 }
 
 entries(A) ::= entries(B) COMMA INDEX(C).
 {
-  ACE_LOG(Debug, "entries, entry");
+  ACE_LOG(Extra, "entries, entry");
   B->push_back(dynamic_cast<IndexToken *>(C)->value);
   A = B;
 }
