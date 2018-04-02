@@ -82,3 +82,18 @@ TEST_F(Hook, Fail_GlobalPath_All) {
   ASSERT_EQ(svr.get(), nullptr);
 }
 
+TEST_F(Hook, Pass_Template) {
+  WRITE_HEADER;
+  auto res = ace::model::Model::load("03_Template.json");
+  ASSERT_NE(res.get(), nullptr);
+  auto svr = res->validate("hook/03_Ok.lua", 1, const_cast<char **>(&prgnam));
+  ASSERT_NE(svr.get(), nullptr);
+}
+
+TEST_F(Hook, Fail_Template) {
+  WRITE_HEADER;
+  auto res = ace::model::Model::load("03_Template.json");
+  ASSERT_NE(res.get(), nullptr);
+  auto svr = res->validate("hook/03_Error.lua", 1, const_cast<char **>(&prgnam));
+  ASSERT_EQ(svr.get(), nullptr);
+}

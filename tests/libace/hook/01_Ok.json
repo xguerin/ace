@@ -31,7 +31,7 @@
     },
     "t4": {
       "kind": "string", "arity": "+",
-      "hook": { "path": "$.t3", "from": "([a-z]+)0([a-z]+)", "to": "\\1+\\2" },
+      "hook": { "path": "$.t3", "from": "([a-z]+)0([a-z]+)", "to": "\\1+\\2", "exact": true },
       "doc": "one liner"
     }
   }

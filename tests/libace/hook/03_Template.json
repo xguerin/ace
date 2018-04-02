@@ -1,0 +1,24 @@
+{
+  "header": {
+    "author": { "name": "John Doe", "email": "jdoe@acme.com" },
+    "version": "1.0",
+    "doc": "A model"
+  },
+  "templates": {
+    "tmpl0": {
+      "kind": "string", "arity": "+",
+      "hook": { "path": "$.var0", "from": "(.*)", "to": "\\1" },
+      "doc": "a string template"
+    }
+  },
+  "body": {
+    "var0": {
+      "kind": "string", "arity": "+", "doc": "a dummy class"
+    },
+    "var1": {
+      "kind": "select", "arity": "1",
+      "size": "+", "template": "tmpl0",
+      "doc": "Valid select option"
+    }
+  }
+}
