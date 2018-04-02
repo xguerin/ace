@@ -114,6 +114,8 @@ class Selector
   // Accessors
 
   SizeAttributeType const & sizeAttribute() const;
+
+  bool hasSize() const;
   Arity const & size() const;
 
   TemplateAttributeType const & templateAttribute() const;

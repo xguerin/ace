@@ -57,7 +57,8 @@ Selector::Selector()
     m_types(),
     m_instances() {
   m_attributes.define<TemplateAttributeType>("template", false);
-  m_attributes.define<SizeAttributeType>("size", false);
+  m_attributes.define<SizeAttributeType>("size", true);
+  m_attributes.exclude("size", "hook");
 }
 
 bool
@@ -148,10 +149,10 @@ Selector::flattenInstance(tree::Object & r, tree::Value & v) {
   tree::Object & o = static_cast<tree::Object &>(v);
   /**
    * We check the size of the object there, and not in checkInstance because objects
-   * can be automatically defaulted to empty objects when all there values can be
+   * can be automatically defaulted to empty objects when all their values can be
    * defaulted, and this step happens in Body::flattenInstance.
    */
-  if (not size().check(o.size())) {
+  if (hasSize() and not size().check(o.size())) {
     ERROR(ERR_INVALID_SELECT_SIZE(o.size()));
     return false;
   }
@@ -461,6 +462,11 @@ Selector::SizeAttributeType const &
 Selector::sizeAttribute() const {
   Attribute const & attr = *m_attributes["size"];
   return static_cast<SizeAttributeType const &>(attr);
+}
+
+bool
+Selector::hasSize() const {
+  return m_attributes.has("size");
 }
 
 Arity const &

@@ -27,7 +27,7 @@
     "t3": {
       "kind": "select", "arity": "1",
       "hook": { "path": "$.t1", "from": "([a-z]+)_([a-z]+)", "to": "\\10\\2" },
-      "doc": "one liner", "size": "*", "template": "a_class"
+      "doc": "one liner", "template": "a_class"
     },
     "t4": {
       "kind": "string", "arity": "+",

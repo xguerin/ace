@@ -54,6 +54,7 @@ BasicType::BasicType(const Kind k, std::string const & a)
   m_attributes.exclude("hook", "either");
   m_attributes.exclude("hook", "map");
   m_attributes.exclude("hook", "range");
+  m_attributes.exclude("hook", "size");
   m_attributes.exclude("inherit", "hook");
 }
 
