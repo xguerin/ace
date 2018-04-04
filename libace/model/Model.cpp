@@ -128,14 +128,14 @@ Model::path(const bool local) const {
 
 bool
 Model::checkModel(tree::Value const & t) const try {
-  const ace::tree::Checker::Schema jsonSchema = {
+  const ace::tree::Checker::Schema schema = {
     { "header"   , { ace::tree::Value::Type::Object, false } },
     { "templates", { ace::tree::Value::Type::Object, true  } },
     { "body"     , { ace::tree::Value::Type::Object, false } }
   };
   Context context(filePath());
   ace::tree::Checker chk(path(), t);
-  if (not chk.validate(jsonSchema)) return false;
+  if (not chk.validate(schema)) return false;
   if (not m_header.checkModel(t["header"])) return false;
   if (t.has("templates")) {
     DEBUG("Check model templates");

@@ -46,7 +46,7 @@ Header::path(const bool local) const {
 
 bool
 Header::checkModel(tree::Value const & t) const {
-  const ace::tree::Checker::Schema jsonSchema = {
+  const ace::tree::Checker::Schema schema = {
     { "package"  , { ace::tree::Value::Type::Array , true  } },
     { "author"   , { ace::tree::Value::Type::Object, true  } },
     { "namespace", { ace::tree::Value::Type::Array , true  } },
@@ -56,7 +56,7 @@ Header::checkModel(tree::Value const & t) const {
     { "doc"      , { ace::tree::Value::Type::String, false } }
   };
   ace::tree::Checker chk(path(), t);
-  if (not chk.validate(jsonSchema)) return false;
+  if (not chk.validate(schema)) return false;
   if (t.has("author") and not m_author.checkModel(t["author"])) return false;
   if (static_cast<tree::Primitive const &>(t["doc"]).value<std::string>().empty()) {
     ERROR(ERR_EMPTY_DOC);

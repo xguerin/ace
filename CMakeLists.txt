@@ -39,7 +39,6 @@ message(STATUS "Build version: " ${VERSION_SHORT})
 # Options
 #
 
-option(ACE_PLUGIN_JSON    "Enable JSON configuration plugin"   ON)
 option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"    ON)
 option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
 option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
@@ -106,9 +105,7 @@ include_directories(${RE2_INCLUDE_DIRS})
 include_directories(${LEMON_INCLUDE_DIRS})
 include_directories(${RAGEL_INCLUDE_DIRS})
 
-if (ACE_PLUGIN_JSON)
-  find_package(JANSSON REQUIRED)
-endif ()
+find_package(JANSSON REQUIRED)
 
 if (ACE_PLUGIN_LUA)
   find_package(Lua52 REQUIRED)
@@ -132,10 +129,7 @@ endif ()
 
 add_subdirectory(libace)
 add_subdirectory(tools)
-
-if (ACE_PLUGIN_JSON OR ACE_BUILD_TESTS)
-  add_subdirectory(formats/json)
-endif ()
+add_subdirectory(formats/json)
 
 if (ACE_PLUGIN_LUA OR ACE_BUILD_TESTS)
   add_subdirectory(formats/lua)

@@ -36,12 +36,12 @@ Author::path(const bool local) const {
 }
 
 bool Author::checkModel(tree::Value const & t) const {
-  const ace::tree::Checker::Schema jsonSchema = {
+  const ace::tree::Checker::Schema schema = {
     { "name"  , { ace::tree::Value::Type::String, false } },
     { "email" , { ace::tree::Value::Type::String, false } }
   };
   ace::tree::Checker chk(path(), t);
-  return chk.validate(jsonSchema);
+  return chk.validate(schema);
 }
 
 void Author::loadModel(tree::Value const & t) {
