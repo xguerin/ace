@@ -6,19 +6,21 @@
 #  YAMLCPP_INCLUDE_DIR, where to find yaml.h
 
 find_path(YAMLCPP_INCLUDE_DIR yaml-cpp/yaml.h
-          PATHS
-          /usr/local/include
-          /usr/include
-          ENV{YAMLCPP_ROOT}/include
-          ${YAMLCPP_ROOT}/include)
+  NO_DEFAULT_PATH
+  PATHS
+  /usr/local/include
+  /usr/include
+  $ENV{YAMLCPP_ROOT}/include
+  ${YAMLCPP_ROOT}/include)
 
 find_library(YAMLCPP_LIBRARY
-             NAMES ${YAMLCPP_STATIC} yaml-cpp
-             PATHS 
-             /usr/local
-             /usr
-             ENV{YAMLCPP_ROOT}/lib
-             ${YAMLCPP_DIR}/lib)
+  NAMES yaml-cpp
+  NO_DEFAULT_PATH
+  PATHS 
+  /usr/local/lib
+  /usr/lib
+  $ENV{YAMLCPP_ROOT}/lib
+  ${YAMLCPP_ROOT}/lib)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(YAMLCPP DEFAULT_MSG YAMLCPP_INCLUDE_DIR YAMLCPP_LIBRARY)
 mark_as_advanced(YAMLCPP_INCLUDE_DIR YAMLCPP_LIBRARY)
