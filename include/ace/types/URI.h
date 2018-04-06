@@ -53,7 +53,7 @@ class URI : public EnumeratedType<std::string, false, URISchemaCompare, URIForma
  public:
 
   enum class Scheme {
-    File, HTTP, IPv4, FTP, SMBCast, Undefined
+    File, HTTP, IPv4, FTP, Undefined
   };
 
   URI();

@@ -66,17 +66,3 @@ TEST_F(URI, Pass_Ok_All) {
   auto svr = res->validate("uri/01_Ok.lua", 1, const_cast<char **>(&prgnam));
   ASSERT_NE(svr.get(), nullptr);
 }
-
-TEST_F(URI, Pass_Ok2) {
-  WRITE_HEADER;
-  auto res = ace::model::Model::load("02_Ok.json");
-  ASSERT_NE(res.get(), nullptr);
-}
-
-TEST_F(URI, Pass_Ok2_All) {
-  WRITE_HEADER;
-  auto res = ace::model::Model::load("02_Ok.json");
-  auto svr = res->validate("uri/02_Ok.lua", 1, const_cast<char **>(&prgnam));
-  ASSERT_NE(svr.get(), nullptr);
-}
-

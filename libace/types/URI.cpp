@@ -79,14 +79,6 @@ static bool checkIPv4Format(std::string const & n, std::string const & b) {
   return true;
 }
 
-static bool checkSMBCastFormat(std::string const & n, std::string const & b) {
-  /**
-   * SMBCast addresses are simply STRING or STRING:STRING,
-   * so no need to validate anything here.
-   */
-  return true;
-}
-
 static bool checkFormat(std::string const & n, std::string const & b) {
   size_t markerPos = b.find("://");
   if (markerPos == std::string::npos or markerPos == 0) {
@@ -105,9 +97,6 @@ static bool checkFormat(std::string const & n, std::string const & b) {
     } break;
     case ace::model::URI::Scheme::IPv4 : {
       if (not checkIPv4Format(n, value)) return false;
-    } break;
-    case ace::model::URI::Scheme::SMBCast : {
-      if (not checkSMBCastFormat(n, value)) return false;
     } break;
     default : break;
   }
@@ -186,11 +175,10 @@ URI::clone(std::string const & n) const {
 URI::Scheme
 URI::parseScheme(std::string const & n) {
   const std::map<std::string, ace::model::URI::Scheme> stringToScheme = {
-    { "file",     Scheme::File    },
-    { "http",     Scheme::HTTP    },
-    { "ipv4",     Scheme::IPv4    },
-    { "ftp" ,     Scheme::FTP     },
-    { "smbcast",  Scheme::SMBCast }
+    { "file", Scheme::File },
+    { "http", Scheme::HTTP },
+    { "ipv4", Scheme::IPv4 },
+    { "ftp" , Scheme::FTP  }
   };
   if (stringToScheme.count(n) != 0) return stringToScheme.at(n);
   return Scheme::Undefined;
@@ -199,11 +187,10 @@ URI::parseScheme(std::string const & n) {
 std::string
 URI::toString(const Scheme s) {
   const std::map<ace::model::URI::Scheme, std::string> schemeToString = {
-    { Scheme::File,     "file"    },
-    { Scheme::HTTP,     "http"    },
-    { Scheme::IPv4,     "ipv4"    },
-    { Scheme::FTP ,     "ftp"     },
-    { Scheme::SMBCast,  "smbcast" }
+    { Scheme::File, "file" },
+    { Scheme::HTTP, "http" },
+    { Scheme::IPv4, "ipv4" },
+    { Scheme::FTP , "ftp"  }
   };
   if (schemeToString.count(s) != 0) return schemeToString.at(s);
   return "undefined";
