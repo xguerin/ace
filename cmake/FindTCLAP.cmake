@@ -5,12 +5,13 @@
 
 find_path(TCLAP_INCLUDE_DIR
   NAMES tclap/CmdLine.h
-  NO_DEFAULT_PATH
   PATHS
-  /usr/include
-  /usr/local/include
-  $ENV{TCLAP_ROOT}/include
-  ${TCLAP_ROOT}/include)
+  /usr/local
+  /usr
+  PATH_SUFFIXES include
+  HINTS
+  $ENV{TCLAP_ROOT}
+  ${TCLAP_ROOT})
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(TCLAP DEFAULT_MSG TCLAP_INCLUDE_DIR)
 mark_as_advanced(TCLAP_INCLUDE_DIR)

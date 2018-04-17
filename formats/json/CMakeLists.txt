@@ -1,4 +1,4 @@
-include_directories(${JANSSON_INCLUDE_DIRS})
+include_directories(${JANSSON_INCLUDE_DIR})
 
 add_library(ace_json_format SHARED  Array.cpp
                                     Common.cpp
@@ -10,7 +10,7 @@ target_compile_features(ace_json_format PRIVATE cxx_nullptr)
 
 target_link_libraries(ace_json_format
   PRIVATE ace
-  PUBLIC ${JANSSON_LIBRARIES})
+  PUBLIC ${JANSSON_LIBRARY})
 
 install(
   TARGETS ace_json_format
