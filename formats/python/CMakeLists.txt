@@ -1,5 +1,7 @@
 include_directories(${PYTHON_INCLUDE_DIRS})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register")
+
 add_library(ace_python_format SHARED  Array.cpp
                                       Common.cpp
                                       Object.cpp

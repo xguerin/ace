@@ -50,6 +50,8 @@ class Value {
   Value() = default;
   Value(const Type t, std::string const & v);
 
+  virtual ~Value() { }
+
   Type type() const;
 
   virtual operator std::string() const = 0;
@@ -201,6 +203,8 @@ class Statement {
 
   Statement() = default;
   Statement(const Type t);
+
+  virtual ~Statement() { }
 
   Type type() const;
 
