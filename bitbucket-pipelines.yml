@@ -1,0 +1,11 @@
+image: xguerin/ace-pipeline
+
+pipelines:
+  default:
+    - step:
+        script:
+          - mkdir build
+          - cd build
+          - cmake -DACE_BUILD_TESTS=ON ..
+          - make -j 4
+          - make test
