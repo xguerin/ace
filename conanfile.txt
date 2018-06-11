@@ -1,0 +1,15 @@
+[requires]
+gtest/1.8.0@bincrafters/stable
+jansson/2.11@bincrafters/stable
+yamlcpp/0.6.2@xguerin/imports
+tclap/1.2.2@xguerin/imports
+re2/20180401@xguerin/imports
+ragel/6.10@xguerin/imports
+lemon/latest@xguerin/imports
+
+[generators]
+cmake
+
+[options]
+yamlcpp:shared=True
+re2:shared=True
