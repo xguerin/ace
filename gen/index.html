@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Code generation - Adaptable Configuration Engine</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "C++ code generation", url: "#_top", children: [
+              {title: "File organization", url: "#file-organization" },
+              {title: "Checkers and getters", url: "#checkers-and-getters" },
+              {title: "Handling inheritance", url: "#handling-inheritance" },
+              {title: "The case of the Plugin type", url: "#the-case-of-the-plugin-type" },
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../misc/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../misc/" class="btn btn-xs btn-link">
+        Miscellaneous
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../deps/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../deps/" class="btn btn-xs btn-link">
+        Dependencies
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="c-code-generation">C++ code generation</h1>
+<p>ACE provides a Model-to-C++ compiler, called <code>ace-compile</code>, to enable tools to interact with configuration files. It also provides helper tools to instantiate the generated class based on configuration instances. If a configuration parsing class has been successfully instantiated, the tool developer has the guarantee that all accessed configuration option values are valid according to the defined model.</p>
+<h2 id="file-organization">File organization</h2>
+<p><code>ace-compile</code> generates three types of files: model class interfaces <code>&lt;ModelName&gt;Instance.ac.h</code>; model class declarations <code>&lt;ModelName&gt;.ac.h</code>; and model class definitions <code>&lt;ModelName&gt;.ac.cpp</code>. Model class interfaces define pure virtual interfaces that contain the accessor prototypes of a given model. Only interfaces are used within the definition of <code>class</code> type accessor prototypes.</p>
+<h2 id="checkers-and-getters">Checkers and getters</h2>
+<p>For each option, the compiler generates two accessors:</p>
+<ul>
+<li>a checker: <code>bool has_&lt;OptionName&gt;() const</code> if the arity of the option is either <code>?</code> or <code>*</code></li>
+<li>a getter: <code>OptionType &lt;OptionName&gt;() const</code></li>
+</ul>
+<p>The value of <code>OptionType</code> depends on the arity and the type of the option:</p>
+<ul>
+<li><code>?</code> or <code>1</code>: <code>OptionType</code> is either <code>BaseType</code> or <code>BaseType const &amp;</code></li>
+<li><code>*</code> or <code>+</code>: <code>OptionType</code> is <code>std:vector&lt;BaseType&gt; const</code> or <code>std::vector&lt;BaseType::Ref&gt; const &amp;</code></li>
+</ul>
+<p>The value of <code>BaseType</code> depends on the kind of type involved. It may be either <code>bool</code>, <code>int</code>, <code>float</code>, <code>std::string</code>, or <code>&lt;ModelName&gt;Interface</code>. <code>BaseType const &amp;</code> is used for <code>std::string</code> and <code>&lt;ModelOption&gt;Interface</code> types. <code>std::vector&lt;BaseType::Ref&gt; const &amp;</code> is used for <code>&lt;ModelOption&gt;Interface</code>.</p>
+<h2 id="handling-inheritance">Handling inheritance</h2>
+<p>The inclusion of external models is handled using multiple inheritance of pure virtual interfaces. The final implementation of the derived models instantiates itself all the configuration values. As a consequence, the declaration and definition files of models that only serve as base model in a model definition are not generated. When to included models define the same <code>class</code> option, the option is merged in the final model if and only if either the <code>class</code> models are identical or if one is a direct descendent of the other. In the later case, the compiler leverages C++ co-variant return types to implement the option accessors.</p>
+<h2 id="the-case-of-the-plugin-type">The case of the Plugin type</h2>
+<p>The code generation of the <code>plugin</code> kind of type is handle a bit differently that the other types. The <code>plugin</code> C++ type generated is a map from <code>std::string</code> to <code>MODEL::Ref</code> objects, containing the instantiated plugins. <code>MODEL::Ref</code> is a reference to the instantiated object casted into its base type. It's up to the user to up-cast that reference to the expected type. Example:</p>
+<pre><code class="json">&quot;options&quot;: {
+  &quot;kind&quot;: &quot;plugin&quot;, &quot;arity&quot;: &quot;1&quot;,
+  &quot;model&quot;: &quot;Base.json&quot;
+}
+</code></pre>
+
+<p>The generated accessor:</p>
+<pre><code class="cpp">std::map&lt;std::string, Base::Ref&gt; const &amp; options() const;
+</code></pre>
+
+<p>For two triggered models ModelA and ModelB, the generic way to access the components is:</p>
+<pre><code class="cpp">IModelA const &amp; modelA = std::static_pointer_cast&lt;IModelA const &amp;&gt;(options().at(&quot;a&quot;));
+IModelB const &amp; modelB = std::static_pointer_cast&lt;IModelB const &amp;&gt;(options().at(&quot;b&quot;));
+</code></pre>
+
+<p>To avoid verbose casting, a helper templated function is also generated to access generic components. The helper's name is the name of the options suffixed with <code>_at</code>:</p>
+<pre><code class="json">IModelA const &amp; modelA = options_at&lt;IModelA&gt;(&quot;a&quot;);
+IModelB const &amp; modelB = options_at&lt;IModelB&gt;(&quot;b&quot;);
+</code></pre>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../misc/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../misc/" class="btn btn-xs btn-link">
+        Miscellaneous
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../deps/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../deps/" class="btn btn-xs btn-link">
+        Dependencies
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Dependencies - Adaptable Configuration Engine</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Dependencies", url: "#_top", children: [
+              {title: "Requirement dependency", url: "#requirement-dependency" },
+              {title: "Disable dependency", url: "#disable-dependency" },
+              {title: "Value-guarded dependency", url: "#value-guarded-dependency" },
+              {title: "Constraint-guarded dependency", url: "#constraint-guarded-dependency" },
+              {title: "Mixing dependencies", url: "#mixing-dependencies" },
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../gen/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../gen/" class="btn btn-xs btn-link">
+        Code generation
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../types/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../types/" class="btn btn-xs btn-link">
+        Types
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="dependencies">Dependencies</h1>
+<p>Option value definition may have one or more dependencies on other option value definitions within the same model or across included models. The supported types of dependencies are presented below. Dependent types are addressed using a local JSONPath path.</p>
+<h2 id="requirement-dependency">Requirement dependency</h2>
+<p>When options are mentioned in this type of dependency, their arity is promoted to <code>required</code>.</p>
+<pre><code class="json">&quot;deps&quot;: [ { &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
+</code></pre>
+
+<h2 id="disable-dependency">Disable dependency</h2>
+<p>When options are mentioned in this type of dependency, their use is disabled.</p>
+<pre><code class="json">&quot;deps&quot;: [ { &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
+</code></pre>
+
+<h2 id="value-guarded-dependency">Value-guarded dependency</h2>
+<p>Value-guarded dependencies are activated only when the option has one of the value specified in the <code>when</code> list.</p>
+<pre><code class="json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
+</code></pre>
+
+<pre><code class="json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
+</code></pre>
+
+<h2 id="constraint-guarded-dependency">Constraint-guarded dependency</h2>
+<p>Constraint-guarded dependencies enforce the final value of the dependent type.</p>
+<pre><code class="json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;either&quot;: [ V1, V2 ] } ]
+</code></pre>
+
+<pre><code class="json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;range&quot;: &quot;[ V1, V2 ]&quot; } ]
+</code></pre>
+
+<h2 id="mixing-dependencies">Mixing dependencies</h2>
+<pre><code class="json">&quot;deps&quot;: [
+  { &quot;require&quot;: [ &quot;@.A&quot;, ... ] },
+  { &quot;when&quot;: [ V ], &quot;require&quot;: [ &quot;@.A&quot;, ... ] }
+]
+</code></pre>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../gen/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../gen/" class="btn btn-xs btn-link">
+        Code generation
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../types/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../types/" class="btn btn-xs btn-link">
+        Types
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

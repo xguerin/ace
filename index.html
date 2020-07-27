@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="None">
+    
+    
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Adaptable Configuration Engine</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+      <script src="./js/elasticlunr.min.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = (window === window.parent);
+        
+        var pageToc = [
+          {title: "About", url: "#_top", children: [
+              {title: "Installation", url: "#installation" },
+              {title: "Getting started", url: "#getting-started" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="./search.html">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+
+    
+    
+
+    
+    <a href="" class="wm-top-brand wm-top-link wm-vcenter">
+      
+      <div class="wm-top-title">
+        Adaptable Configuration Engine<br>
+        
+          <span class="wm-top-version">1.2.0</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+  <div id="main-content" class="wm-page-top-frame">
+    
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href="" class="wm-article-link wm-toc-text">Home</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="models/" class="wm-article-link wm-toc-text">Models</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="types/" class="wm-article-link wm-toc-text">Types</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="deps/" class="wm-article-link wm-toc-text">Dependencies</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="gen/" class="wm-article-link wm-toc-text">Code generation</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="misc/" class="wm-article-link wm-toc-text">Miscellaneous</a>
+</li>
+  </ul>
+</nav>
+
+    <div class="wm-content-pane">
+      <iframe class="wm-article" name="article"></iframe>
+    </div>
+  </div>
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="models/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="models/" class="btn btn-xs btn-link">
+        Models
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="about">About</h1>
+<p>ACE is a model-based configuration authoring and validation environment. It aims at bringing determinism to tool configuration by externalizing the configuration definition into a separate model file. The model file is used to check the validity of a configuration instance, browse available options, and generate the necessary source code to access the options values.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="prepare">Prepare</h3>
+<p>Grab <a href="https://git.sr.ht/~xguerin/ace">the source code</a>. ACE has several dependencies, listed below. Dependencies with checkmarks can be installed using <a href="https://conan.io">Conan</a>:</p>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="http://www.hwaci.com/sw/lemon">lemon</a> (macOS: <strong>NOT</strong> the current Homebrew version)</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="http://www.colm.net/open-source/ragel">ragel</a></li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="http://tclap.sourceforge.net/">TCLAP</a></li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="https://github.com/google/re2">RE2</a></li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="https://github.com/google/googletest">GTest</a> if testing is enabled</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="http://www.digip.org/jansson">jansson</a> for JSON support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Python 2.x for Python support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Lua 5.2.4 for Lua support</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> <a href="https://github.com/jbeder/yaml-cpp">yaml-cpp</a> for YAML support</li>
+</ul>
+<h3 id="building-without-conan">Building without Conan</h3>
+<p>ACE uses <a href="https://cmake.org">CMake</a> as its build system. To build the project, simply run the following commands:</p>
+<pre><code class="bash">cd ace
+mkdir build
+cd build
+cmake ..
+make
+make install
+</code></pre>
+
+<h3 id="building-with-conan">Building with Conan</h3>
+<p>To build the project using <code>Conan</code>, run the following commands:</p>
+<pre><code class="bash">cd ace
+mkdir build
+cd build
+conan install ..
+cmake ..
+make
+make install
+</code></pre>
+
+<h3 id="tweaking-the-build-process">Tweaking the build process</h3>
+<p>The <code>cmake</code> command accepts the following variables (default is shown <strong>bold</strong>):</p>
+<ul>
+<li><code>ACE_PLUGIN_JSON</code>: enables the JSON file plugin. Accepts <strong><code>ON</code></strong> or <code>OFF</code>.</li>
+<li><code>ACE_PLUGIN_LUA</code>: enables the LUA file plugin. Accepts <strong><code>ON</code></strong> or <code>OFF</code>.</li>
+<li><code>ACE_PLUGIN_PYTHON</code>: enables the PYTHON file plugin. Accepts <strong><code>ON</code></strong> or <code>OFF</code>.</li>
+<li><code>ACE_PLUGIN_TOML</code>: enables the TOML file plugin. Accepts <strong><code>ON</code></strong> or <code>OFF</code>.</li>
+<li><code>ACE_PLUGIN_YAML</code>: enables the YAML file plugin. Accepts <strong><code>ON</code></strong> or <code>OFF</code>.</li>
+<li><code>ACE_PLUGIN_TESTS</code>: builds the test suite. Accepts <code>ON</code> or <strong><code>OFF</code></strong>.</li>
+</ul>
+<p>The standard <code>cmake</code> variable <code>CMAKE_INSTALL_PREFIX</code> shall be used to alter the installation prefix:</p>
+<pre><code class="bash">cd ace
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/opt ..
+make
+make install
+</code></pre>
+
+<h2 id="getting-started">Getting started</h2>
+<h3 id="model-definition">Model definition</h3>
+<p>The first step is to define a model for our example configuration, saved into a <code>Model.json</code> file:</p>
+<pre><code class="json">{
+  &quot;header&quot;: {
+    &quot;author&quot;: { &quot;name&quot;: &quot;John Doe&quot;, &quot;email&quot;: &quot;jdoe@acme.com&quot; },
+    &quot;version&quot;: &quot;1.0&quot;,
+    &quot;namespace&quot;: [ &quot;my&quot;, &quot;ns&quot; ],
+    &quot;doc&quot;: &quot;ACME configuration model&quot;
+  },
+  &quot;body&quot;: {
+    &quot;intItem&quot;: {
+      &quot;kind&quot;: &quot;integer&quot;, &quot;arity&quot;: &quot;?&quot;,
+      &quot;doc&quot;: &quot;an integer option&quot;
+    },
+    &quot;stringItem&quot;: {
+      &quot;kind&quot;: &quot;string&quot;, &quot;arity&quot;: &quot;1&quot;,
+      &quot;doc&quot;: &quot;a string option&quot;
+    },
+    &quot;floatItem&quot;: {
+      &quot;kind&quot;: &quot;float&quot;, &quot;arity&quot;: &quot;*&quot;,
+      &quot;doc&quot;: &quot;a float option&quot;
+    },
+    &quot;booleanItem&quot;: {
+      &quot;kind&quot;: &quot;boolean&quot;, &quot;arity&quot;: &quot;+&quot;,
+      &quot;doc&quot;: &quot;a boolean option&quot;
+    }
+  }
+}
+</code></pre>
+
+<p>This model defines 4 configuration items: a integer item <code>intItem</code>, a string item <code>stringItem</code>, a float item <code>floatItem</code>, and a boolean item <code>booleanItem</code>. Beside its kind, each item declares its arity and documnetation.</p>
+<h3 id="model-transpilation">Model transpilation</h3>
+<p>The second step is to transpile that model into a set of helper classes that can be used in a C++ application.</p>
+<pre><code>ace-compile Model.json
+</code></pre>
+
+<p>The <code>ace-compile</code> command produces 3 files: an interface header file <code>IModel.ac.h</code>, an implementation header file <code>Model.ac.h</code>, and an implementation source file <code>Model.ac.cpp</code>.</p>
+<h3 id="code-integration">Code integration</h3>
+<p>The third step is to make use of the generated files in our example application. ACE provides a set of helper functions that simplify that task:</p>
+<pre><code class="cpp">#include &lt;Model.ac.h&gt;
+#include &lt;ace/engine/Master.h&gt;
+#include &lt;ace/model/Helper.h&gt;
+#include &lt;tclap/CmdLine.h&gt;
+#include &lt;string&gt;
+
+using namespace ace::model::Helper;
+
+int main(int argc, char *argv[]) {
+  // Define CLI arguments
+
+  TCLAP::CmdLine cmd(&quot;ACME Tool&quot;, ' ', &quot;0.1&quot;);
+  TCLAP::ValueArg&lt;std::string&gt; cfgPath(&quot;c&quot;, &quot;config&quot;, &quot;Configuration file&quot;,
+                                       true, &quot;&quot;, &quot;string&quot;);
+  cmd.add(cfgPath);
+  cmd.parse(argc, argv);
+
+  // Instantiate the configuration
+  //
+  auto cfg = parseFile&lt;my::ns::Model&gt;(cfgPath.getValue(), false, argc, argv);
+  if (cfg == nullptr) return -1;
+
+  // Use it !
+  //
+  auto const &amp; acme = *cfg;
+  if (acme.has_intItem()) {
+    std::cout &lt;&lt; &quot;int = &quot; &lt;&lt; acme.intItem() &lt;&lt; std::endl;
+  }
+  for (auto const &amp; f : acme.floatItem()) {
+    std::cout &lt;&lt; &quot;float = &quot; &lt;&lt; f &lt;&lt; std::endl;
+  }
+  for (auto const &amp; b : acme.booleanItem()) {
+    std::cout &lt;&lt; &quot;bool = &quot; &lt;&lt; b &lt;&lt; std::endl;
+  }
+  std::cout &lt;&lt; &quot;str = &quot; &lt;&lt; acme.stringItem() &lt;&lt; std::endl;
+
+  return 0;
+}
+</code></pre>
+
+<p>Please note that the code above makes use of <code>TCLAP</code> to parse the command line arguments. This is an arbitrary choice and you are free to use whichever CLI option parser you wish.</p>
+<h3 id="testing">Testing</h3>
+<p>Finally, we are ready to test our application. First, let's compile it using the following Makefile:</p>
+<pre><code class="makefile">CFLAGS = -g3 -x c++ -std=c++11 -I . -I $(ACE_INCLUDE_PATH) 
+LFLAGS = -L $(ACE_LIB_PATH) -rpath $(ACE_LIB_PATH) 
+
+all: clean ace bin
+
+ace:
+    ace-compile -I . Model.json
+
+bin:
+    c++ $(CFLAGS) -c main.cpp
+    c++ $(CFLAGS) -c Model.ac.cpp
+    c++ $(LFLAGS) -o main main.o Model.ac.o -lace
+
+clean:
+    rm -f *.ac.* *.o main
+</code></pre>
+
+<p>Next, let's define a configuration file, in TOML, called <code>config.toml</code>:</p>
+<pre><code class="toml">intItem = 17
+stringItem = &quot;Hello!&quot;
+floatItem = 3.14
+booleanItem = [ true, false, false ]
+</code></pre>
+
+<p>Finally, let's run our application:</p>
+<pre><code>./main -c config.toml
+</code></pre>
+
+<p>The expected output it:</p>
+<pre><code>int = 17
+float = 3.14
+bool = 1
+bool = 0
+bool = 0
+str = Hello!
+</code></pre>
+
+<p>Since ACE also supports JSON, Python and Lua, we can also use these configuration files:</p>
+<pre><code class="json">{
+  &quot;intItem&quot; : 17,
+  &quot;stringItem&quot; : &quot;Hello!&quot;,
+  &quot;floatItem&quot; : 3.14,
+  &quot;booleanItem&quot; : [ true, false, false ],
+  &quot;selectItem&quot; : &quot;hello&quot;,
+  &quot;hello&quot; : &quot;world&quot;
+}
+</code></pre>
+
+<p>a Python configuration file:</p>
+<pre><code class="python">config = {
+  'intItem' : 17,
+  'stringItem' : 'Hello!',
+  'floatItem' : 3.14,
+  'booleanItem' : [ True, False, False ],
+  'selectItem': 'hello',
+  'hello': 'world'
+}
+</code></pre>
+
+<p>or a Lua configuration file:</p>
+<pre><code class="lua">config = {
+  intItem = 17,
+  stringItem = 'Hello!',
+  floatItem = 3.14,
+  booleanItem = { true, false, false }
+  selectItem = 'hello',
+  hello = 'world'
+}
+</code></pre>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="models/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="models/" class="btn btn-xs btn-link">
+        Models
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
+<!--
+MkDocs version : 1.1.2
+Build Date UTC : 2020-07-27 13:21:14.714026+00:00
+-->
