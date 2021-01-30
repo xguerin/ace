@@ -18,5 +18,4 @@ target_link_libraries(ace-validate PRIVATE ace)
 
 install(
   TARGETS ace-compile ace-convert ace-explain ace-path ace-validate 
-  RUNTIME DESTINATION bin
-  )
+  RUNTIME DESTINATION bin)

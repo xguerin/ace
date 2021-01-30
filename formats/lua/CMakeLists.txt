@@ -12,7 +12,11 @@ target_link_libraries(ace_lua_format
   PRIVATE ace
   PUBLIC ${LUA_LIBRARIES})
 
+set_target_properties(ace_lua_format
+  PROPERTIES
+  VERSION ${LIB_VERSION}
+  SOVERSION ${LIB_SOVERSION})
+
 install(
   TARGETS ace_lua_format
-  LIBRARY DESTINATION lib
-  )
+  LIBRARY DESTINATION lib)

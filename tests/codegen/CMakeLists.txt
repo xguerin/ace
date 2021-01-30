@@ -23,8 +23,7 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E env ACE_SCANNER_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ace-compile -I ${CMAKE_CURRENT_SOURCE_DIR} ${MODELS}
   DEPENDS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ace-compile
   COMMENT "Compiling test models"
-  VERBATIM
-  )
+  VERBATIM)
 
 add_executable(codegen-tests ${SOURCES} ${MODEL_AC_CPP})
 add_test(gtest codegen-tests)

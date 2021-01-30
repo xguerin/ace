@@ -12,7 +12,11 @@ target_link_libraries(ace_json_format
   PRIVATE ace
   PUBLIC ${JANSSON_LIBRARY})
 
+set_target_properties(ace_json_format
+  PROPERTIES
+  VERSION ${LIB_VERSION}
+  SOVERSION ${LIB_SOVERSION})
+
 install(
   TARGETS ace_json_format
-  LIBRARY DESTINATION lib
-  )
+  LIBRARY DESTINATION lib)

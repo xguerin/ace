@@ -11,12 +11,15 @@ add_library(ace SHARED
   $<TARGET_OBJECTS:ace_filesystem>
   $<TARGET_OBJECTS:ace_model>
   $<TARGET_OBJECTS:ace_tree>
-  $<TARGET_OBJECTS:ace_types>
-  )
+  $<TARGET_OBJECTS:ace_types>)
 
 target_link_libraries(ace PUBLIC ${RE2_LIBRARY} ${CMAKE_DL_LIBS})
 
+set_target_properties(ace
+  PROPERTIES
+  VERSION ${LIB_VERSION}
+  SOVERSION ${LIB_SOVERSION})
+
 install(
   TARGETS ace
-  LIBRARY DESTINATION lib
-  )
+  LIBRARY DESTINATION lib)

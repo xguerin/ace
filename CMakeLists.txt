@@ -32,8 +32,10 @@ string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
 string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
 string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
 
-set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-message(STATUS "Build version: " ${VERSION_SHORT})
+set(LIB_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+set(LIB_SOVERSION ${VERSION_MAJOR})
+
+message(STATUS "Build version: " ${LIB_VERSION})
 
 #
 # Options
@@ -58,7 +60,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release ... FORCE)
 endif()
 
-add_definitions(-DACE_VERSION="${VERSION_SHORT}")
+add_definitions(-DACE_VERSION="${LIB_VERSION}")
 
 #
 # Global include directory
@@ -166,29 +168,25 @@ if(ACE_BUILD_TESTS)
   add_test(
     NAME libace
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/libace
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libace-tests
-    )
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libace-tests)
   set_property(
     TEST libace
     PROPERTY ENVIRONMENT
     "ACE_SCANNER_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
-    "ACE_TESTS_PATH=${CMAKE_BINARY_DIR}/tests/libace"
-    )
+    "ACE_TESTS_PATH=${CMAKE_BINARY_DIR}/tests/libace")
   #
   # Generated code tests
   #
   add_test(
     NAME codegen
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/codegen
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/codegen-tests
-    )
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/codegen-tests)
   #
   set_property(
     TEST codegen
     PROPERTY ENVIRONMENT
     "ACE_SCANNER_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
-    "ACE_TESTS_PATH=${CMAKE_BINARY_DIR}/tests/codegen"
-    )
+    "ACE_TESTS_PATH=${CMAKE_BINARY_DIR}/tests/codegen")
 endif()
 
 #
@@ -197,5 +195,4 @@ endif()
 
 install(
   DIRECTORY   include/ace
-  DESTINATION include 
-  )
+  DESTINATION include)

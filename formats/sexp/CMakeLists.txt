@@ -14,6 +14,11 @@ add_library(ace_sexp_format SHARED ${SOURCES})
 target_compile_features(ace_sexp_format PRIVATE cxx_nullptr)
 target_link_libraries(ace_sexp_format PRIVATE ace)
 
+set_target_properties(ace_sexp_format
+  PROPERTIES
+  VERSION ${LIB_VERSION}
+  SOVERSION ${LIB_SOVERSION})
+
 install(
   TARGETS ace_sexp_format
   LIBRARY DESTINATION lib)

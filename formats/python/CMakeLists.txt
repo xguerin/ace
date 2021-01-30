@@ -14,7 +14,11 @@ target_link_libraries(ace_python_format
   PRIVATE ace
   PUBLIC ${PYTHON_LIBRARIES})
 
+set_target_properties(ace_python_format
+  PROPERTIES
+  VERSION ${LIB_VERSION}
+  SOVERSION ${LIB_SOVERSION})
+
 install(
   TARGETS ace_python_format
-  LIBRARY DESTINATION lib
-  )
+  LIBRARY DESTINATION lib)
