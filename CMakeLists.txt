@@ -3,7 +3,9 @@
 #
 
 project("ACE" C CXX)
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.12)
+
+cmake_policy(SET CMP0074 NEW)
 
 include(cmake/GetGitRevisionDescription.cmake)
 include(cmake/Lemon.cmake)
@@ -41,11 +43,12 @@ message(STATUS "Build version: " ${LIB_VERSION})
 # Options
 #
 
+option(ACE_PLUGIN_HJSON   "Enable HJSON configuration plugin"  ON)
+option(ACE_PLUGIN_INI     "Enable INI configuration plugin"    ON)
 option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"    ON)
 option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
-option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
-option(ACE_PLUGIN_INI     "Enable INI configuration plugin"    ON)
 option(ACE_PLUGIN_SEXP    "Enable SEXP configuration plugin"   ON)
+option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
 option(ACE_PLUGIN_YAML    "Enable YAML configuration plugin"   ON)
 option(ACE_BUILD_TESTS    "Build the Google tests suite"       OFF)
 
@@ -110,6 +113,10 @@ include_directories(${RE2_INCLUDE_DIR})
 
 find_package(JANSSON REQUIRED)
 
+if(ACE_PLUGIN_HJSON)
+  find_package(HJSON REQUIRED)
+endif()
+
 if(ACE_PLUGIN_LUA)
   find_package(Lua52 REQUIRED)
 endif()
@@ -132,7 +139,16 @@ endif()
 
 add_subdirectory(libace)
 add_subdirectory(tools)
+
 add_subdirectory(formats/json)
+
+if(ACE_PLUGIN_HJSON OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/hjson)
+endif()
+
+if(ACE_PLUGIN_INI OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/ini)
+endif()
 
 if(ACE_PLUGIN_LUA OR ACE_BUILD_TESTS)
   add_subdirectory(formats/lua)
@@ -142,16 +158,12 @@ if(ACE_PLUGIN_PYTHON OR ACE_BUILD_TESTS)
   add_subdirectory(formats/python)
 endif()
 
-if(ACE_PLUGIN_TOML OR ACE_BUILD_TESTS)
-  add_subdirectory(formats/toml)
-endif()
-
-if(ACE_PLUGIN_INI OR ACE_BUILD_TESTS)
-  add_subdirectory(formats/ini)
-endif()
-
 if(ACE_PLUGIN_SEXP OR ACE_BUILD_TESTS)
   add_subdirectory(formats/sexp)
+endif()
+
+if(ACE_PLUGIN_TOML OR ACE_BUILD_TESTS)
+  add_subdirectory(formats/toml)
 endif()
 
 if(ACE_PLUGIN_YAML OR ACE_BUILD_TESTS)
