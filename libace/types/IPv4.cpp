@@ -39,19 +39,21 @@
 #include <sys/socket.h>
 #endif
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // IPv4 format checker
 
-IPv4FormatChecker::IPv4FormatChecker(const BasicType * o) : FormatChecker(o) { }
+IPv4FormatChecker::IPv4FormatChecker(const BasicType* o) : FormatChecker(o) {}
 
 bool
-IPv4FormatChecker::operator() (tree::Object const & r, tree::Value const & v) const {
-  if (not FormatChecker<std::string>::operator()(r, v)) return false;
+IPv4FormatChecker::operator()(tree::Object const& r, tree::Value const& v) const
+{
+  if (not FormatChecker<std::string>::operator()(r, v)) {
+    return false;
+  }
   int score = 0;
-  v.each([&](tree::Value const & w) {
-    tree::Primitive const & p = static_cast<tree::Primitive const &>(w);
+  v.each([&](tree::Value const& w) {
+    tree::Primitive const& p = static_cast<tree::Primitive const&>(w);
     if (p.value() != "auto" and not checkFormat(p.value())) {
       ERROR_O(m_owner, ERR_IPv4_BAD_ADDRESS(p.value()));
       score += 1;
@@ -60,37 +62,43 @@ IPv4FormatChecker::operator() (tree::Object const & r, tree::Value const & v) co
   return score == 0;
 }
 
-bool IPv4FormatChecker::checkFormat(std::string const & s) {
-  struct addrinfo hints, * result = nullptr;
-  memset(& hints, 0, sizeof(hints));
+bool
+IPv4FormatChecker::checkFormat(std::string const& s)
+{
+  struct addrinfo hints, *result = nullptr;
+  memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_INET;
-  int r = getaddrinfo(s.c_str(), nullptr, & hints, & result);
+  int r = getaddrinfo(s.c_str(), nullptr, &hints, &result);
   freeaddrinfo(result);
   return r == 0;
 }
 
 // IPv4 class
 
-IPv4::IPv4() : Type(BasicType::Kind::IPv4), EnumeratedType(BasicType::Kind::IPv4) { }
+IPv4::IPv4()
+  : Type(BasicType::Kind::IPv4), EnumeratedType(BasicType::Kind::IPv4)
+{}
 
 void
-IPv4::collectInterfaceIncludes(std::set<std::string> & i) const {
+IPv4::collectInterfaceIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 void
-IPv4::collectImplementationIncludes(std::set<std::string> & i) const {
+IPv4::collectImplementationIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 BasicType::Ref
-IPv4::clone(std::string const & n) const {
-  IPv4 * mac = new IPv4(*this);
+IPv4::clone(std::string const& n) const
+{
+  IPv4* mac = new IPv4(*this);
   mac->setName(n);
   return BasicType::Ref(mac);
 }
 
-} // namespace model
-} // namespace ace
+}}

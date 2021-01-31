@@ -32,19 +32,25 @@
 
 namespace {
 
-static bool expansion_count(std::string const & p, int & r) {
+static bool
+expansion_count(std::string const& p, int& r)
+{
   bool esc = false;
   std::locale loc;
   std::set<size_t> occs;
-  for (auto & c : p) {
+  for (auto& c : p) {
     if (c == ESCAPE_CHAR) {
       esc = not esc;
     } else if (esc) {
-      if (std::isdigit(c, loc)) occs.insert(c - '0');
+      if (std::isdigit(c, loc)) {
+        occs.insert(c - '0');
+      }
       esc = false;
     }
   }
-  if (esc) return false;
+  if (esc) {
+    return false;
+  }
   if (not occs.empty() and occs.size() != *occs.rbegin()) {
     return false;
   }
@@ -52,16 +58,22 @@ static bool expansion_count(std::string const & p, int & r) {
   return true;
 }
 
-static std::string expand_string(std::string const & p, std::vector<std::string> const & x) {
+static std::string
+expand_string(std::string const& p, std::vector<std::string> const& x)
+{
   bool esc = false;
   std::locale loc;
   std::ostringstream oss;
-  for (auto & c : p) {
+  for (auto& c : p) {
     if (c == ESCAPE_CHAR) {
-      if (esc) oss << c;
+      if (esc) {
+        oss << c;
+      }
       esc = not esc;
     } else if (esc) {
-      if (std::isdigit(c, loc)) oss << x[c - '1'];
+      if (std::isdigit(c, loc)) {
+        oss << x[c - '1'];
+      }
       esc = false;
     } else {
       oss << c;
@@ -70,32 +82,37 @@ static std::string expand_string(std::string const & p, std::vector<std::string>
   return oss.str();
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace common {
-namespace Regex {
+namespace ace { namespace common { namespace Regex {
 
-bool match(std::string const & s, std::string const & r) {
+bool
+match(std::string const& s, std::string const& r)
+{
   return RE2::FullMatch(s, r);
 }
 
-bool expand(std::string const & s, std::string const & r,
-                  std::string const & p, std::string & v) {
+bool
+expand(std::string const& s, std::string const& r, std::string const& p,
+       std::string& v)
+{
   int n = 0;
-  if (not expansion_count(p, n)) return false;
+  if (not expansion_count(p, n)) {
+    return false;
+  }
   const RE2::Arg* args[n];
   std::vector<std::string> exps(n);
-  for (int i = 0; i < n; i += 1) args[i] = new RE2::Arg(&exps[i]);
-  if (not RE2::FullMatchN(s, r, args, n)) return false;
-  for (int i = 0; i < n; i += 1) delete args[i];
+  for (int i = 0; i < n; i += 1) {
+    args[i] = new RE2::Arg(&exps[i]);
+  }
+  if (not RE2::FullMatchN(s, r, args, n)) {
+    return false;
+  }
+  for (int i = 0; i < n; i += 1) {
+    delete args[i];
+  }
   v = expand_string(p, exps);
   return true;
 }
 
-
-} // namespace Regex
-} // namespace common
-} // namespace ace
-
-
+}}}

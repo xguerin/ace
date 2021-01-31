@@ -24,115 +24,143 @@
 #include <ace/tree/Array.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 bool
-DependencyAttribute<>::Comparator::operator()(Dependency::Ref const & a,
-                                              Dependency::Ref const & b) const {
+DependencyAttribute<>::Comparator::operator()(Dependency::Ref const& a,
+                                              Dependency::Ref const& b) const
+{
   return a->priority() < b->priority();
 }
 
-DependencyAttribute<>::DependencyAttribute(DependencyAttribute const & o)
-  : Attribute(o), m_values() {
-  for (auto & d : o.m_values) {
+DependencyAttribute<>::DependencyAttribute(DependencyAttribute const& o)
+  : Attribute(o), m_values()
+{
+  for (auto& d : o.m_values) {
     Dependency::Ref nd(d->clone());
     nd->setParent(this);
     m_values.insert(nd);
   }
 }
 
-DependencyAttribute<>::DependencyAttribute(std::string const & n, bool o)
-  : Attribute(n, o), m_values() { }
+DependencyAttribute<>::DependencyAttribute(std::string const& n, bool o)
+  : Attribute(n, o), m_values()
+{}
 
 bool
-DependencyAttribute<>::checkModel(tree::Value const & t) const {
+DependencyAttribute<>::checkModel(tree::Value const& t) const
+{
   if (t.type() != tree::Value::Type::Array) {
     ERROR(ERR_DEPS_NOT_AN_ARRAY);
     return false;
   }
-  auto const & ary = static_cast<tree::Array const &>(t);
+  auto const& ary = static_cast<tree::Array const&>(t);
   if (ary.size() == 0) {
     ERROR(ERR_EMPTY_DEPS);
     return false;
   }
-  for (auto & d : ary) if (not checkDependency(*d)) return false;
+  for (auto& d : ary) {
+    if (not checkDependency(*d)) {
+      return false;
+    }
+  }
   return true;
 }
 
 void
-DependencyAttribute<>::loadModel(tree::Value const & t) {
-  auto const & ary = static_cast<tree::Array const &>(t);
-  for (auto & d : ary) loadDependency(*d);
+DependencyAttribute<>::loadModel(tree::Value const& t)
+{
+  auto const& ary = static_cast<tree::Array const&>(t);
+  for (auto& d : ary) {
+    loadDependency(*d);
+  }
 }
 
 bool
-DependencyAttribute<>::checkDependency(tree::Value const & t) const {
+DependencyAttribute<>::checkDependency(tree::Value const& t) const
+{
   return false;
 }
 
 void
-DependencyAttribute<>::loadDependency(tree::Value const & t) {
-}
+DependencyAttribute<>::loadDependency(tree::Value const& t)
+{}
 
 bool
-DependencyAttribute<>::validateModel() {
+DependencyAttribute<>::validateModel()
+{
   int score = 0;
-  for (auto & d : m_values) if (not d->validateModel()) score += 1;
+  for (auto& d : m_values) {
+    if (not d->validateModel()) {
+      score += 1;
+    }
+  }
   return score == 0;
 }
 
 void
-DependencyAttribute<>::load(Attribute const & a) {
-  DependencyAttribute<> const & ra = static_cast<DependencyAttribute<> const &>(a);
+DependencyAttribute<>::load(Attribute const& a)
+{
+  DependencyAttribute<> const& ra =
+    static_cast<DependencyAttribute<> const&>(a);
   m_values = ra.m_values;
 }
 
 bool
-DependencyAttribute<>::merge(Attribute const & b) {
-  if (not Attribute::merge(b)) return false;
+DependencyAttribute<>::merge(Attribute const& b)
+{
+  if (not Attribute::merge(b)) {
+    return false;
+  }
   Dependencies extra;
-  DependencyAttribute<> const & rb = static_cast<DependencyAttribute<> const &>(b);
-  for (auto & o : rb.m_values) {
+  DependencyAttribute<> const& rb =
+    static_cast<DependencyAttribute<> const&>(b);
+  for (auto& o : rb.m_values) {
     bool merged = false;
-    for (auto & l : m_values) if (l->canMerge(*o)) {
-      l->merge(*o);
-      merged = true;
-      break;
+    for (auto& l : m_values) {
+      if (l->canMerge(*o)) {
+        l->merge(*o);
+        merged = true;
+        break;
+      }
     }
     if (not merged) {
       extra.insert(o);
     }
   }
-  for (auto & e : extra) {
+  for (auto& e : extra) {
     e->setParent(this);
     m_values.insert(e);
   }
   return true;
 }
 
-DependencyAttribute<>::operator tree::Checker::Pattern() const {
+DependencyAttribute<>::operator tree::Checker::Pattern() const
+{
   return tree::Checker::Pattern(tree::Value::Type::Array, m_optional);
 }
 
 void
-DependencyAttribute<>::print(std::ostream & o, int l) const {
+DependencyAttribute<>::print(std::ostream& o, int l) const
+{
   bool indent = false;
-  for (auto & a : m_values) {
+  for (auto& a : m_values) {
     Generator::indent(o, indent ? l : 0) << (std::string)*a << std::endl;
-    if (not indent) indent = true;
+    if (not indent) {
+      indent = true;
+    }
   }
 }
 
-DependencyAttribute<>::operator std::string() const {
+DependencyAttribute<>::operator std::string() const
+{
   return std::string();
 }
 
-typename DependencyAttribute<>::Dependencies const &
-DependencyAttribute<>::values() const {
+typename DependencyAttribute<>::Dependencies const&
+DependencyAttribute<>::values() const
+{
   return m_values;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

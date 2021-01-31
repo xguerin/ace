@@ -30,49 +30,49 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // File comparator
 
-struct FileTypeCompare : public std::binary_function<std::string, std::string, bool> {
-  bool operator() (std::string const & a, std::string const & b) const;
+struct FileTypeCompare
+  : public std::binary_function<std::string, std::string, bool>
+{
+  bool operator()(std::string const& a, std::string const& b) const;
 };
 
 // File format checker
 
-class FileFormatChecker : public FormatChecker<std::string> {
- public:
-
+class FileFormatChecker : public FormatChecker<std::string>
+{
+public:
   FileFormatChecker() = delete;
-  explicit FileFormatChecker(const BasicType * o);
-  bool operator()(tree::Object const & r, tree::Value const & v) const;
+  explicit FileFormatChecker(const BasicType* o);
+  bool operator()(tree::Object const& r, tree::Value const& v) const;
 
- private:
-
-  bool checkFormat(std::string const & n, std::string const & b) const;
+private:
+  bool checkFormat(std::string const& n, std::string const& b) const;
 };
 
 // File class
 
-class File : public EnumeratedType<std::string, false, FileTypeCompare, FileFormatChecker> {
- public:
-
+class File
+  : public EnumeratedType<std::string, false, FileTypeCompare,
+                          FileFormatChecker>
+{
+public:
   File();
 
   bool validateModel();
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
 
- private:
-
-  FileModeAttribute const & fileModeAttribute() const;
+private:
+  FileModeAttribute const& fileModeAttribute() const;
 
   friend class FileFormatChecker;
 };
 
-} // namespace model
-} // namespace ace
+}}

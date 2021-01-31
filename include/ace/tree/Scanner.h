@@ -27,43 +27,40 @@
 #include <memory>
 #include <string>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-class Scanner {
- public:
-
+class Scanner
+{
+public:
   using Ref = std::shared_ptr<Scanner>;
 
- public:
-
-  enum class Format {
+public:
+  enum class Format
+  {
     Compact,
     Default
   };
 
   Scanner() = default;
-  explicit Scanner(Scanner const &) = default;
-  virtual ~Scanner() { }
+  explicit Scanner(Scanner const&) = default;
+  virtual ~Scanner() {}
 
-  virtual Value::Ref open(std::string const & fn, int argc, char ** argv) = 0;
-  virtual Value::Ref parse(std::string const & s, int argc, char ** argv) = 0;
-  virtual void dump(Value const & v, const Format f, std::ostream & o) const = 0;
+  virtual Value::Ref open(std::string const& fn, int argc, char** argv) = 0;
+  virtual Value::Ref parse(std::string const& s, int argc, char** argv) = 0;
+  virtual void dump(Value const& v, const Format f, std::ostream& o) const = 0;
 
-  virtual bool openAll(std::string const & fn, int argc, char ** argv,
-                       std::list<Value::Ref> & values) = 0;
-  virtual bool parseAll(std::string const & s, int argc, char ** argv,
-                       std::list<Value::Ref> & values) = 0;
-  virtual bool dumpAll(std::list<Value::Ref> & values, const Format f,
-                       std::ostream & o) const = 0;
+  virtual bool openAll(std::string const& fn, int argc, char** argv,
+                       std::list<Value::Ref>& values) = 0;
+  virtual bool parseAll(std::string const& s, int argc, char** argv,
+                        std::list<Value::Ref>& values) = 0;
+  virtual bool dumpAll(std::list<Value::Ref>& values, const Format f,
+                       std::ostream& o) const = 0;
 
   virtual std::string name() const = 0;
   virtual std::string extension() const = 0;
 
- protected:
-
-  static void shift(std::string const & fn, int & argc, char ** & argv);
+protected:
+  static void shift(std::string const& fn, int& argc, char**& argv);
 };
 
-} // namespace tree
-} // namespace ace
+}}

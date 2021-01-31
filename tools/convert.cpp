@@ -38,12 +38,14 @@
 #include <vector>
 
 static ace::tree::Value::Ref
-load(std::string const & path, int argc, char * argv[]) {
+load(std::string const& path, int argc, char* argv[])
+{
   if (!MASTER.hasScannerByExtension(path)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", path);
     return ace::tree::Value::Ref();
   }
-  ace::tree::Value::Ref svr = MASTER.scannerByExtension(path).open(path, argc, argv);
+  ace::tree::Value::Ref svr =
+    MASTER.scannerByExtension(path).open(path, argc, argv);
   if (svr.get() == nullptr) {
     ACE_LOG(Error, "Cannot open configuration file \"" + path + "\"");
     return ace::tree::Value::Ref();
@@ -52,29 +54,36 @@ load(std::string const & path, int argc, char * argv[]) {
 }
 
 static bool
-convert(std::string const & filename, ace::tree::Value const & v, const bool c) {
+convert(std::string const& filename, ace::tree::Value const& v, const bool c)
+{
   std::ofstream ofs;
   ofs.open(filename);
   if (ofs.fail()) {
     ACE_LOG(Error, "Can!open file ", filename, " for writing");
     return false;
   }
-  auto f = c ? ace::tree::Scanner::Format::Compact : ace::tree::Scanner::Format::Default;
+  auto f = c ? ace::tree::Scanner::Format::Compact
+             : ace::tree::Scanner::Format::Default;
   MASTER.scannerByExtension(filename).dump(v, f, ofs);
   ofs.close();
   return true;
 }
 
 using SA = TCLAP::SwitchArg;
-template<typename T> using VA = TCLAP::ValueArg<T>;
-template<typename T> using MA = TCLAP::MultiArg<T>;
-template<typename T> using UA = TCLAP::UnlabeledValueArg<T>;
+template<typename T>
+using VA = TCLAP::ValueArg<T>;
+template<typename T>
+using MA = TCLAP::MultiArg<T>;
+template<typename T>
+using UA = TCLAP::UnlabeledValueArg<T>;
 
-int main(int argc, char * argv[]) try {
+int
+main(int argc, char* argv[])
+try {
   TCLAP::CmdLine cmd("Advanced Configuration Converter", ' ', ACE_VERSION);
-  SA              comA("c", "compact", "Compact output", cmd);
+  SA comA("c", "compact", "Compact output", cmd);
   VA<std::string> outA("o", "output", "Output file", true, "", "NAME.EXT", cmd);
-  SA              vrbA("v", "verbose", "Verbose mode", cmd);
+  SA vrbA("v", "verbose", "Verbose mode", cmd);
   UA<std::string> cfgA("config", "Configuration file", true, "", "string", cmd);
   cmd.parse(argc, argv);
   /**
@@ -93,20 +102,19 @@ int main(int argc, char * argv[]) try {
    * Scan the configuration file
    */
   ace::tree::Value::Ref root = load(cfgA.getValue(), argc, argv);
-  if (root.get() == nullptr) return -1;
+  if (root.get() == nullptr) {
+    return -1;
+  }
   /**
    * convert the file
    */
   return convert(outA.getValue(), *root, comA.isSet()) ? 0 : 1;
-}
-catch (TCLAP::ArgException const & e) {
+} catch (TCLAP::ArgException const& e) {
   ACE_LOG(Error, e.error(), " for argument ", e.argId());
-}
-catch (std::invalid_argument const & e) {
+} catch (std::invalid_argument const& e) {
   ACE_LOG(Error, "Invalid argument: ", e.what());
   return -1;
-}
-catch (std::runtime_error const & e) {
+} catch (std::runtime_error const& e) {
   ACE_LOG(Error, "Runtime error: ", e.what());
   return -1;
 }

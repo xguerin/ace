@@ -31,20 +31,23 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace ace {
-namespace fs {
+namespace ace { namespace fs {
 
-Directory::Directory() : Node() {
+Directory::Directory() : Node()
+{
   char buffer[PATH_MAX];
   bzero(buffer, PATH_MAX);
   getcwd(buffer, PATH_MAX);
   std::string base(buffer);
-  if (*base.rbegin() != '/') base += "/";
+  if (*base.rbegin() != '/') {
+    base += "/";
+  }
   m_path = fs::Path(base);
   m_fd = open(m_path.toString().c_str(), 0, O_RDWR);
 }
 
-Directory::Directory(fs::Path const & p) : Node() {
+Directory::Directory(fs::Path const& p) : Node()
+{
   if (not p.empty() and p.isDirectory()) {
     fs::Path fullPath(p);
     if (not p.isAbsolute()) {
@@ -52,10 +55,12 @@ Directory::Directory(fs::Path const & p) : Node() {
       bzero(buffer, PATH_MAX);
       getcwd(buffer, PATH_MAX);
       std::string base(buffer);
-      if (*base.rbegin() != '/') base += "/";
+      if (*base.rbegin() != '/') {
+        base += "/";
+      }
       fullPath = fs::Path(base) / p;
     }
-    DIR * dir = opendir(fullPath.toString().c_str());
+    DIR* dir = opendir(fullPath.toString().c_str());
     if (dir != nullptr) {
       m_fd = open(fullPath.toString().c_str(), 0, O_RDWR);
       m_path = fullPath;
@@ -64,15 +69,21 @@ Directory::Directory(fs::Path const & p) : Node() {
   }
 }
 
-bool Directory::has(fs::Path const & p) const {
+bool
+Directory::has(fs::Path const& p) const
+{
   return has(p, p.begin());
 }
 
-void Directory::each(std::function<void(Node const &)> op) const {
-  struct dirent * ep;
+void
+Directory::each(std::function<void(Node const&)> const& op) const
+{
+  struct dirent* ep;
   int ofd = dup(m_fd);
-  if (ofd < 0) return;
-  DIR * dir = fdopendir(ofd);
+  if (ofd < 0) {
+    return;
+  }
+  DIR* dir = fdopendir(ofd);
   if (dir == nullptr) {
     close(ofd);
     return;
@@ -93,26 +104,36 @@ void Directory::each(std::function<void(Node const &)> op) const {
   close(ofd);
 }
 
-bool Directory::has(fs::Path const & p, fs::Path::const_iterator const & i) const {
-  if (p.isAbsolute()) return false;
-  if (i->empty()) return true;
+bool
+Directory::has(fs::Path const& p, fs::Path::const_iterator const& i) const
+{
+  if (p.isAbsolute()) {
+    return false;
+  }
+  if (i->empty()) {
+    return true;
+  }
   int ofd = dup(m_fd);
-  if (ofd < 0) return false;
-  DIR * dir = fdopendir(ofd);
+  if (ofd < 0) {
+    return false;
+  }
+  DIR* dir = fdopendir(ofd);
   if (dir == nullptr) {
     close(ofd);
     return false;
   }
   rewinddir(dir);
   bool result = false;
-  struct dirent * ep;
-  while ((ep = readdir(dir)) != nullptr) if (*i == ep->d_name) {
-    if (p.down(i) != p.end()) {
-      result = Directory(m_path / fs::Path(*i, true)).has(p, p.down(i));
-      break;
-    } else {
-      result = ep->d_type != DT_DIR;
-      break;
+  struct dirent* ep;
+  while ((ep = readdir(dir)) != nullptr) {
+    if (*i == ep->d_name) {
+      if (p.down(i) != p.end()) {
+        result = Directory(m_path / fs::Path(*i, true)).has(p, p.down(i));
+        break;
+      } else {
+        result = ep->d_type != DT_DIR;
+        break;
+      }
     }
   }
   /**
@@ -125,13 +146,16 @@ bool Directory::has(fs::Path const & p, fs::Path::const_iterator const & i) cons
 }
 
 Node
-Directory::parent() const {
-  if (m_fd == -1) return Node();
+Directory::parent() const
+{
+  if (m_fd == -1) {
+    return Node();
+  }
   fs::Path up("/");
-  if (m_path != up) up = m_path.prune();
+  if (m_path != up) {
+    up = m_path.prune();
+  }
   return fs::Directory(up);
 }
 
-} // namespace ace
-} // namespace fs
-
+}}

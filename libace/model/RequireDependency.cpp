@@ -34,65 +34,78 @@
 
 namespace {
 
-const ace::model::BasicType *
-basicTypeFor(const ace::model::Object * o) {
-  return static_cast<const ace::model::BasicType *>(o->parent()->parent()->parent());
+const ace::model::BasicType*
+basicTypeFor(const ace::model::Object* o)
+{
+  return static_cast<const ace::model::BasicType*>(
+    o->parent()->parent()->parent());
 }
 
-ace::model::Model *
-modelFor(ace::model::Object * o) {
-  return static_cast<ace::model::Model *>(o->owner());
+ace::model::Model*
+modelFor(ace::model::Object* o)
+{
+  return static_cast<ace::model::Model*>(o->owner());
 }
 
-ace::model::Body *
-bodyFor(ace::model::Object * o) {
-  return & modelFor(o)->body();
+ace::model::Body*
+bodyFor(ace::model::Object* o)
+{
+  return &modelFor(o)->body();
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-RequireDependency::RequireDependency() {
-  m_schm["require"] = { ace::tree::Value::Type::Array , false };
+RequireDependency::RequireDependency()
+{
+  m_schm["require"] = { ace::tree::Value::Type::Array, false };
 }
 
 bool
-RequireDependency::match(tree::Value const & t) {
+RequireDependency::match(tree::Value const& t)
+{
   return t.has("require");
 }
 
 bool
-RequireDependency::checkModel(tree::Value const & t) const {
-  if (not Dependency::checkModel(t)) return false;
-  auto const & ary = static_cast<tree::Array const &>(t["require"]);
+RequireDependency::checkModel(tree::Value const& t) const
+{
+  if (not Dependency::checkModel(t)) {
+    return false;
+  }
+  auto const& ary = static_cast<tree::Array const&>(t["require"]);
   if (ary.size() == 0) {
     ERROR(ERR_EMPTY_REQS);
     return false;
   }
-  for (auto & e : ary) if (e->type() != tree::Value::Type::String) {
-    ERROR(ERR_WRONG_REQ_TYPE);
-    return false;
+  for (auto& e : ary) {
+    if (e->type() != tree::Value::Type::String) {
+      ERROR(ERR_WRONG_REQ_TYPE);
+      return false;
+    }
   }
   return true;
 }
 
 void
-RequireDependency::loadModel(tree::Value const & t) {
-  auto const & ary = static_cast<tree::Array const &>(t["require"]);
-  for (auto & e : ary) {
-    std::string ev = static_cast<tree::Primitive const &>(*e).value<std::string>();
+RequireDependency::loadModel(tree::Value const& t)
+{
+  auto const& ary = static_cast<tree::Array const&>(t["require"]);
+  for (auto& e : ary) {
+    std::string ev =
+      static_cast<tree::Primitive const&>(*e).value<std::string>();
     m_deps.insert(ev);
   }
   Dependency::loadModel(t);
 }
 
 void
-RequireDependency::expandInstance(tree::Object & r, tree::Value & v) {
+RequireDependency::expandInstance(tree::Object& r, tree::Value& v)
+{
   Dependency::expandInstance(r, v);
-  Body * body = bodyFor(this);
-  for (auto & dep : m_deps) {
+  Body* body = bodyFor(this);
+  for (auto& dep : m_deps) {
     tree::Path dest;
     if (buildModelPath(dep, r, dest) and body->has(dest)) {
       INFO("Promote ", dest);
@@ -102,10 +115,14 @@ RequireDependency::expandInstance(tree::Object & r, tree::Value & v) {
 }
 
 bool
-RequireDependency::resolveInstance(tree::Object const & r, tree::Value const & v) const {
-  if (not Dependency::resolveInstance(r, v)) return false;
+RequireDependency::resolveInstance(tree::Object const& r,
+                                   tree::Value const& v) const
+{
+  if (not Dependency::resolveInstance(r, v)) {
+    return false;
+  }
   int score = 0;
-  for (auto & dep : m_deps) {
+  for (auto& dep : m_deps) {
     tree::Path p;
     if (not buildModelPath(dep, r, p)) {
       return false;
@@ -119,23 +136,26 @@ RequireDependency::resolveInstance(tree::Object const & r, tree::Value const & v
 }
 
 int
-RequireDependency::priority() const {
+RequireDependency::priority() const
+{
   return 5;
 }
 
 RequireDependency::Ref
-RequireDependency::clone() const {
+RequireDependency::clone() const
+{
   return RequireDependency::Ref(new RequireDependency(*this));
 }
 
-RequireDependency::operator std::string() const {
+RequireDependency::operator std::string() const
+{
   std::ostringstream o;
-  const BasicType * type = basicTypeFor(this);
+  const BasicType* type = basicTypeFor(this);
   size_t cur = 0;
   o << "require ";
-  for (auto & e : m_deps) {
+  for (auto& e : m_deps) {
     if (hasPlaceHolder(e)) {
-      const String * strType = dynamic_cast<const String *>(type);
+      const String* strType = dynamic_cast<const String*>(type);
       if (strType != nullptr) {
         if (strType->hasEitherAttribute()) {
           o << (std::string)strType->eitherAttribute();
@@ -146,11 +166,11 @@ RequireDependency::operator std::string() const {
     } else {
       o << e;
     }
-    if (cur++ < m_deps.size() - 1) o << ", ";
+    if (cur++ < m_deps.size() - 1) {
+      o << ", ";
+    }
   }
   return o.str();
 }
 
-} // namespace model
-} // namespace ace
-
+}}

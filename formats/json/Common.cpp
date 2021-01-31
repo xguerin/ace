@@ -27,12 +27,11 @@
 #include <ace/common/Log.h>
 #include <string>
 
-namespace ace {
-namespace jsonfmt {
-namespace Common {
+namespace ace { namespace jsonfmt { namespace Common {
 
 tree::Value::Ref
-build(std::string const & name, json_t * const value) {
+build(std::string const& name, json_t* const value)
+{
   tree::Value::Ref result = nullptr;
   switch (json_typeof(value)) {
     case JSON_OBJECT: {
@@ -55,9 +54,10 @@ build(std::string const & name, json_t * const value) {
 }
 
 tree::Value::Ref
-parseFile(std::string const & path) {
+parseFile(std::string const& path)
+{
   json_error_t error;
-  json_t * item = json_load_file(path.c_str(), JSON_REJECT_DUPLICATES, & error);
+  json_t* item = json_load_file(path.c_str(), JSON_REJECT_DUPLICATES, &error);
   if (item == nullptr) {
     ACE_LOG(Error, "load failed: ", error.text);
     return nullptr;
@@ -72,9 +72,10 @@ parseFile(std::string const & path) {
 }
 
 tree::Value::Ref
-parseString(std::string const & str) {
+parseString(std::string const& str)
+{
   json_error_t error;
-  json_t * item = json_loads(str.c_str(), JSON_REJECT_DUPLICATES, & error);
+  json_t* item = json_loads(str.c_str(), JSON_REJECT_DUPLICATES, &error);
   if (item == nullptr) {
     ACE_LOG(Error, "load failed: ", error.text);
     return nullptr;
@@ -88,20 +89,22 @@ parseString(std::string const & str) {
   return result;
 }
 
-json_t *
-dump(tree::Value const & v) {
+json_t*
+dump(tree::Value const& v)
+{
   switch (v.type()) {
-    case tree::Value::Type::Boolean   :
-    case tree::Value::Type::Float     :
-    case tree::Value::Type::Integer   :
-    case tree::Value::Type::String    : return Primitive::dump(v);
-    case tree::Value::Type::Array     : return Array::dump(v);
-    case tree::Value::Type::Object    : return Object::dump(v);
-    default                           : return nullptr;
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::Float:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::String:
+      return Primitive::dump(v);
+    case tree::Value::Type::Array:
+      return Array::dump(v);
+    case tree::Value::Type::Object:
+      return Object::dump(v);
+    default:
+      return nullptr;
   }
 }
 
-} // namespace Common
-} // namespace inifmt
-} // namespace ace
-
+}}}

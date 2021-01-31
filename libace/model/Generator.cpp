@@ -23,58 +23,65 @@
 #include <ace/model/Generator.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 template<>
 std::string
-Generator::nameFor<bool>() {
+Generator::nameFor<bool>()
+{
   return "bool";
 }
 
 template<>
 std::string
-Generator::nameFor<int>() {
+Generator::nameFor<int>()
+{
   return "int";
 }
 
 template<>
 std::string
-Generator::nameFor<long>() {
+Generator::nameFor<long>()
+{
   return "long";
 }
 
 template<>
 std::string
-Generator::nameFor<float>() {
+Generator::nameFor<float>()
+{
   return "float";
 }
 
 template<>
 std::string
-Generator::nameFor<double>() {
+Generator::nameFor<double>()
+{
   return "double";
 }
 
 template<>
 std::string
-Generator::nameFor<std::string>() {
+Generator::nameFor<std::string>()
+{
   return "std::string";
 }
 
-std::ostream &
-Generator::indent(std::ostream & o, int level) {
-  for (int i = 0; i < level; i += 1) o << " ";
+std::ostream&
+Generator::indent(std::ostream& o, int level)
+{
+  for (int i = 0; i < level; i += 1) {
+    o << " ";
+  }
   return o;
 }
 
 std::string
-Generator::tempName() {
+Generator::tempName()
+{
   return "__tmp_" + std::to_string(s_tmpId++);
 }
 
 size_t Generator::s_tmpId = 1;
 
-} // namespace model
-} // namespace ace
-
+}}

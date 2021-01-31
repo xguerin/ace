@@ -29,15 +29,13 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-Array::Array(std::string const & n)
-  : Value(n, Type::Array), m_content() { }
+Array::Array(std::string const& n) : Value(n, Type::Array), m_content() {}
 
-Array::Array(Array const & a)
-  : Value(a), m_content() {
-  for (auto const & e: a.m_content) {
+Array::Array(Array const& a) : Value(a), m_content()
+{
+  for (auto const& e : a.m_content) {
     auto n = e->clone();
     n->m_parent = this;
     m_content.push_back(n);
@@ -45,21 +43,26 @@ Array::Array(Array const & a)
 }
 
 Value::Ref
-Array::clone() const {
+Array::clone() const
+{
   return Value::Ref(new Array(*this));
 }
 
 Array::Ref
-Array::build(std::string const & n) {
+Array::build(std::string const& n)
+{
   return Ref(new Array(n));
 }
 
 void
-Array::merge(Value const & o) {
-  if (o.type() != Value::Type::Array) return;
-  Array const & ary = dynamic_cast<Array const &>(o);
+Array::merge(Value const& o)
+{
+  if (o.type() != Value::Type::Array) {
+    return;
+  }
+  Array const& ary = dynamic_cast<Array const&>(o);
   size_t index = m_content.size();
-  for (auto & e : ary) {
+  for (auto& e : ary) {
     e->setName(std::to_string(index));
     m_content.push_back(e);
     index += 1;
@@ -67,35 +70,51 @@ Array::merge(Value const & o) {
 }
 
 void
-Array::each(Callback c) {
-  for (auto & e : m_content) c(*e);
+Array::each(Callback const& c)
+{
+  for (auto& e : m_content) {
+    c(*e);
+  }
 }
 
 void
-Array::each(ConstCallback c) const {
-  for (auto & e : m_content) c(*e);
+Array::each(ConstCallback const& c) const
+{
+  for (auto& e : m_content) {
+    c(*e);
+  }
 }
 
 bool
-Array::has(std::string const & k) const {
-  if (k.empty()) return false;
+Array::has(std::string const& k) const
+{
+  if (k.empty()) {
+    return false;
+  }
   size_t i = atol(k.c_str());
-  if (i == 0 and k != "0") return false;
+  if (i == 0 and k != "0") {
+    return false;
+  }
   return i < m_content.size();
 }
 
 bool
-Array::has(Path const & p, Path::const_iterator const & i) const {
-  if (i == p.end()) return true;
+Array::has(Path const& p, Path::const_iterator const& i) const
+{
+  if (i == p.end()) {
+    return true;
+  }
   size_t success = 0;
   switch ((*i)->type()) {
     case path::Item::Type::Indexed: {
-      for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
-        success += m_content[idx]->has(p, p.down(i)) ? 1 : 0;
+      for (auto& idx : (*i)->indexes()) {
+        if (idx < m_content.size()) {
+          success += m_content[idx]->has(p, p.down(i)) ? 1 : 0;
+        }
       }
     } break;
     case path::Item::Type::Ranged: {
-      auto const & r = (*i)->range();
+      auto const& r = (*i)->range();
       if (r.low < m_content.size() and r.high <= m_content.size()) {
         for (size_t idx = r.low; idx < r.high; idx += r.steps) {
           success += m_content[idx]->has(p, p.down(i)) ? 1 : 0;
@@ -103,46 +122,58 @@ Array::has(Path const & p, Path::const_iterator const & i) const {
       }
     } break;
     case path::Item::Type::Any: {
-      if (not m_content.empty()) for (auto & idx : m_content) {
-        success += idx->has(p, p.down(i)) ? 1 : 0;
+      if (not m_content.empty()) {
+        for (auto& idx : m_content) {
+          success += idx->has(p, p.down(i)) ? 1 : 0;
+        }
       } else {
         success += 1;
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    success += e->has(p, i) ? 1 : 0;
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      success += e->has(p, i) ? 1 : 0;
+    }
   }
   return success != 0;
 }
 
 size_t
-Array::size() const {
+Array::size() const
+{
   return m_content.size();
 }
 
-Value::Ref const &
-Array::at(const size_t idx) const {
+Value::Ref const&
+Array::at(const size_t idx) const
+{
   return m_content[idx];
 }
 
 bool
-Array::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r) {
-  if (i == p.end()) return false;
+Array::put(Path const& p, Path::const_iterator const& i, Value::Ref const& r)
+{
+  if (i == p.end()) {
+    return false;
+  }
   if (p.down(i) == p.end()) {
     ACE_LOG(Warning, "Cannot `put` directly in an array");
     return false;
   }
   switch ((*i)->type()) {
     case path::Item::Type::Indexed: {
-      for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
-        auto n = r == nullptr ? nullptr : r->clone();
-        m_content[idx]->put(p, p.down(i), n);
+      for (auto& idx : (*i)->indexes()) {
+        if (idx < m_content.size()) {
+          auto n = r == nullptr ? nullptr : r->clone();
+          m_content[idx]->put(p, p.down(i), n);
+        }
       }
     } break;
     case path::Item::Type::Ranged: {
-      auto const & rng = (*i)->range();
+      auto const& rng = (*i)->range();
       if (rng.low < m_content.size() and rng.high <= m_content.size()) {
         for (size_t idx = rng.low; idx < rng.high; idx += rng.steps) {
           auto n = r == nullptr ? nullptr : r->clone();
@@ -151,7 +182,7 @@ Array::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r)
       }
     } break;
     case path::Item::Type::Any: {
-      for (auto & e : m_content) {
+      for (auto& e : m_content) {
         auto n = r == nullptr ? nullptr : r->clone();
         e->put(p, p.down(i), n);
       }
@@ -161,51 +192,67 @@ Array::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r)
       return false;
     }
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e->put(p, i, r);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e->put(p, i, r);
+    }
   }
   return true;
 }
 
-Value &
-Array::operator[](std::string const & k) {
+Value&
+Array::operator[](std::string const& k)
+{
   return get(k);
 }
 
-Value const &
-Array::operator[](std::string const & k) const  {
+Value const&
+Array::operator[](std::string const& k) const
+{
   return get(k);
 }
 
-Value &
-Array::get(std::string const & v) {
-  if (not has(v)) throw std::invalid_argument(v + ": invalid index");
+Value&
+Array::get(std::string const& v)
+{
+  if (not has(v)) {
+    throw std::invalid_argument(v + ": invalid index");
+  }
   int i = atoi(v.c_str());
   return *m_content[i];
 }
 
-Value const &
-Array::get(std::string const & v) const {
-  if (not has(v)) throw std::invalid_argument(v + ": invalid index");
+Value const&
+Array::get(std::string const& v) const
+{
+  if (not has(v)) {
+    throw std::invalid_argument(v + ": invalid index");
+  }
   int i = atoi(v.c_str());
   return *m_content[i];
 }
 
 void
-Array::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) {
-  if (i == p.end()) return;
+Array::get(Path const& p, Path::const_iterator const& i,
+           std::vector<Value::Ref>& r)
+{
+  if (i == p.end()) {
+    return;
+  }
   switch ((*i)->type()) {
     case path::Item::Type::Indexed: {
-      for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
-        if (p.down(i) == p.end()) {
-          r.push_back(m_content[idx]);
-        } else {
-          m_content[idx]->get(p, p.down(i), r);
+      for (auto& idx : (*i)->indexes()) {
+        if (idx < m_content.size()) {
+          if (p.down(i) == p.end()) {
+            r.push_back(m_content[idx]);
+          } else {
+            m_content[idx]->get(p, p.down(i), r);
+          }
         }
       }
     } break;
     case path::Item::Type::Ranged: {
-      auto const & rng = (*i)->range();
+      auto const& rng = (*i)->range();
       if (rng.low < m_content.size() and rng.high <= m_content.size()) {
         for (size_t idx = rng.low; idx < rng.high; idx += rng.steps) {
           if (p.down(i) == p.end()) {
@@ -217,34 +264,45 @@ Array::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Re
       }
     } break;
     case path::Item::Type::Any: {
-      for (auto & e : m_content) if (p.down(i) == p.end()) {
-        r.push_back(e);
-      } else {
-        e->get(p, p.down(i), r);
+      for (auto& e : m_content) {
+        if (p.down(i) == p.end()) {
+          r.push_back(e);
+        } else {
+          e->get(p, p.down(i), r);
+        }
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e->get(p, i, r);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e->get(p, i, r);
+    }
   }
 }
 
 void
-Array::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const {
-  if (i == p.end()) return;
+Array::get(Path const& p, Path::const_iterator const& i,
+           std::vector<Value::Ref>& r) const
+{
+  if (i == p.end()) {
+    return;
+  }
   switch ((*i)->type()) {
     case path::Item::Type::Indexed: {
-      for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
-        if (p.down(i) == p.end()) {
-          r.push_back(m_content[idx]);
-        } else {
-          m_content[idx]->get(p, p.down(i), r);
+      for (auto& idx : (*i)->indexes()) {
+        if (idx < m_content.size()) {
+          if (p.down(i) == p.end()) {
+            r.push_back(m_content[idx]);
+          } else {
+            m_content[idx]->get(p, p.down(i), r);
+          }
         }
       }
     } break;
     case path::Item::Type::Ranged: {
-      auto const & rng = (*i)->range();
+      auto const& rng = (*i)->range();
       if (rng.low < m_content.size() and rng.high <= m_content.size()) {
         for (size_t idx = rng.low; idx < rng.high; idx += rng.steps) {
           if (p.down(i) == p.end()) {
@@ -256,22 +314,30 @@ Array::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Re
       }
     } break;
     case path::Item::Type::Any: {
-      for (auto & e : m_content) if (p.down(i) == p.end()) {
-        r.push_back(e);
-      } else {
-        e->get(p, p.down(i), r);
+      for (auto& e : m_content) {
+        if (p.down(i) == p.end()) {
+          r.push_back(e);
+        } else {
+          e->get(p, p.down(i), r);
+        }
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e->get(p, i, r);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e->get(p, i, r);
+    }
   }
 }
 
 void
-Array::erase(std::string const & v) {
-  if (not has(v)) return;
+Array::erase(std::string const& v)
+{
+  if (not has(v)) {
+    return;
+  }
   size_t idx = atoi(v.c_str());
   m_content.erase(m_content.begin() + idx);
   for (; idx < m_content.size(); idx += 1) {
@@ -280,27 +346,36 @@ Array::erase(std::string const & v) {
 }
 
 void
-Array::erase(Path const & p, Path::const_iterator const & i) {
-  if (i == p.end()) return;
+Array::erase(Path const& p, Path::const_iterator const& i)
+{
+  if (i == p.end()) {
+    return;
+  }
   switch ((*i)->type()) {
     case path::Item::Type::Indexed: {
       if (p.down(i) == p.end()) {
-        for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
-          m_content[idx] = nullptr;
+        for (auto& idx : (*i)->indexes()) {
+          if (idx < m_content.size()) {
+            m_content[idx] = nullptr;
+          }
         }
         Content temp;
-        for (auto & e : m_content) if (e != nullptr) {
-          temp.push_back(e);
+        for (auto& e : m_content) {
+          if (e != nullptr) {
+            temp.push_back(e);
+          }
         }
         m_content = temp;
       } else {
-        for (auto & idx : (*i)->indexes()) if (idx < m_content.size()) {
+        for (auto& idx : (*i)->indexes()) {
+          if (idx < m_content.size()) {
             m_content[idx]->erase(p, p.down(i));
           }
         }
+      }
     } break;
     case path::Item::Type::Ranged: {
-      auto const & rng = (*i)->range();
+      auto const& rng = (*i)->range();
       if (rng.low < m_content.size() and rng.high <= m_content.size()) {
         for (size_t idx = rng.low; idx < rng.high; idx += rng.steps) {
           if (p.down(i) == p.end()) {
@@ -315,18 +390,24 @@ Array::erase(Path const & p, Path::const_iterator const & i) {
       if (p.down(i) == p.end()) {
         m_content.clear();
       } else {
-        for (auto & e : m_content) e->erase(p, p.down(i));
+        for (auto& e : m_content) {
+          e->erase(p, p.down(i));
+        }
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e->erase(p, i);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e->erase(p, i);
+    }
   }
 }
 
 void
-Array::push_back(Value::Ref const & r) {
+Array::push_back(Value::Ref const& r)
+{
   size_t index = m_content.size();
   r->setName(std::to_string(index));
   r->m_parent = this;
@@ -334,15 +415,15 @@ Array::push_back(Value::Ref const & r) {
 }
 
 tree::Array::const_iterator
-Array::begin() const {
+Array::begin() const
+{
   return m_content.begin();
 }
 
 tree::Array::const_iterator
-Array::end() const {
+Array::end() const
+{
   return m_content.end();
 }
 
-} // namespace tree
-} // namespace ace
-
+}}

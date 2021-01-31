@@ -26,28 +26,26 @@
 #include <ace/tree/Scanner.h>
 #include <string>
 
-namespace ace {
-namespace inifmt {
+namespace ace { namespace inifmt {
 
-class Scanner : public tree::Scanner {
- public:
-
+class Scanner : public tree::Scanner
+{
+public:
   Scanner() = default;
 
-  tree::Value::Ref open(std::string const & fn, int argc, char ** argv);
-  tree::Value::Ref parse(std::string const & s, int argc, char ** argv);
-  void dump(tree::Value const & v, const Format f, std::ostream & o) const;
+  tree::Value::Ref open(std::string const& fn, int argc, char** argv);
+  tree::Value::Ref parse(std::string const& s, int argc, char** argv);
+  void dump(tree::Value const& v, const Format f, std::ostream& o) const;
 
-  bool openAll(std::string const & fn, int argc, char ** argv,
-               std::list<tree::Value::Ref> & values);
-  bool parseAll(std::string const & s, int argc, char ** argv,
-                std::list<tree::Value::Ref> & values);
-  bool dumpAll(std::list<tree::Value::Ref> & values, const Format f,
-               std::ostream & o) const;
+  bool openAll(std::string const& fn, int argc, char** argv,
+               std::list<tree::Value::Ref>& values);
+  bool parseAll(std::string const& s, int argc, char** argv,
+                std::list<tree::Value::Ref>& values);
+  bool dumpAll(std::list<tree::Value::Ref>& values, const Format f,
+               std::ostream& o) const;
 
   std::string name() const;
   std::string extension() const;
 };
 
-} // namespace inifmt
-} // namespace ace
+}}

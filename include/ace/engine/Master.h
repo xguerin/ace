@@ -38,89 +38,90 @@
 #define MASTER ace::engine::Master::getInstance()
 #endif
 
-namespace ace {
-namespace engine {
+namespace ace { namespace engine {
 
-class Master {
- public:
+class Master
+{
+public:
+  typedef void* (*Builder)(tree::Value const& v);
 
-  typedef void * (*Builder)(tree::Value const & v);
-
-  enum Option {
-    None        = 0x00,
-    Defaulted   = 0x01,
-    Inherited   = 0x02,
-    Promoted    = 0x04,
-    Undefined   = 0x08,
-    Unexpected  = 0x10,
-    Relevant    = Defaulted | Inherited | Promoted,
-    All         = Defaulted | Inherited | Promoted | Undefined | Unexpected
+  enum Option
+  {
+    None = 0x00,
+    Defaulted = 0x01,
+    Inherited = 0x02,
+    Promoted = 0x04,
+    Undefined = 0x08,
+    Unexpected = 0x10,
+    Relevant = Defaulted | Inherited | Promoted,
+    All = Defaulted | Inherited | Promoted | Undefined | Unexpected
   };
 
- public:
+public:
+  void addModelDirectory(fs::Path const& p);
+  bool addInlinedModel(std::string const& k, std::string const& s);
 
-  void addModelDirectory(fs::Path const & p);
-  bool addInlinedModel(std::string const & k, std::string const & s);
+  bool hasModel(std::string const& n) const;
+  bool isInlinedModel(std::string const& n) const;
 
-  bool hasModel(std::string const & n) const;
-  bool isInlinedModel(std::string const & n) const;
+  bool addModelBuilder(std::string const& k, std::string const& v, Builder b);
 
-  bool addModelBuilder(std::string const & k, std::string const & v, Builder b);
+  bool hasModelBuildersFor(std::string const& k) const;
+  std::map<std::string, Builder> const& modelBuildersFor(
+    std::string const& k) const;
 
-  bool hasModelBuildersFor(std::string const & k) const;
-  std::map<std::string, Builder> const & modelBuildersFor(std::string const & k) const;
+  bool addChildForPath(std::string const& path, std::string const& ch);
+  std::set<std::string> childrenForPath(std::string const& p);
 
-  bool addChildForPath(std::string const & path, std::string const & ch);
-  std::set<std::string> childrenForPath(std::string const & p);
+  fs::Path modelPathFor(fs::Path const& p) const;
+  std::string const& modelSourceFor(std::string const& n) const;
 
-  fs::Path modelPathFor(fs::Path const & p) const;
-  std::string const & modelSourceFor(std::string const & n) const;
-
-  bool addModelPathIntoContext(std::string const & mdp);
-  void remModelPathFromContext(std::string const & mdp);
+  bool addModelPathIntoContext(std::string const& mdp);
+  void remModelPathFromContext(std::string const& mdp);
 
   std::string modelEnvPath() const;
 
-  bool hasScannerByName(std::string const & n) const;
-  tree::Scanner & scannerByName(std::string const & n) const;
+  bool hasScannerByName(std::string const& n) const;
+  tree::Scanner& scannerByName(std::string const& n) const;
 
-  bool hasScannerByExtension(std::string const & fn) const;
-  tree::Scanner & scannerByExtension(std::string const & fn) const;
+  bool hasScannerByExtension(std::string const& fn) const;
+  tree::Scanner& scannerByExtension(std::string const& fn) const;
 
-  void pushDefaulted(std::string const & p, std::string const & v);
-  void pushInherited(std::string const & p, std::string const & f, std::string const & v);
-  void pushPromoted(std::string const & p);
-  void pushUndefined(std::string const & p);
-  void pushUnexpected(std::string const & p);
+  void pushDefaulted(std::string const& p, std::string const& v);
+  void pushInherited(std::string const& p, std::string const& f,
+                     std::string const& v);
+  void pushPromoted(std::string const& p);
+  void pushUndefined(std::string const& p);
+  void pushUnexpected(std::string const& p);
 
-  std::set<std::string> const & unexpected() const;
+  std::set<std::string> const& unexpected() const;
 
-  void summarize(std::ostream & o, int filter = Option::Relevant) const;
+  void summarize(std::ostream& o, int filter = Option::Relevant) const;
   void reset();
 
-  static Master & getInstance();
+  static Master& getInstance();
 
- private:
-
+private:
   Master();
 
-  void loadPluginsAtPath(std::string const & path);
-  void collectChildrenForPath(std::string const & p, std::set<std::string> & r) const;
+  void loadPluginsAtPath(std::string const& path);
+  void collectChildrenForPath(std::string const& p,
+                              std::set<std::string>& r) const;
 
-  std::string                                                       m_modelEnvPath;
-  std::list<fs::Directory>                                          m_modelDirs;
-  std::map<std::string, std::reference_wrapper<const std::string>>  m_inlineModels;
-  std::map<std::string, std::map<std::string, Builder>>             m_builders;
-  std::map<std::string, std::set<std::string>>                      m_childrenForPath;
-  std::set<std::string>                                             m_modelPathContext;
-  std::map<std::string, tree::Scanner::Ref>                         m_scannersByName;
-  std::map<std::string, tree::Scanner::Ref>                         m_scannersByExtension;
-  std::map<std::string, std::string>                                m_defaulted;
-  std::map<std::string, std::pair<std::string, std::string>>        m_inherited;
-  std::set<std::string>                                             m_promoted;
-  std::set<std::string>                                             m_undefined;
-  std::set<std::string>                                             m_unexpected;
+  std::string m_modelEnvPath;
+  std::list<fs::Directory> m_modelDirs;
+  std::map<std::string, std::reference_wrapper<const std::string>>
+    m_inlineModels;
+  std::map<std::string, std::map<std::string, Builder>> m_builders;
+  std::map<std::string, std::set<std::string>> m_childrenForPath;
+  std::set<std::string> m_modelPathContext;
+  std::map<std::string, tree::Scanner::Ref> m_scannersByName;
+  std::map<std::string, tree::Scanner::Ref> m_scannersByExtension;
+  std::map<std::string, std::string> m_defaulted;
+  std::map<std::string, std::pair<std::string, std::string>> m_inherited;
+  std::set<std::string> m_promoted;
+  std::set<std::string> m_undefined;
+  std::set<std::string> m_unexpected;
 };
 
-} // namespace engine
-} // namespace ace
+}}

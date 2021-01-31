@@ -24,15 +24,14 @@
 #include "Common.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>  // NOLINT
+#include <ace/tree/Object.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace hjsonfmt {
-namespace Object {
+namespace ace { namespace hjsonfmt { namespace Object {
 
 tree::Value::Ref
-build(std::string const & name, Hjson::Value const& obj) {
+build(std::string const& name, Hjson::Value const& obj)
+{
   tree::Object::Ref object = tree::Object::build(name);
   for (auto const& e : obj) {
     tree::Value::Ref v = Common::build(e.first, e.second);
@@ -46,16 +45,15 @@ build(std::string const & name, Hjson::Value const& obj) {
 }
 
 Hjson::Value
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
+dump(tree::Value const& v)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
   Hjson::Value result;
-  for (auto const & e : w) {
+  for (auto const& e : w) {
     Hjson::Value value = Common::dump(*e.second);
     result[e.first] = value;
   }
   return result;
 }
 
-} // namespace Object
-} // namespace hjsonfmt
-} // namespace ace
+}}}

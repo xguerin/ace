@@ -23,12 +23,12 @@
 #include "Common.h"
 #include <string>
 
-namespace ace {
-namespace pyfmt {
+namespace ace { namespace pyfmt {
 
 tree::Value::Ref
-build_value(std::string const & n, PyObject * o) {
-  if (PyBool_Check(o) or PyInt_Check(o)  or PyLong_Check(o) or
+build_value(std::string const& n, PyObject* o)
+{
+  if (PyBool_Check(o) or PyInt_Check(o) or PyLong_Check(o) or
       PyFloat_Check(o) or PyString_Check(o)) {
     return Primitive::build(n, o);
   } else if (PyList_Check(o)) {
@@ -40,17 +40,21 @@ build_value(std::string const & n, PyObject * o) {
 }
 
 void
-dump_value(tree::Value const & v, std::ostream & o, int l, bool i) {
+dump_value(tree::Value const& v, std::ostream& o, int l, bool i)
+{
   switch (v.type()) {
-    case tree::Value::Type::Boolean   :
-    case tree::Value::Type::Float     :
-    case tree::Value::Type::Integer   :
-    case tree::Value::Type::String    : return Primitive::dump(v, o, l, i);
-    case tree::Value::Type::Array     : return Array::dump(v, o, l, i);
-    case tree::Value::Type::Object    : return Object::dump(v, o, l, i);
-    default                           : break;
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::Float:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::String:
+      return Primitive::dump(v, o, l, i);
+    case tree::Value::Type::Array:
+      return Array::dump(v, o, l, i);
+    case tree::Value::Type::Object:
+      return Object::dump(v, o, l, i);
+    default:
+      break;
   }
 }
 
-} // namespace inifmt
-} // namespace ace
+}}

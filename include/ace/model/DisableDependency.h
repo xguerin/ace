@@ -28,29 +28,28 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class DisableDependency : public Dependency {
- public:
-
+class DisableDependency : public Dependency
+{
+public:
   DisableDependency();
-  explicit DisableDependency(DisableDependency const &) = default;
-  virtual ~DisableDependency() { }
+  explicit DisableDependency(DisableDependency const&) = default;
+  virtual ~DisableDependency() {}
 
   // Match
 
-  static bool match(tree::Value const & t);
+  static bool match(tree::Value const& t);
 
   // Object
 
-  virtual bool checkModel(tree::Value const & t) const;
-  virtual void loadModel(tree::Value const & t);
+  virtual bool checkModel(tree::Value const& t) const;
+  virtual void loadModel(tree::Value const& t);
 
   // Instance
 
-  virtual void expandInstance(tree::Object & r, tree::Value & v);
-  virtual bool flattenInstance(tree::Object & r, tree::Value & v);
+  virtual void expandInstance(tree::Object& r, tree::Value& v);
+  virtual bool flattenInstance(tree::Object& r, tree::Value& v);
 
   // Local
 
@@ -60,5 +59,4 @@ class DisableDependency : public Dependency {
   virtual operator std::string() const;
 };
 
-} // namespace model
-} // namespace ace
+}}

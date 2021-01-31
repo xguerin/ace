@@ -30,15 +30,13 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-Object::Object(std::string const & n)
-    : Value(n, Type::Object), m_content() { }
+Object::Object(std::string const& n) : Value(n, Type::Object), m_content() {}
 
-Object::Object(Object const & o)
-  : Value(o), m_content() {
-  for (auto const & e: o.m_content) {
+Object::Object(Object const& o) : Value(o), m_content()
+{
+  for (auto const& e : o.m_content) {
     auto n = e.second->clone();
     n->m_parent = this;
     m_content[e.first] = n;
@@ -46,34 +44,45 @@ Object::Object(Object const & o)
 }
 
 Object::Ref
-Object::build(std::string const & n) {
+Object::build(std::string const& n)
+{
   return Ref(new Object(n));
 }
 
 Value::Ref
-Object::clone() const {
+Object::clone() const
+{
   return Value::Ref(new Object(*this));
 }
 
 void
-Object::merge(Value const & o) {
-  if (o.type() != Value::Type::Object) return;
-  Object const & obj = dynamic_cast<Object const &>(o);
-  for (auto & e : obj) if (m_content.count(e.first) == 0) {
-    m_content.insert(e);
-  } else {
-    m_content[e.first]->merge(*e.second);
+Object::merge(Value const& o)
+{
+  if (o.type() != Value::Type::Object) {
+    return;
+  }
+  Object const& obj = dynamic_cast<Object const&>(o);
+  for (auto& e : obj) {
+    if (m_content.count(e.first) == 0) {
+      m_content.insert(e);
+    } else {
+      m_content[e.first]->merge(*e.second);
+    }
   }
 }
 
 bool
-Object::has(std::string const & k) const {
+Object::has(std::string const& k) const
+{
   return m_content.find(k) != m_content.end();
 }
 
 bool
-Object::has(Path const & p, Path::const_iterator const & i) const {
-  if (i == p.end()) return true;
+Object::has(Path const& p, Path::const_iterator const& i) const
+{
+  if (i == p.end()) {
+    return true;
+  }
   size_t success = 0;
   switch ((*i)->type()) {
     case path::Item::Type::Named: {
@@ -82,74 +91,98 @@ Object::has(Path const & p, Path::const_iterator const & i) const {
       }
     } break;
     case path::Item::Type::Any: {
-      if (not m_content.empty()) for (auto & e : m_content) {
-        success += e.second->has(p, p.down(i)) ? 1 : 0;
+      if (not m_content.empty()) {
+        for (auto& e : m_content) {
+          success += e.second->has(p, p.down(i)) ? 1 : 0;
+        }
       } else {
         success += 1;
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    success += e.second->has(p, i) ? 1 : 0;
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      success += e.second->has(p, i) ? 1 : 0;
+    }
   }
   return success != 0;
 }
 
 size_t
-Object::size() const {
+Object::size() const
+{
   return m_content.size();
 }
 
-Value::Ref const &
-Object::at(std::string const & k) const  {
-  if (not has(k)) throw std::invalid_argument(k + ": no such key");
+Value::Ref const&
+Object::at(std::string const& k) const
+{
+  if (not has(k)) {
+    throw std::invalid_argument(k + ": no such key");
+  }
   return m_content.at(k);
 }
 
 void
-Object::put(Value::Ref const & r) {
+Object::put(Value::Ref const& r)
+{
   m_content[r->name()] = r;
   r->m_parent = this;
 }
 
 void
-Object::put(std::string const & k, Value::Ref const & r) {
+Object::put(std::string const& k, Value::Ref const& r)
+{
   r->setName(k);
   r->m_parent = this;
   m_content[k] = r;
 }
 
 bool
-Object::put(Path const & p, Value::Ref const & r) {
+Object::put(Path const& p, Value::Ref const& r)
+{
   return put(p, ++p.begin(), r);
 }
 
-Value &
-Object::operator[](std::string const & k) {
+Value&
+Object::operator[](std::string const& k)
+{
   return get(k);
 }
 
-Value const &
-Object::operator[](std::string const & k) const  {
+Value const&
+Object::operator[](std::string const& k) const
+{
   return get(k);
 }
 
-Value &
-Object::get(std::string const & k) {
-  if (not has(k)) throw std::invalid_argument(k + ": no such key");
+Value&
+Object::get(std::string const& k)
+{
+  if (not has(k)) {
+    throw std::invalid_argument(k + ": no such key");
+  }
   return *m_content.at(k);
 }
 
-Value const &
-Object::get(std::string const & k) const  {
-  if (not has(k)) throw std::invalid_argument(k + ": no such key");
+Value const&
+Object::get(std::string const& k) const
+{
+  if (not has(k)) {
+    throw std::invalid_argument(k + ": no such key");
+  }
   return *m_content.at(k);
 }
 
 void
-Object::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) {
-  if (i == p.end()) return;
+Object::get(Path const& p, Path::const_iterator const& i,
+            std::vector<Value::Ref>& r)
+{
+  if (i == p.end()) {
+    return;
+  }
   switch ((*i)->type()) {
     case path::Item::Type::Named: {
       if (m_content.count((*i)->value()) != 0) {
@@ -161,22 +194,31 @@ Object::get(Path const & p, Path::const_iterator const & i, std::vector<Value::R
       }
     } break;
     case path::Item::Type::Any: {
-      for (auto & e : m_content) if (p.down(i) == p.end()) {
-        r.push_back(e.second);
-      } else {
-        e.second->get(p, p.down(i), r);
+      for (auto& e : m_content) {
+        if (p.down(i) == p.end()) {
+          r.push_back(e.second);
+        } else {
+          e.second->get(p, p.down(i), r);
+        }
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e.second->get(p, i, r);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e.second->get(p, i, r);
+    }
   }
 }
 
 void
-Object::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const {
-  if (i == p.end()) return;
+Object::get(Path const& p, Path::const_iterator const& i,
+            std::vector<Value::Ref>& r) const
+{
+  if (i == p.end()) {
+    return;
+  }
   switch ((*i)->type()) {
     case path::Item::Type::Named: {
       if (m_content.count((*i)->value()) != 0) {
@@ -188,28 +230,39 @@ Object::get(Path const & p, Path::const_iterator const & i, std::vector<Value::R
       }
     } break;
     case path::Item::Type::Any: {
-      for (auto & e : m_content) if (p.down(i) == p.end()) {
-        r.push_back(e.second);
-      } else {
-        e.second->get(p, p.down(i), r);
+      for (auto& e : m_content) {
+        if (p.down(i) == p.end()) {
+          r.push_back(e.second);
+        } else {
+          e.second->get(p, p.down(i), r);
+        }
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e.second->get(p, i, r);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e.second->get(p, i, r);
+    }
   }
 }
 
 void
-Object::erase(std::string const & k) {
-  if (not has(k)) throw std::invalid_argument(k + ": no such key");
+Object::erase(std::string const& k)
+{
+  if (not has(k)) {
+    throw std::invalid_argument(k + ": no such key");
+  }
   m_content.erase(k);
 }
 
 void
-Object::erase(Path const & p, Path::const_iterator const & i) {
-  if (i == p.end()) return;
+Object::erase(Path const& p, Path::const_iterator const& i)
+{
+  if (i == p.end()) {
+    return;
+  }
   switch ((*i)->type()) {
     case path::Item::Type::Named: {
       if (m_content.count((*i)->value()) != 0) {
@@ -224,28 +277,36 @@ Object::erase(Path const & p, Path::const_iterator const & i) {
       if (p.down(i) == p.end()) {
         m_content.clear();
       } else {
-        for (auto & e : m_content) e.second->erase(p, p.down(i));
+        for (auto& e : m_content) {
+          e.second->erase(p, p.down(i));
+        }
       }
     } break;
-    default: break;
+    default:
+      break;
   }
-  if ((*i)->recursive()) for (auto & e : m_content) {
-    e.second->erase(p, i);
+  if ((*i)->recursive()) {
+    for (auto& e : m_content) {
+      e.second->erase(p, i);
+    }
   }
 }
 
 tree::Object::const_iterator
-Object::begin() const {
+Object::begin() const
+{
   return m_content.begin();
 }
 
 tree::Object::const_iterator
-Object::end() const {
+Object::end() const
+{
   return m_content.end();
 }
 
 Path
-Object::path() const {
+Object::path() const
+{
   Path apath;
   if (m_name.empty()) {
     apath.push(path::Item::build(path::Item::Type::Global));
@@ -256,13 +317,17 @@ Object::path() const {
 }
 
 bool
-Object::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r) {
-  if (i == p.end()) return false;
-  if ((*i)->type() != path::Item::Type::Named) {
-    ACE_LOG(Error, "Only named path items are supported (", (*i)->toString(), ")");
+Object::put(Path const& p, Path::const_iterator const& i, Value::Ref const& r)
+{
+  if (i == p.end()) {
     return false;
   }
-  std::string const & id = (*i)->value();
+  if ((*i)->type() != path::Item::Type::Named) {
+    ACE_LOG(Error, "Only named path items are supported (", (*i)->toString(),
+            ")");
+    return false;
+  }
+  std::string const& id = (*i)->value();
   if (p.down(i) != p.end()) {
     if (m_content.find(id) == m_content.end()) {
       tree::Object::Ref tmp = Object::build(id);
@@ -291,6 +356,4 @@ Object::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r
   }
 }
 
-} // namespace tree
-} // namespace ace
-
+}}

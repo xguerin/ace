@@ -28,67 +28,65 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-class Object : public Value {
- public:
-
+class Object : public Value
+{
+public:
   using Ref = std::shared_ptr<Object>;
   using Content = std::map<std::string, Value::Ref>;
   using const_iterator = Content::const_iterator;
 
- public:
-
+public:
   Object() = delete;
-  static Ref build(std::string const & n = "");
+  static Ref build(std::string const& n = "");
 
   Value::Ref clone() const;
 
-  void merge(Value const & o);
+  void merge(Value const& o);
 
-  bool has(std::string const & k) const;
+  bool has(std::string const& k) const;
   using Value::has;
-  bool has(Path const & p, Path::const_iterator const & i) const;
+  bool has(Path const& p, Path::const_iterator const& i) const;
 
   size_t size() const;
 
-  Value::Ref const & at(std::string const & k) const;
+  Value::Ref const& at(std::string const& k) const;
 
-  void put(Value::Ref const & r);
-  void put(std::string const & k, Value::Ref const & r);
-  bool put(Path const & p, Value::Ref const & r);
+  void put(Value::Ref const& r);
+  void put(std::string const& k, Value::Ref const& r);
+  bool put(Path const& p, Value::Ref const& r);
 
-  Value & operator[](std::string const & k);
-  Value const & operator[](std::string const & k) const;
+  Value& operator[](std::string const& k);
+  Value const& operator[](std::string const& k) const;
 
-  Value & get(std::string const & k);
-  Value const & get(std::string const & k) const;
+  Value& get(std::string const& k);
+  Value const& get(std::string const& k) const;
 
   using Value::get;
 
-  void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r);
-  void get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const;
+  void get(Path const& p, Path::const_iterator const& i,
+           std::vector<Value::Ref>& r);
+  void get(Path const& p, Path::const_iterator const& i,
+           std::vector<Value::Ref>& r) const;
 
-  void erase(std::string const & k);
+  void erase(std::string const& k);
   using Value::erase;
 
-  void erase(Path const & p, Path::const_iterator const & i);
+  void erase(Path const& p, Path::const_iterator const& i);
 
   const_iterator begin() const;
   const_iterator end() const;
 
   Path path() const;
 
- private:
+private:
+  Object(Object const& o);
+  explicit Object(std::string const& n);
 
-  Object(Object const & o);
-  explicit Object(std::string const & n);
-
-  bool put(Path const & p, Path::const_iterator const & i, Value::Ref const & r);
+  bool put(Path const& p, Path::const_iterator const& i, Value::Ref const& r);
 
   Content m_content;
 };
 
-} // namespace tree
-} // namespace ace
+}}

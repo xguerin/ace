@@ -26,16 +26,10 @@
 #include <string>
 #include <jansson.h>
 
-namespace ace {
-namespace jsonfmt {
-namespace Array {
+namespace ace { namespace jsonfmt { namespace Array {
 
-tree::Value::Ref
-build(std::string const & name, json_t * const ary);
+tree::Value::Ref build(std::string const& name, json_t* const ary);
 
-json_t *
-dump(tree::Value const & v);
+json_t* dump(tree::Value const& v);
 
-} // namespace Array
-} // namespace jsonfmt
-} // namespace ace
+}}}

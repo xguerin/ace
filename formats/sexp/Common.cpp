@@ -35,12 +35,11 @@
 #include <streambuf>
 #include <string>
 
-namespace ace {
-namespace sexpfmt {
-namespace Common {
+namespace ace { namespace sexpfmt { namespace Common {
 
 tree::Value::Ref
-parseFile(std::string const & path) {
+parseFile(std::string const& path)
+{
   std::ifstream t(path);
   std::string str;
   /**
@@ -52,7 +51,8 @@ parseFile(std::string const & path) {
   /**
    * Load the file
    */
-  str.assign((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+  str.assign((std::istreambuf_iterator<char>(t)),
+             std::istreambuf_iterator<char>());
   /**
    * Parse the string
    */
@@ -60,36 +60,40 @@ parseFile(std::string const & path) {
 }
 
 tree::Value::Ref
-parseString(std::string const & str) {
+parseString(std::string const& str)
+{
   auto res = Scan().parse(str, false);
-  if (res == nullptr) return nullptr;
+  if (res == nullptr) {
+    return nullptr;
+  }
   return build("", res);
 }
 
 tree::Value::Ref
-build(std::string const & name, sexp::Value::Ref const & v) {
+build(std::string const& name, sexp::Value::Ref const& v)
+{
   switch (v->type()) {
     case sexp::Value::Type::Atom: {
-      auto const & atom = static_cast<sexp::Atom const &>(*v);
+      auto const& atom = static_cast<sexp::Atom const&>(*v);
       switch (atom.type()) {
         case sexp::Atom::Type::Boolean: {
-          auto const & w = static_cast<sexp::Boolean const &>(atom);
+          auto const& w = static_cast<sexp::Boolean const&>(atom);
           return tree::Primitive::build(name, w.value());
         }
         case sexp::Atom::Type::String: {
-          auto const & w = static_cast<sexp::String const &>(atom);
+          auto const& w = static_cast<sexp::String const&>(atom);
           return tree::Primitive::build(name, w.value());
         }
         case sexp::Atom::Type::Integer: {
-          auto const & w = static_cast<sexp::Integer const &>(atom);
+          auto const& w = static_cast<sexp::Integer const&>(atom);
           return tree::Primitive::build(name, w.value());
         }
         case sexp::Atom::Type::Float: {
-          auto const & w = static_cast<sexp::Float const &>(atom);
+          auto const& w = static_cast<sexp::Float const&>(atom);
           return tree::Primitive::build(name, w.value());
         }
         case sexp::Atom::Type::Symbol: {
-          auto const & w = static_cast<sexp::Symbol const &>(atom);
+          auto const& w = static_cast<sexp::Symbol const&>(atom);
           return tree::Primitive::build(name, w.value());
         }
       }
@@ -106,34 +110,26 @@ build(std::string const & name, sexp::Value::Ref const & v) {
 }
 
 size_t
-dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
-     std::ostream & o) {
+dump(tree::Value const& v, const tree::Scanner::Format f, const size_t indent,
+     std::ostream& o)
+{
   switch (v.type()) {
-    case tree::Value::Type::Boolean : {
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::String:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::Float: {
       return sexpfmt::Primitive::dump(v, f, indent, o);
     }
-    case tree::Value::Type::String : {
-      return sexpfmt::Primitive::dump(v, f, indent, o);
-    }
-    case tree::Value::Type::Integer : {
-      return sexpfmt::Primitive::dump(v, f, indent, o);
-    }
-    case tree::Value::Type::Float : {
-      return sexpfmt::Primitive::dump(v, f, indent, o);
-    }
-    case tree::Value::Type::Object : {
+    case tree::Value::Type::Object: {
       return sexpfmt::Object::dump(v, f, indent, o);
     }
-    case tree::Value::Type::Array : {
+    case tree::Value::Type::Array: {
       return sexpfmt::Array::dump(v, f, indent, o);
     }
-    default : {
+    default: {
       return 0;
     }
   }
 }
 
-} // namespace Common
-} // namespace sexpfmt
-} // namespace ace
-
+}}}

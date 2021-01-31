@@ -26,13 +26,9 @@
 #include <ace/tree/Array.h>
 #include <string>
 
-namespace ace {
-namespace pyfmt {
-namespace Array {
+namespace ace { namespace pyfmt { namespace Array {
 
-tree::Value::Ref build(std::string const & n, PyObject * o);
-void dump(tree::Value const & v, std::ostream & o, int l, bool i);
+tree::Value::Ref build(std::string const& n, PyObject* o);
+void dump(tree::Value const& v, std::ostream& o, int l, bool i);
 
-} // namespace Array
-} // namespace pyfmt
-} // namespace ace
+}}}

@@ -25,12 +25,11 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
-namespace utils {
+namespace ace { namespace tree { namespace utils {
 
 static tree::Value::Ref
-buildPrimitive(std::string const & n, std::string const & s) {
+buildPrimitive(std::string const& n, std::string const& s)
+{
   if (ace::common::String::is<bool>(s)) {
     bool v = common::String::value<bool>(s);
     return tree::Primitive::build(n, v);
@@ -42,75 +41,85 @@ buildPrimitive(std::string const & n, std::string const & s) {
     return tree::Primitive::build(n, v);
   } else {
     std::string v(s);
-    if (not v.empty() and v.size() > 1) if (*v.begin() == '"' and *v.rbegin() == '"') {
-      v.erase(v.begin());
-      v.erase(--v.end());
+    if (not v.empty() and v.size() > 1) {
+      if (*v.begin() == '"' and *v.rbegin() == '"') {
+        v.erase(v.begin());
+        v.erase(--v.end());
+      }
     }
     return tree::Primitive::build(n, v);
   }
 }
 
 static tree::Value::Ref
-buildArray(std::string const & n, std::vector<std::string> const & fields) {
+buildArray(std::string const& n, std::vector<std::string> const& fields)
+{
   tree::Value::Ref v(nullptr);
   tree::Array::Ref array = tree::Array::build("");
-  for (auto & f : fields) {
+  for (auto& f : fields) {
     v = tree::Value::Ref(buildPrimitive("", f));
     array->push_back(v);
   }
   return tree::Value::Ref(array);
 }
 
-enum class StringState {
+enum class StringState
+{
   AnyCapture,
   ArraySplit,
   StringCapture
 };
 
 bool
-processArrayString(std::string const & n, std::string const & in,
-                   std::vector<std::string> & result) {
+processArrayString(std::string const& n, std::string const& in,
+                   std::vector<std::string>& result)
+{
   StringState state = StringState::ArraySplit;
   std::string candidate;
-  for (auto & c : in) switch (state) {
-    case StringState::AnyCapture : {
-      if (c == '"') {
-        state = StringState::ArraySplit;
-      }
-      candidate.push_back(c);
-    } break;
-    case StringState::ArraySplit : {
-      if (c == '"') {
-        if (not candidate.empty()) {
-          ACE_LOG(Error, "Duplicate double-quote in value \"", n, "\" at index ", result.size());
-          return false;
+  for (auto& c : in) {
+    switch (state) {
+      case StringState::AnyCapture: {
+        if (c == '"') {
+          state = StringState::ArraySplit;
         }
-        state = StringState::AnyCapture;
         candidate.push_back(c);
-      } else if (c == ',') {
-        if (candidate.empty()) {
-          ACE_LOG(Error, "Empty element in value \"", n, "\" at index ", result.size());
-          return false;
+      } break;
+      case StringState::ArraySplit: {
+        if (c == '"') {
+          if (not candidate.empty()) {
+            ACE_LOG(Error, "Duplicate double-quote in value \"", n,
+                    "\" at index ", result.size());
+            return false;
+          }
+          state = StringState::AnyCapture;
+          candidate.push_back(c);
+        } else if (c == ',') {
+          if (candidate.empty()) {
+            ACE_LOG(Error, "Empty element in value \"", n, "\" at index ",
+                    result.size());
+            return false;
+          }
+          result.push_back(common::String::trim(candidate));
+          candidate.clear();
+        } else {
+          candidate.push_back(c);
+          state = StringState::StringCapture;
         }
-        result.push_back(common::String::trim(candidate));
-        candidate.clear();
-      } else {
-        candidate.push_back(c);
-        state = StringState::StringCapture;
-      }
-    } break;
-    case StringState::StringCapture : {
-      if (c == '"') {
-        ACE_LOG(Error, "Misused double-quote in value \"", n, "\" at index ", result.size());
-        return false;
-      } else if (c == ',') {
-        result.push_back(common::String::trim(candidate));
-        candidate.clear();
-        state = StringState::ArraySplit;
-      } else {
-        candidate.push_back(c);
-      }
-    } break;
+      } break;
+      case StringState::StringCapture: {
+        if (c == '"') {
+          ACE_LOG(Error, "Misused double-quote in value \"", n, "\" at index ",
+                  result.size());
+          return false;
+        } else if (c == ',') {
+          result.push_back(common::String::trim(candidate));
+          candidate.clear();
+          state = StringState::ArraySplit;
+        } else {
+          candidate.push_back(c);
+        }
+      } break;
+    }
   }
   if (not candidate.empty()) {
     result.push_back(common::String::trim(candidate));
@@ -120,7 +129,8 @@ processArrayString(std::string const & n, std::string const & in,
 }
 
 tree::Value::Ref
-buildPrimitiveOrArray(std::string const & n, std::string const & content) {
+buildPrimitiveOrArray(std::string const& n, std::string const& content)
+{
   std::vector<std::string> fields;
   if (not processArrayString(n, content, fields) or fields.size() == 0) {
     return nullptr;
@@ -133,14 +143,12 @@ buildPrimitiveOrArray(std::string const & n, std::string const & content) {
 }
 
 void
-illegalValueAccess(std::string const & n) {
+illegalValueAccess(std::string const& n)
+{
   std::cerr << "FATAL: in " << n << std::endl;
   std::cerr << "Illegal access to absent option value ";
   std::cerr << "(checker function must be used before accessing (?,*) options)";
   std::cerr << std::endl << "Aborting !" << std::endl;
 }
 
-} // namespace utils
-} // namespace tree
-} // namespace ace
-
+}}}

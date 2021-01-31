@@ -24,23 +24,27 @@
 
 #include <iostream>
 
-namespace ace {
-namespace common {
+namespace ace { namespace common {
 
 #define STR(v) #v
 
-#define T(a) if (not (a)) return __LINE__
-#define F(a) if ((a)) return __LINE__
+#define T(a)                                                                   \
+  if (not(a))                                                                  \
+  return __LINE__
+#define F(a)                                                                   \
+  if ((a))                                                                     \
+  return __LINE__
 
-#define E(a, b) if ((a) != (b)) {                                  \
-  std::cerr << STR(a) << " (" << a << ") != " << b << std::endl;   \
-  return __LINE__;                                                 \
-}
+#define E(a, b)                                                                \
+  if ((a) != (b)) {                                                            \
+    std::cerr << STR(a) << " (" << (a) << ") != " << (b) << std::endl;         \
+    return __LINE__;                                                           \
+  }
 
-#define N(a, b) if ((a) == (b)) {                                  \
-  std::cerr << STR(a) << " (" << a << ") == " << b << std::endl;   \
-  return __LINE__;                                                 \
-}
+#define N(a, b)                                                                \
+  if ((a) == (b)) {                                                            \
+    std::cerr << STR(a) << " (" << (a) << ") == " << (b) << std::endl;         \
+    return __LINE__;                                                           \
+  }
 
-} // namespace common
-} // namespace ace
+}}

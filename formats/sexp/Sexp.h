@@ -26,18 +26,18 @@
 #include <memory>
 #include <string>
 
-namespace ace {
-namespace sexp {
+namespace ace { namespace sexp {
 
 /**
  * Value class
  */
-class Value {
- public:
-
+class Value
+{
+public:
   using Ref = std::shared_ptr<Value>;
 
-  enum class Type {
+  enum class Type
+  {
     Atom,
     List
   };
@@ -46,8 +46,7 @@ class Value {
 
   Type type() const;
 
- protected:
-
+protected:
   Value(const Type t);
 
   Type m_type;
@@ -57,10 +56,11 @@ class Value {
  * Atom class
  */
 
-class Atom : public Value {
- public:
-
-  enum class Type {
+class Atom : public Value
+{
+public:
+  enum class Type
+  {
     Boolean,
     String,
     Integer,
@@ -73,109 +73,102 @@ class Atom : public Value {
 
   Type type() const;
 
- private:
-
+private:
   Type m_type;
 };
 
 /**
  * Boolean class
  */
-class Boolean : public Atom {
- public:
-
+class Boolean : public Atom
+{
+public:
   Boolean();
-  Boolean(std::string const & v);
+  Boolean(std::string const& v);
 
   bool value() const;
 
- private:
-
+private:
   bool m_value;
 };
 
-class String : public Atom {
- public:
-
+class String : public Atom
+{
+public:
   String();
-  String(std::string const & v);
+  String(std::string const& v);
 
-  std::string const & value() const;
+  std::string const& value() const;
 
- private:
-
+private:
   std::string m_value;
 };
 
-class Integer : public Atom {
- public:
-
-  enum class Base {
+class Integer : public Atom
+{
+public:
+  enum class Base
+  {
     Decimal,
     Octal,
     Hexadecimal
   };
 
   Integer();
-  Integer(const Base b, std::string const & v);
+  Integer(const Base b, std::string const& v);
 
   long value() const;
 
- private:
-
-  static long parse(const Base b, std::string const & v);
+private:
+  static long parse(const Base b, std::string const& v);
 
   long m_value;
 };
 
-class Float : public Atom {
- public:
-
+class Float : public Atom
+{
+public:
   Float();
-  Float(std::string const & v);
+  Float(std::string const& v);
 
   double value() const;
 
- private:
-
+private:
   double m_value;
 };
 
-class Symbol : public Atom {
- public:
-
+class Symbol : public Atom
+{
+public:
   Symbol();
-  Symbol(std::string const & v);
+  Symbol(std::string const& v);
 
-  std::string const & value() const;
+  std::string const& value() const;
 
- private:
-
+private:
   std::string m_value;
 };
 
 /**
  * List class
  */
-class List : public Value {
- public:
-
+class List : public Value
+{
+public:
   List();
-  List(Value::Ref const & v);
+  List(Value::Ref const& v);
 
-  size_t     len() const;
+  size_t len() const;
   Value::Ref car() const;
   Value::Ref cdr() const;
 
-  void append(Value::Ref const & v);
+  void append(Value::Ref const& v);
 
-  static bool NIL(Value::Ref const & r);
+  static bool NIL(Value::Ref const& r);
 
- private:
-
+private:
   Value::Ref m_car;
   Value::Ref m_cdr;
 };
 
-} // namespace sexp
-} // namespace ace
+}}

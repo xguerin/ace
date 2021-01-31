@@ -23,17 +23,15 @@
 #include "Node.h"
 #include <ace/filesystem/Path.h>
 
-namespace ace {
-namespace fs {
+namespace ace { namespace fs {
 
-class File : public Node {
- public:
-
+class File : public Node
+{
+public:
   File() = default;
-  explicit File(fs::Path const & p);
+  explicit File(fs::Path const& p);
 
   Node parent() const;
 };
 
-} // namespace fs
-} // namespace ace
+}}

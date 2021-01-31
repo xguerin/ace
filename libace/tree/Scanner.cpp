@@ -23,23 +23,23 @@
 #include <ace/tree/Scanner.h>
 #include <string>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
 void
-Scanner::shift(std::string const & fn, int & argc, char ** & argv) {
-  for (int i = 1; i < argc; i += 1) if (std::string(argv[i]) == "--") {
-    argc = argc - i;
-    argv = & argv[i];
-    break;
+Scanner::shift(std::string const& fn, int& argc, char**& argv)
+{
+  for (int i = 1; i < argc; i += 1) {
+    if (std::string(argv[i]) == "--") {
+      argc = argc - i;
+      argv = &argv[i];
+      break;
+    }
   }
   if (argc == 0) {
     argv = nullptr;
   } else {
-    argv[0] = const_cast<char *>(fn.c_str());
+    argv[0] = const_cast<char*>(fn.c_str());
   }
 }
 
-} // namespace tree
-} // namespace ace
-
+}}

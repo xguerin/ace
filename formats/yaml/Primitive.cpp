@@ -27,12 +27,11 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace yamlfmt {
-namespace Primitive {
+namespace ace { namespace yamlfmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & name, YAML::Node const & r) {
+build(std::string const& name, YAML::Node const& r)
+{
   std::string value = r.as<std::string>();
   /*
    * If the node is an escaped string then it would have a tag starting with !.
@@ -59,8 +58,9 @@ build(std::string const & name, YAML::Node const & r) {
 }
 
 void
-dump(tree::Value const & v, YAML::Emitter & e) {
-  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
+dump(tree::Value const& v, YAML::Emitter& e)
+{
+  tree::Primitive const& p = static_cast<tree::Primitive const&>(v);
   if (p.is<long>()) {
     e << p.value<long>();
   } else if (p.is<double>()) {
@@ -68,7 +68,7 @@ dump(tree::Value const & v, YAML::Emitter & e) {
   } else if (p.is<bool>()) {
     e << p.value<bool>();
   } else {
-    auto const & v = p.value<std::string>();
+    auto const& v = p.value<std::string>();
     /*
      * If the string can be decoded as another primitive type, then quote it.
      */
@@ -83,6 +83,4 @@ dump(tree::Value const & v, YAML::Emitter & e) {
   }
 }
 
-} // namespace Primitive
-} // namespace yamlfmt
-} // namespace ace
+}}}

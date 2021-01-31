@@ -28,21 +28,23 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace yamlfmt {
+namespace ace { namespace yamlfmt {
 
 tree::Value::Ref
-Scanner::open(std::string const & fn, int argc, char ** argv) {
+Scanner::open(std::string const& fn, int argc, char** argv)
+{
   return Common::parseFile(fn);
 }
 
 tree::Value::Ref
-Scanner::parse(std::string const & s, int argc, char ** argv) {
+Scanner::parse(std::string const& s, int argc, char** argv)
+{
   return Common::parseString(s);
 }
 
 void
-Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
+Scanner::dump(tree::Value const& v, const Format f, std::ostream& o) const
+{
   YAML::Emitter e;
   e << YAML::BeginDoc;
   Common::dump(v, e);
@@ -51,20 +53,23 @@ Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
 }
 
 bool
-Scanner::openAll(std::string const & fn, int argc, char ** argv,
-                 std::list<tree::Value::Ref> & values) {
+Scanner::openAll(std::string const& fn, int argc, char** argv,
+                 std::list<tree::Value::Ref>& values)
+{
   return false;
 }
 
 bool
-Scanner::parseAll(std::string const & s, int argc, char ** argv,
-                  std::list<tree::Value::Ref> & values) {
+Scanner::parseAll(std::string const& s, int argc, char** argv,
+                  std::list<tree::Value::Ref>& values)
+{
   return false;
 }
 
 bool
-Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
-                 std::ostream & o) const {
+Scanner::dumpAll(std::list<tree::Value::Ref>& values, const Format f,
+                 std::ostream& o) const
+{
   /*
    * Make sure there is something to dump.
    */
@@ -75,7 +80,7 @@ Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
    * Dump the values.
    */
   YAML::Emitter e;
-  for (auto const & r : values) {
+  for (auto const& r : values) {
     e << YAML::BeginDoc;
     Common::dump(*r, e);
     e << YAML::EndDoc;
@@ -85,20 +90,23 @@ Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
 }
 
 std::string
-Scanner::name() const {
+Scanner::name() const
+{
   return "yaml";
 }
 
 std::string
-Scanner::extension() const {
+Scanner::extension() const
+{
   return "yaml";
 }
 
-} // namespace yamlfmt
-} // namespace ace
+}}
 
 extern "C" {
-void * loadPlugin() {
+void*
+loadPlugin()
+{
   return new ace::yamlfmt::Scanner();
 }
 }

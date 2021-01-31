@@ -30,16 +30,16 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
-namespace Helper {
+namespace ace { namespace model { namespace Helper {
 
 bool
-validate(std::string const & mp, std::string const & ver, const bool strict,
-         tree::Value::Ref & svr) {
+validate(std::string const& mp, std::string const& ver, const bool strict,
+         tree::Value::Ref& svr)
+{
   model::Model::Ref mdl;
   if (ver != version()) {
-    ACE_LOG(Error, "Model version \"", ver, "\" and ACE version \"", version(), "\" mismatch");
+    ACE_LOG(Error, "Model version \"", ver, "\" and ACE version \"", version(),
+            "\" mismatch");
     return false;
   }
   if (not MASTER.hasModel(mp)) {
@@ -83,10 +83,12 @@ validate(std::string const & mp, std::string const & ver, const bool strict,
 }
 
 bool
-printAsTree(std::string const & mp, std::string const & ver) {
+printAsTree(std::string const& mp, std::string const& ver)
+{
   model::Model::Ref mdl;
   if (ver != version()) {
-    ACE_LOG(Error, "Model version \"", ver, "\" and ACE version \"", version(), "\" mismatch");
+    ACE_LOG(Error, "Model version \"", ver, "\" and ACE version \"", version(),
+            "\" mismatch");
     return false;
   }
   if (not MASTER.hasModel(mp)) {
@@ -111,10 +113,12 @@ printAsTree(std::string const & mp, std::string const & ver) {
 }
 
 bool
-explain(std::string const & mp, std::string const & ver, std::string const & cp) {
+explain(std::string const& mp, std::string const& ver, std::string const& cp)
+{
   model::Model::Ref mdl;
   if (ver != version()) {
-    ACE_LOG(Error, "Model version \"", ver, "\" and ACE version \"", version(), "\" mismatch");
+    ACE_LOG(Error, "Model version \"", ver, "\" and ACE version \"", version(),
+            "\" mismatch");
     return false;
   }
   if (not MASTER.hasModel(mp)) {
@@ -139,11 +143,9 @@ explain(std::string const & mp, std::string const & ver, std::string const & cp)
 }
 
 std::string
-version() {
+version()
+{
   return std::string(ACE_VERSION);
 }
 
-} // namespace Helper
-} // namespace model
-} // namespace ace
-
+}}}

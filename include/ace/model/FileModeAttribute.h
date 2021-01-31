@@ -27,24 +27,23 @@
 #include <string>
 #include <sys/types.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class FileModeAttribute : public Attribute {
- public:
-
+class FileModeAttribute : public Attribute
+{
+public:
   FileModeAttribute() = delete;
-  explicit FileModeAttribute(FileModeAttribute const & o) = default;
-  FileModeAttribute(std::string const & name, bool o);
+  explicit FileModeAttribute(FileModeAttribute const& o) = default;
+  FileModeAttribute(std::string const& name, bool o);
 
   // Object
 
-  void loadModel(tree::Value const & t);
-  bool checkModel(tree::Value const & t) const;
+  void loadModel(tree::Value const& t);
+  bool checkModel(tree::Value const& t) const;
 
   // Instance
 
-  void load(Attribute const & a);
+  void load(Attribute const& a);
 
   // Attribute
 
@@ -55,14 +54,12 @@ class FileModeAttribute : public Attribute {
 
   // Accessors
 
-  std::string const & value() const;
+  std::string const& value() const;
   int flags() const;
 
- private:
-
+private:
   std::string m_value;
-  int         m_flags;
+  int m_flags;
 };
 
-} // namespace model
-} // namespace ace
+}}

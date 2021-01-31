@@ -26,16 +26,10 @@
 #include <ace/tree/Scanner.h>
 #include <string>
 
-namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace ace { namespace tomlfmt { namespace Object {
 
-tree::Value::Ref
-build(std::string const & name, toml::Value const & value);
+tree::Value::Ref build(std::string const& name, toml::Value const& value);
 
-toml::Value
-dump(tree::Value const & v);
+toml::Value dump(tree::Value const& v);
 
-} // namespace Object
-} // namespace tomlfmt
-} // namespace ace
+}}}

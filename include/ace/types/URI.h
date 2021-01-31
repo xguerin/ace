@@ -28,46 +28,53 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // URI comparator
 
-struct URISchemaCompare : public std::binary_function<std::string, std::string, bool> {
-  bool operator() (std::string const & a, std::string const & b) const;
+struct URISchemaCompare
+  : public std::binary_function<std::string, std::string, bool>
+{
+  bool operator()(std::string const& a, std::string const& b) const;
 };
 
 // URI format checker
 
-class URIFormatChecker : public FormatChecker<std::string> {
- public:
-
+class URIFormatChecker : public FormatChecker<std::string>
+{
+public:
   URIFormatChecker() = delete;
-  explicit URIFormatChecker(const BasicType * o);
-  bool operator()(tree::Object const & r, tree::Value const & v) const;
+  explicit URIFormatChecker(const BasicType* o);
+  bool operator()(tree::Object const& r, tree::Value const& v) const;
 };
 
 // URI class
 
-class URI : public EnumeratedType<std::string, false, URISchemaCompare, URIFormatChecker> {
- public:
-
-  enum class Scheme {
-    File, HTTP, IPv4, FTP, Undefined
+class URI
+  : public EnumeratedType<std::string, false, URISchemaCompare,
+                          URIFormatChecker>
+{
+public:
+  enum class Scheme
+  {
+    File,
+    HTTP,
+    IPv4,
+    FTP,
+    Undefined
   };
 
   URI();
 
   bool validateModel();
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
 
-  static Scheme parseScheme(std::string const & n);
+  static Scheme parseScheme(std::string const& n);
   static std::string toString(const Scheme s);
 };
 
-} // namespace model
-} // namespace ace
+}}

@@ -26,12 +26,11 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace tomlfmt {
-namespace Primitive {
+namespace ace { namespace tomlfmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & pri) {
+build(std::string const& name, toml::Value const& pri)
+{
   tree::Primitive::Ref result = nullptr;
   if (pri.is<std::string>()) {
     std::string value(pri.as<std::string>());
@@ -50,16 +49,22 @@ build(std::string const & name, toml::Value const & pri) {
 }
 
 toml::Value
-dump(tree::Value const & v) {
-  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
-  if (p.is<bool>()) return toml::Value(p.value<bool>());
-  if (p.is<long>()) return toml::Value(static_cast<int64_t>(p.value<long>()));
-  if (p.is<double>()) return toml::Value(p.value<double>());
-  if (p.is<std::string>()) return toml::Value(p.value<std::string>());
+dump(tree::Value const& v)
+{
+  tree::Primitive const& p = static_cast<tree::Primitive const&>(v);
+  if (p.is<bool>()) {
+    return toml::Value(p.value<bool>());
+  }
+  if (p.is<long>()) {
+    return toml::Value(static_cast<int64_t>(p.value<long>()));
+  }
+  if (p.is<double>()) {
+    return toml::Value(p.value<double>());
+  }
+  if (p.is<std::string>()) {
+    return toml::Value(p.value<std::string>());
+  }
   return toml::Value();
 }
 
-} // namespace Primitive
-} // namespace tomlfmt
-} // namespace ace
-
+}}}

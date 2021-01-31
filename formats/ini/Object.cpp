@@ -24,20 +24,19 @@
 #include "Common.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>  // NOLINT
+#include <ace/tree/Object.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace inifmt {
-namespace Object {
+namespace ace { namespace inifmt { namespace Object {
 
 void
-dump(tree::Value const & v, std::ostream & o) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
+dump(tree::Value const& v, std::ostream& o)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
   /**
    * Dump non-object types
    */
-  for (auto const & e: w) {
+  for (auto const& e : w) {
     if (e.second->type() != ace::tree::Value::Type::Object) {
       o << e.first << " = ";
       Common::dump(*e.second, o);
@@ -47,15 +46,14 @@ dump(tree::Value const & v, std::ostream & o) {
   /**
    * Dump object types
    */
-  for (auto const & e: w) {
+  for (auto const& e : w) {
     if (e.second->type() == ace::tree::Value::Type::Object) {
       std::string p = e.second->path();
-      o << std::endl << "[" << p.substr(2, std::string::npos) << "]" << std::endl;
+      o << std::endl
+        << "[" << p.substr(2, std::string::npos) << "]" << std::endl;
       Common::dump(*e.second, o);
     }
   }
 }
 
-} // namespace Object
-} // namespace inifmt
-} // namespace ace
+}}}

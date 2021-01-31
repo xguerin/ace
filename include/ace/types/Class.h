@@ -32,76 +32,74 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Class : public Type<void, FormatChecker<void>> {
- public:
-
+class Class : public Type<void, FormatChecker<void>>
+{
+public:
   using Ref = std::shared_ptr<Class>;
 
   Class();
 
   // Build from templated Object
 
-  static Class::Ref build(std::string const & n, const Object * p,
-                          std::string const & m, Arity const & a);
+  static Class::Ref build(std::string const& n, const Object* p,
+                          std::string const& m, Arity const& a);
 
   // Object
 
-  bool injectInherited(tree::Object const & r, Object const & o, tree::Value & v) const;
+  bool injectInherited(tree::Object const& r, Object const& o,
+                       tree::Value& v) const;
 
   // Instance
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  void expandInstance(tree::Object & r, tree::Value & v);
-  bool flattenInstance(tree::Object & r, tree::Value & v);
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  void expandInstance(tree::Object& r, tree::Value& v);
+  bool flattenInstance(tree::Object& r, tree::Value& v);
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
   // Coach
 
-  void display(Coach::Branch const & br) const;
-  bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  void display(Coach::Branch const& br) const;
+  bool explain(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
   // Generator
 
-  void collectModelFileDependencies(std::set<std::string> & d) const;
+  void collectModelFileDependencies(std::set<std::string>& d) const;
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
   using Type::doBuildDefinition;
-  void doBuildDefinition(std::string const & s, std::string const & v, std::string const & e,
-                         std::ostream & o, int l) const;
+  void doBuildDefinition(std::string const& s, std::string const& v,
+                         std::string const& e, std::ostream& o, int l) const;
 
   using Type::doSerializerDefinition;
-  void doSerializerDefinition(std::string const & c, std::string const & n,
-                              std::string const & v, const bool b,
-                              std::ostream & o, int l) const;
+  void doSerializerDefinition(std::string const& c, std::string const& n,
+                              std::string const& v, const bool b,
+                              std::ostream& o, int l) const;
 
   // Basic Type
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
   std::string typeName() const;
-  bool has(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  bool has(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
-  void get(tree::Path const & p, tree::Path::const_iterator const & i,
-           std::list<BasicType::Ref> & r) const;
+  void get(tree::Path const& p, tree::Path::const_iterator const& i,
+           std::list<BasicType::Ref>& r) const;
 
-  void promoteArity(tree::Path const & p, tree::Path::const_iterator const & i);
-  void disable(tree::Path const & p, tree::Path::const_iterator const & i);
+  void promoteArity(tree::Path const& p, tree::Path::const_iterator const& i);
+  void disable(tree::Path const& p, tree::Path::const_iterator const& i);
 
   bool isObject() const;
 
   // Accessors
 
-  ModelAttribute & modelAttribute();
-  ModelAttribute const & modelAttribute() const;
+  ModelAttribute& modelAttribute();
+  ModelAttribute const& modelAttribute() const;
 
- private:
-
+private:
   std::vector<Model::Ref> m_clones;
 };
 
-} // namespace model
-} // namespace ace
+}}

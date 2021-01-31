@@ -30,9 +30,7 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
-namespace Helper {
+namespace ace { namespace model { namespace Helper {
 
 using StrAlloc = std::allocator<std::string>;
 
@@ -51,8 +49,8 @@ using StrAlloc = std::allocator<std::string>;
  *
  * @return
  */
-bool
-validate(std::string const & mp, std::string const & ver, const bool stct, tree::Value::Ref & svr);
+bool validate(std::string const& mp, std::string const& ver, const bool stct,
+              tree::Value::Ref& svr);
 
 /**
  * @brief Validate a configuration file for a model
@@ -65,11 +63,12 @@ validate(std::string const & mp, std::string const & ver, const bool stct, tree:
  *
  * @return True in case of success, false otherwise
  */
-template<typename T, template <class, class> class C>
+template<typename T, template<class, class> class C>
 bool
-validateFile(std::string const & file,
-             C<std::string, StrAlloc> const & stms = C<std::string, StrAlloc>(),
-             const bool strict = false, int argc = 0, char ** argv = nullptr) {
+validateFile(std::string const& file,
+             C<std::string, StrAlloc> const& stms = C<std::string, StrAlloc>(),
+             const bool strict = false, int argc = 0, char** argv = nullptr)
+{
   if (not MASTER.hasScannerByExtension(file)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", file);
     return false;
@@ -97,11 +96,12 @@ validateFile(std::string const & file,
  *
  * @return A valid reference in case of success, nullptr otherwise
  */
-template<typename T, template <class, class> class C>
+template<typename T, template<class, class> class C>
 typename T::Ref
-parseFile(std::string const & file,
-          C<std::string, StrAlloc> const & stms = C<std::string, StrAlloc>(),
-          const bool strict = false, int argc = 0, char ** argv = nullptr) {
+parseFile(std::string const& file,
+          C<std::string, StrAlloc> const& stms = C<std::string, StrAlloc>(),
+          const bool strict = false, int argc = 0, char** argv = nullptr)
+{
   if (not MASTER.hasScannerByExtension(file)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", file);
     return nullptr;
@@ -115,7 +115,9 @@ parseFile(std::string const & file,
     ACE_LOG(Error, "Alteration of instance failed");
     return nullptr;
   }
-  if (validate(T::PATH, T::VERSION, strict, svr)) return T::build(*svr);
+  if (validate(T::PATH, T::VERSION, strict, svr)) {
+    return T::build(*svr);
+  }
   return nullptr;
 }
 
@@ -131,8 +133,9 @@ parseFile(std::string const & file,
  */
 template<typename T>
 bool
-validateFile(std::string const & file, const bool strict = false,
-             int argc = 0, char ** argv = nullptr) {
+validateFile(std::string const& file, const bool strict = false, int argc = 0,
+             char** argv = nullptr)
+{
   return validateFile<T>(file, std::vector<std::string>(), strict, argc, argv);
 }
 
@@ -148,8 +151,9 @@ validateFile(std::string const & file, const bool strict = false,
  */
 template<typename T>
 typename T::Ref
-parseFile(std::string const & file, const bool strict = false,
-          int argc = 0, char ** argv = nullptr) {
+parseFile(std::string const& file, const bool strict = false, int argc = 0,
+          char** argv = nullptr)
+{
   return parseFile<T>(file, std::vector<std::string>(), strict, argc, argv);
 }
 
@@ -164,18 +168,21 @@ parseFile(std::string const & file, const bool strict = false,
  *
  * @return True in case of success, false otherwise
  */
-template<typename T, template<class, class> class C, template<class, class> class D>
+template<typename T, template<class, class> class C,
+         template<class, class> class D>
 bool
-validateFiles(C<std::string, StrAlloc> const & files,
-              D<std::string, StrAlloc> const & stms = D<std::string, StrAlloc>(),
-              const bool strict = false, int argc = 0, char ** argv = nullptr) {
+validateFiles(C<std::string, StrAlloc> const& files,
+              D<std::string, StrAlloc> const& stms = D<std::string, StrAlloc>(),
+              const bool strict = false, int argc = 0, char** argv = nullptr)
+{
   tree::Value::Ref res = nullptr;
-  for (auto & file : files) {
+  for (auto& file : files) {
     if (not MASTER.hasScannerByExtension(file)) {
       ACE_LOG(Error, "Unsupported configuration file format: ", file);
       return false;
     }
-    tree::Value::Ref svr = MASTER.scannerByExtension(file).open(file, argc, argv);
+    tree::Value::Ref svr =
+      MASTER.scannerByExtension(file).open(file, argc, argv);
     if (svr == nullptr) {
       ACE_LOG(Error, "Cannot open configuration file \"" + file + "\"");
       return false;
@@ -204,18 +211,21 @@ validateFiles(C<std::string, StrAlloc> const & files,
  *
  * @return A valid reference in case of success, nullptr otherwise
  */
-template<typename T, template<class, class> class C, template<class, class> class D>
+template<typename T, template<class, class> class C,
+         template<class, class> class D>
 typename T::Ref
-parseFiles(C<std::string, StrAlloc> const & files,
-           D<std::string, StrAlloc> const & stms = D<std::string, StrAlloc>(),
-           const bool strict = false, int argc = 0, char ** argv = nullptr) {
+parseFiles(C<std::string, StrAlloc> const& files,
+           D<std::string, StrAlloc> const& stms = D<std::string, StrAlloc>(),
+           const bool strict = false, int argc = 0, char** argv = nullptr)
+{
   tree::Value::Ref res = nullptr;
-  for (auto & file : files) {
+  for (auto& file : files) {
     if (not MASTER.hasScannerByExtension(file)) {
       ACE_LOG(Error, "Unsupported configuration file format: ", file);
       return nullptr;
     }
-    tree::Value::Ref svr = MASTER.scannerByExtension(file).open(file, argc, argv);
+    tree::Value::Ref svr =
+      MASTER.scannerByExtension(file).open(file, argc, argv);
     if (svr == nullptr) {
       ACE_LOG(Error, "Cannot open configuration file \"" + file + "\"");
       return nullptr;
@@ -230,7 +240,9 @@ parseFiles(C<std::string, StrAlloc> const & files,
     ACE_LOG(Error, "Alteration of instance failed");
     return nullptr;
   }
-  if (validate(T::PATH, T::VERSION, strict, res)) return T::build(*res);
+  if (validate(T::PATH, T::VERSION, strict, res)) {
+    return T::build(*res);
+  }
   return nullptr;
 }
 
@@ -246,9 +258,11 @@ parseFiles(C<std::string, StrAlloc> const & files,
  */
 template<typename T, template<class, class> class C>
 bool
-validateFiles(C<std::string, StrAlloc> const & files,
-              const bool strict = false, int argc = 0, char ** argv = nullptr) {
-  return validateFiles<T>(files, std::vector<std::string>(), strict, argc, argv);
+validateFiles(C<std::string, StrAlloc> const& files, const bool strict = false,
+              int argc = 0, char** argv = nullptr)
+{
+  return validateFiles<T>(files, std::vector<std::string>(), strict, argc,
+                          argv);
 }
 
 /**
@@ -263,8 +277,9 @@ validateFiles(C<std::string, StrAlloc> const & files,
  */
 template<typename T, template<class, class> class C>
 typename T::Ref
-parseFiles(C<std::string, StrAlloc> const & files,
-           const bool strict = false, int argc = 0, char ** argv = nullptr) {
+parseFiles(C<std::string, StrAlloc> const& files, const bool strict = false,
+           int argc = 0, char** argv = nullptr)
+{
   return parseFiles<T>(files, std::vector<std::string>(), strict, argc, argv);
 }
 
@@ -280,11 +295,13 @@ parseFiles(C<std::string, StrAlloc> const & files,
  *
  * @return True in case of success, false otherwise
  */
-template<typename T, template <class, class> class C>
+template<typename T, template<class, class> class C>
 bool
-validateString(std::string const & str, std::string const & fmt,
-               C<std::string, StrAlloc> const & stms = std::vector<std::string>(),
-               const bool strict = false, int argc = 0, char ** argv = nullptr) {
+validateString(
+  std::string const& str, std::string const& fmt,
+  C<std::string, StrAlloc> const& stms = std::vector<std::string>(),
+  const bool strict = false, int argc = 0, char** argv = nullptr)
+{
   if (not MASTER.hasScannerByName(fmt)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
     return false;
@@ -313,11 +330,12 @@ validateString(std::string const & str, std::string const & fmt,
  *
  * @return A valid reference in case of success, nullptr otherwise
  */
-template<typename T, template <class, class> class C>
+template<typename T, template<class, class> class C>
 typename T::Ref
-parseString(std::string const & str, std::string const & fmt,
-            C<std::string, StrAlloc> const & stms = std::vector<std::string>(),
-            const bool strict = false, int argc = 0, char ** argv = nullptr) {
+parseString(std::string const& str, std::string const& fmt,
+            C<std::string, StrAlloc> const& stms = std::vector<std::string>(),
+            const bool strict = false, int argc = 0, char** argv = nullptr)
+{
   if (not MASTER.hasScannerByName(fmt)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
     return nullptr;
@@ -331,7 +349,9 @@ parseString(std::string const & str, std::string const & fmt,
     ACE_LOG(Error, "Alteration of inline configuration failed");
     return nullptr;
   }
-  if (validate(T::PATH, T::VERSION, strict, svr)) return T::build(*svr);
+  if (validate(T::PATH, T::VERSION, strict, svr)) {
+    return T::build(*svr);
+  }
   return nullptr;
 }
 
@@ -348,9 +368,11 @@ parseString(std::string const & str, std::string const & fmt,
  */
 template<typename T>
 bool
-validateString(std::string const & str, std::string const & fmt,
-               const bool strict = false, int argc = 0, char ** argv = nullptr) {
-  return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc, argv);
+validateString(std::string const& str, std::string const& fmt,
+               const bool strict = false, int argc = 0, char** argv = nullptr)
+{
+  return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc,
+                        argv);
 }
 
 /**
@@ -366,9 +388,11 @@ validateString(std::string const & str, std::string const & fmt,
  */
 template<typename T>
 typename T::Ref
-parseString(std::string const & str, std::string const & fmt,
-            const bool strict = false, int argc = 0, char ** argv = nullptr) {
-  return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc, argv);
+parseString(std::string const& str, std::string const& fmt,
+            const bool strict = false, int argc = 0, char** argv = nullptr)
+{
+  return parseString<T>(str, fmt, std::vector<std::string>(), strict, argc,
+                        argv);
 }
 
 /**  @} */
@@ -386,7 +410,7 @@ parseString(std::string const & str, std::string const & fmt,
  *
  * @return true if the operation succeeded, false otherwise
  */
-bool printAsTree(std::string const & mp, std::string const & ver);
+bool printAsTree(std::string const& mp, std::string const& ver);
 
 /**
  * @brief Print a model as a tree
@@ -397,7 +421,8 @@ bool printAsTree(std::string const & mp, std::string const & ver);
  */
 template<typename T>
 bool
-printAsTree() {
+printAsTree()
+{
   return printAsTree(T::PATH, T::VERSION);
 }
 
@@ -411,7 +436,8 @@ printAsTree() {
  *
  * @return true if the path is valid, false otherwise
  */
-bool explain(std::string const & mp, std::string const & ver, std::string const & cp);
+bool explain(std::string const& mp, std::string const& ver,
+             std::string const& cp);
 
 /**
  * @brief Explain a path within a model
@@ -423,7 +449,8 @@ bool explain(std::string const & mp, std::string const & ver, std::string const 
  */
 template<typename T>
 bool
-explain(std::string const & path) {
+explain(std::string const& path)
+{
   return explain(T::PATH, T::VERSION, path);
 }
 
@@ -446,17 +473,20 @@ explain(std::string const & path) {
  *
  * @return
  */
-template<typename T, template <class, class> class C>
+template<typename T, template<class, class> class C>
 bool
-dumpFile(std::string const & file, std::string const & fmt, std::ostream & to,
-         C<std::string, StrAlloc> const & stms = C<std::string, StrAlloc>(),
-         int argc = 0, char ** argv = nullptr) {
+dumpFile(std::string const& file, std::string const& fmt, std::ostream& to,
+         C<std::string, StrAlloc> const& stms = C<std::string, StrAlloc>(),
+         int argc = 0, char** argv = nullptr)
+{
   if (not MASTER.hasScannerByName(fmt)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
     return false;
   }
   tree::Value::Ref svr = parseFiles<T>(file, stms, false, argc, argv);
-  if (svr == nullptr) return false;
+  if (svr == nullptr) {
+    return false;
+  }
   MASTER.scannerByName(fmt).dump(*svr, tree::Scanner::Format::Default, to);
   return true;
 }
@@ -475,8 +505,9 @@ dumpFile(std::string const & file, std::string const & fmt, std::ostream & to,
  */
 template<typename T>
 bool
-dumpFile(std::string const & file, std::string const & fmt, std::ostream & to,
-         int argc = 0, char ** argv = nullptr) {
+dumpFile(std::string const& file, std::string const& fmt, std::ostream& to,
+         int argc = 0, char** argv = nullptr)
+{
   return dumpFile<T>(file, fmt, to, std::vector<std::string>(), argc, argv);
 }
 
@@ -493,17 +524,22 @@ dumpFile(std::string const & file, std::string const & fmt, std::ostream & to,
  *
  * @return
  */
-template<typename T, template<class, class> class C, template<class, class> class D>
+template<typename T, template<class, class> class C,
+         template<class, class> class D>
 bool
-dumpFiles(C<std::string, StrAlloc> const & files, std::string const & fmt, std::ostream & to,
-          D<std::string, StrAlloc> const & stms = D<std::string, StrAlloc>(),
-          int argc = 0, char ** argv = nullptr) {
+dumpFiles(C<std::string, StrAlloc> const& files, std::string const& fmt,
+          std::ostream& to,
+          D<std::string, StrAlloc> const& stms = D<std::string, StrAlloc>(),
+          int argc = 0, char** argv = nullptr)
+{
   if (not MASTER.hasScannerByName(fmt)) {
     ACE_LOG(Error, "Unsupported configuration file format: ", fmt);
     return false;
   }
   tree::Value::Ref svr = parseFiles<T>(files, stms, false, argc, argv);
-  if (svr == nullptr) return false;
+  if (svr == nullptr) {
+    return false;
+  }
   MASTER.scannerByName(fmt).dump(*svr, tree::Scanner::Format::Default, to);
   return true;
 }
@@ -522,8 +558,9 @@ dumpFiles(C<std::string, StrAlloc> const & files, std::string const & fmt, std::
  */
 template<typename T, template<class, class> class C>
 bool
-dumpFiles(C<std::string, StrAlloc> const & files, std::string const & fmt, std::ostream & to,
-          int argc = 0, char ** argv = nullptr) {
+dumpFiles(C<std::string, StrAlloc> const& files, std::string const& fmt,
+          std::ostream& to, int argc = 0, char** argv = nullptr)
+{
   return dumpFiles<T>(files, fmt, to, std::vector<std::string>(), argc, argv);
 }
 
@@ -538,6 +575,4 @@ std::string version();
 
 /**  @} */
 
-} // namespace Helper
-} // namespace model
-} // namespace ace
+}}}

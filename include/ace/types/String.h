@@ -28,30 +28,27 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class String : public EnumeratedType<std::string, true> {
- public:
-
+class String : public EnumeratedType<std::string, true>
+{
+public:
   using LengthAttributeType = FlagAttribute<std::string>;
 
   String();
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
 
- private:
-
+private:
   common::Range<long> m_length;
 };
 
-} // namespace model
-} // namespace ace
+}}

@@ -26,17 +26,11 @@
 #include <ace/tree/Scanner.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace sexpfmt {
-namespace Primitive {
+namespace ace { namespace sexpfmt { namespace Primitive {
 
-tree::Value::Ref
-build(std::string const & name, sexp::Value::Ref const & obj);
+tree::Value::Ref build(std::string const& name, sexp::Value::Ref const& obj);
 
-size_t
-dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
-     std::ostream & o);
+size_t dump(tree::Value const& v, const tree::Scanner::Format f,
+            const size_t indent, std::ostream& o);
 
-} // namespace Primitive
-} // namespace sexpfmt
-} // namespace ace
+}}}

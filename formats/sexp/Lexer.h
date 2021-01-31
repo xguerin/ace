@@ -24,25 +24,22 @@
 
 #include "Sexp.h"
 
-namespace ace {
-namespace sexpfmt {
+namespace ace { namespace sexpfmt {
 
-class Scan {
- public:
-
+class Scan
+{
+public:
   Scan();
   ~Scan();
 
-  sexp::Value::Ref parse(std::string const & str, const bool dbg = false);
+  sexp::Value::Ref parse(std::string const& str, const bool dbg = false);
 
- private:
-
-  int           cs;
-  int           act;
-  const char *  ts;
-  const char *  te;
-  void *        lparser;
+private:
+  int cs;
+  int act;
+  const char* ts;
+  const char* te;
+  void* lparser;
 };
 
-} // namespace sexpfmt
-} // namespace ace
+}}

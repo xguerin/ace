@@ -27,19 +27,18 @@
 #include <functional>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Float : public RangedType<double, true>,
-              public EnumeratedType<double, true, std::equal_to<double>> {
- public:
-
+class Float
+  : public RangedType<double, true>
+  , public EnumeratedType<double, true, std::equal_to<double>>
+{
+public:
   Float();
 
   bool validateModel();
-  virtual bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  BasicType::Ref clone(std::string const & n) const;
+  virtual bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  BasicType::Ref clone(std::string const& n) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

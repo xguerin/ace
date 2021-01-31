@@ -33,37 +33,39 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace pyfmt {
+namespace ace { namespace pyfmt {
 
 tree::Value::Ref
-Scanner::open(std::string const & fn, int argc, char ** argv) {
+Scanner::open(std::string const& fn, int argc, char** argv)
+{
   if (argc == 0 or argv == nullptr) {
     ACE_LOG(Error, "invalid ARGC/ARGV arguments");
     return nullptr;
   }
 
-  Py_SetProgramName(const_cast<char *>(fn.c_str()));
+  Py_SetProgramName(const_cast<char*>(fn.c_str()));
   Py_InitializeEx(0);
   shift(fn, argc, argv);
   PySys_SetArgv(argc, argv);
 
   fs::Path fnPath(fn), container = fnPath.prune();
   std::string path = container.toString();
-  if (path.empty()) path = ".";
+  if (path.empty()) {
+    path = ".";
+  }
   path = path + ":" + std::string(Py_GetPath());
-  PySys_SetPath(const_cast<char *>(path.c_str()));
+  PySys_SetPath(const_cast<char*>(path.c_str()));
 
   std::vector<std::string> fnParts;
   common::String::split(*fnPath.rbegin(), '.', fnParts);
   fnParts.erase(--fnParts.end());
   std::string mn = common::String::join(fnParts, '.');
 
-  PyObject * pName = PyString_FromString(mn.c_str());
-  PyObject * pModule = PyImport_Import(pName);
+  PyObject* pName = PyString_FromString(mn.c_str());
+  PyObject* pModule = PyImport_Import(pName);
   Py_DECREF(pName);
 
-  PyObject * pConfig = nullptr;
+  PyObject* pConfig = nullptr;
   tree::Value::Ref obj;
   if (pModule == nullptr) {
     PyErr_Print();
@@ -80,42 +82,44 @@ Scanner::open(std::string const & fn, int argc, char ** argv) {
   }
   obj = Object::build("", pConfig);
 
- bad_type:
+bad_type:
   Py_DECREF(pConfig);
- bad_config:
+bad_config:
   Py_XDECREF(pModule);
- bad_file:
+bad_file:
   Py_Finalize();
   return obj;
 }
 
 tree::Value::Ref
-Scanner::parse(std::string const & s, int argc, char ** argv) {
+Scanner::parse(std::string const& s, int argc, char** argv)
+{
   if (argc == 0 or argv == nullptr) {
     ACE_LOG(Error, "invalid ARGC/ARGV arguments");
     return nullptr;
   }
 
-  Py_SetProgramName(const_cast<char *>(""));
+  Py_SetProgramName(const_cast<char*>(""));
   Py_InitializeEx(0);
   shift("", argc, argv);
   PySys_SetArgv(argc, argv);
 
-  PyObject * pModule = PyModule_New("inlined");
+  PyObject* pModule = PyModule_New("inlined");
   PyModule_AddStringConstant(pModule, "__file__", "");
-  PyObject * pGlobal = PyDict_New();
+  PyObject* pGlobal = PyDict_New();
 
   if (PyDict_GetItemString(pGlobal, "__builtins__") == nullptr) {
-    if (PyDict_SetItemString(pGlobal, "__builtins__", PyEval_GetBuiltins()) != 0) {
+    if (PyDict_SetItemString(pGlobal, "__builtins__", PyEval_GetBuiltins()) !=
+        0) {
       ACE_LOG(Error, "cannot merge Python built-ins");
       return nullptr;
     }
   }
 
-  PyObject * pLocal = PyModule_GetDict(pModule);
-  PyObject * pValue = PyRun_String(s.c_str(), Py_file_input, pGlobal, pLocal);
+  PyObject* pLocal = PyModule_GetDict(pModule);
+  PyObject* pValue = PyRun_String(s.c_str(), Py_file_input, pGlobal, pLocal);
 
-  PyObject * pConfig = nullptr;
+  PyObject* pConfig = nullptr;
   tree::Value::Ref obj;
   if (pValue == nullptr) {
     PyErr_Print();
@@ -133,25 +137,27 @@ Scanner::parse(std::string const & s, int argc, char ** argv) {
   }
   obj = Object::build("", pConfig);
 
- bad_type:
+bad_type:
   Py_DECREF(pConfig);
- bad_config:
+bad_config:
   Py_XDECREF(pModule);
- bad_data:
+bad_data:
   Py_Finalize();
   return obj;
 }
 
 void
-Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
+Scanner::dump(tree::Value const& v, const Format f, std::ostream& o) const
+{
   o << "config = ";
   dump_value(v, o, 2, true);
   o << std::endl;
 }
 
 bool
-Scanner::openAll(std::string const & fn, int argc, char ** argv,
-                 std::list<tree::Value::Ref> & values) {
+Scanner::openAll(std::string const& fn, int argc, char** argv,
+                 std::list<tree::Value::Ref>& values)
+{
   auto res = open(fn, argc, argv);
   if (res == nullptr) {
     return false;
@@ -161,8 +167,9 @@ Scanner::openAll(std::string const & fn, int argc, char ** argv,
 }
 
 bool
-Scanner::parseAll(std::string const & s, int argc, char ** argv,
-                  std::list<tree::Value::Ref> & values) {
+Scanner::parseAll(std::string const& s, int argc, char** argv,
+                  std::list<tree::Value::Ref>& values)
+{
   auto res = parse(s, argc, argv);
   if (res == nullptr) {
     return false;
@@ -172,8 +179,9 @@ Scanner::parseAll(std::string const & s, int argc, char ** argv,
 }
 
 bool
-Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
-                 std::ostream & o) const {
+Scanner::dumpAll(std::list<tree::Value::Ref>& values, const Format f,
+                 std::ostream& o) const
+{
   if (values.size() != 1) {
     return false;
   }
@@ -182,20 +190,23 @@ Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
 }
 
 std::string
-Scanner::name() const {
+Scanner::name() const
+{
   return "python";
 }
 
 std::string
-Scanner::extension() const {
+Scanner::extension() const
+{
   return "py";
 }
 
-} // namespace pyfmt
-} // namespace ace
+}}
 
 extern "C" {
-void * loadPlugin() {
+void*
+loadPlugin()
+{
   return new ace::pyfmt::Scanner();
 }
 }

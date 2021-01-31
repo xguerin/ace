@@ -27,12 +27,11 @@
 #include <ace/tree/Array.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace hjsonfmt {
-namespace Array {
+namespace ace { namespace hjsonfmt { namespace Array {
 
 tree::Value::Ref
-build(std::string const & name, Hjson::Value const& ary) {
+build(std::string const& name, Hjson::Value const& ary)
+{
   tree::Array::Ref array = tree::Array::build(name);
   for (auto const& e : ary) {
     tree::Value::Ref v = Common::build(e.first, e.second);
@@ -46,16 +45,15 @@ build(std::string const & name, Hjson::Value const& ary) {
 }
 
 Hjson::Value
-dump(tree::Value const & v) {
-  tree::Array const & ary = static_cast<tree::Array const &>(v);
+dump(tree::Value const& v)
+{
+  tree::Array const& ary = static_cast<tree::Array const&>(v);
   Hjson::Value result;
-  for (auto const & e : ary) {
+  for (auto const& e : ary) {
     Hjson::Value value = Common::dump(*e);
     result.push_back(value);
   }
   return result;
 }
 
-} // namespace Array
-} // namespace hjsonfmt
-} // namespace ace
+}}}

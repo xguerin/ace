@@ -26,13 +26,9 @@
 #include <ace/tree/Object.h>
 #include <string>
 
-namespace ace {
-namespace pyfmt {
-namespace Object {
+namespace ace { namespace pyfmt { namespace Object {
 
-tree::Value::Ref build(std::string const & n, PyObject * o);
-void dump(tree::Value const & v, std::ostream & o, int l, bool i);
+tree::Value::Ref build(std::string const& n, PyObject* o);
+void dump(tree::Value const& v, std::ostream& o, int l, bool i);
 
-} // namespace Object
-} // namespace pyfmt
-} // namespace ace
+}}}

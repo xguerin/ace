@@ -25,33 +25,30 @@
 #include "Object.h"
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Author : public Object {
- public:
-
+class Author : public Object
+{
+public:
   Author();
 
   tree::Path path(const bool local = false) const;
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
 
-  std::string const & name() const;
-  std::string const & email() const;
+  std::string const& name() const;
+  std::string const& email() const;
 
- private:
-
+private:
   std::string m_name;
   std::string m_email;
 };
 
-} // namespace model
-} // namespace ace
+}}
 
 namespace std {
 
-ostream & operator<<(ostream & o, ace::model::Author const & a);
+ostream& operator<<(ostream& o, ace::model::Author const& a);
 
-} // namespace std
+}

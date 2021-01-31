@@ -26,20 +26,20 @@
 #include <ostream>
 #include <cstdint>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Coach {
- public:
-
-  class Branch {
-   public:
-
-    typedef enum _Type {
-      None      = 0x0,
-      Straight  = 0x1,
-      Corner    = 0x2,
-      Tee       = 0x3
+class Coach
+{
+public:
+  class Branch
+  {
+  public:
+    typedef enum Type
+    {
+      None = 0x0,
+      Straight = 0x1,
+      Corner = 0x2,
+      Tee = 0x3
     } Type;
 
     static const Branch Root;
@@ -49,35 +49,33 @@ class Coach {
     Branch push(const Type t) const;
     Branch pop() const;
 
-    std::ostream & print(std::ostream & o) const;
+    std::ostream& print(std::ostream& o) const;
 
-   private:
-
+  private:
     Branch(const uint64_t mask, const size_t count);
 
     Branch append(const Type t) const;
     Type front() const;
 
-    uint64_t  m_mask;
-    size_t    m_count;
+    uint64_t m_mask;
+    size_t m_count;
   };
 
- public:
-
+public:
   Coach() = default;
-  explicit Coach(Coach const &) = default;
-  virtual ~Coach() { }
+  explicit Coach(Coach const&) = default;
+  virtual ~Coach() {}
 
   /**
    * @brief Display object as part of a tree
    */
-  virtual void display(Branch const & br) const;
+  virtual void display(Branch const& br) const;
 
   /**
    * @brief Explain something to the user
    */
-  virtual bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  virtual bool explain(tree::Path const& p,
+                       tree::Path::const_iterator const& i) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

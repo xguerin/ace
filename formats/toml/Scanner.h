@@ -23,31 +23,29 @@
 #pragma once
 
 #include "Toml.h"
-#include <ace/tree/Scanner.h>  // NOLINT(build/include_type), cpplint is confused
+#include <ace/tree/Scanner.h> // NOLINT(build/include_type), cpplint is confused
 #include <string>
 
-namespace ace {
-namespace tomlfmt {
+namespace ace { namespace tomlfmt {
 
-class Scanner : public tree::Scanner {
- public:
-
+class Scanner : public tree::Scanner
+{
+public:
   Scanner() = default;
 
-  tree::Value::Ref open(std::string const & fn, int argc, char ** argv);
-  tree::Value::Ref parse(std::string const & s, int argc, char ** argv);
-  void dump(tree::Value const & v, const Format f, std::ostream & o) const;
+  tree::Value::Ref open(std::string const& fn, int argc, char** argv);
+  tree::Value::Ref parse(std::string const& s, int argc, char** argv);
+  void dump(tree::Value const& v, const Format f, std::ostream& o) const;
 
-  bool openAll(std::string const & fn, int argc, char ** argv,
-               std::list<tree::Value::Ref> & values);
-  bool parseAll(std::string const & s, int argc, char ** argv,
-                std::list<tree::Value::Ref> & values);
-  bool dumpAll(std::list<tree::Value::Ref> & values, const Format f,
-               std::ostream & o) const;
+  bool openAll(std::string const& fn, int argc, char** argv,
+               std::list<tree::Value::Ref>& values);
+  bool parseAll(std::string const& s, int argc, char** argv,
+                std::list<tree::Value::Ref>& values);
+  bool dumpAll(std::list<tree::Value::Ref>& values, const Format f,
+               std::ostream& o) const;
 
   std::string name() const;
   std::string extension() const;
 };
 
-} // namespace tomlfmt
-} // namespace ace
+}}

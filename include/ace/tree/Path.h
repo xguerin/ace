@@ -28,12 +28,11 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-class Path {
- public:
-
+class Path
+{
+public:
   using Container = std::vector<path::Item::Ref>;
   using iterator = typename Container::iterator;
   using const_iterator = typename Container::const_iterator;
@@ -43,22 +42,22 @@ class Path {
 
   Path() = default;
 
-  static Ref build(Path const & p = Path());
-  static Path parse(std::string const & s);
+  static Ref build(Path const& p = Path());
+  static Path parse(std::string const& s);
 
-  Path & push(path::Item::Ref const & ir);
-  Path sub(const_iterator const & from, const_iterator const & to) const;
+  Path& push(path::Item::Ref const& ir);
+  Path sub(const_iterator const& from, const_iterator const& to) const;
 
-  Path merge(Path const & o) const;
+  Path merge(Path const& o) const;
   bool generative() const;
   bool global() const;
 
-  bool operator<(Path const & o) const;
+  bool operator<(Path const& o) const;
 
-  bool operator==(Path const & o) const;
-  bool operator!=(Path const & o) const;
+  bool operator==(Path const& o) const;
+  bool operator!=(Path const& o) const;
 
-  bool match(Path const & p) const;
+  bool match(Path const& p) const;
 
   std::string toString(const bool useBrackets = false) const;
   operator std::string() const;
@@ -75,19 +74,16 @@ class Path {
   const_reverse_iterator rbegin() const;
   const_reverse_iterator rend() const;
 
-  iterator up(iterator const & it) const;
-  iterator down(iterator const & it) const;
+  iterator up(iterator const& it) const;
+  iterator down(iterator const& it) const;
 
-  const_iterator up(const_iterator const & it) const;
-  const_iterator down(const_iterator const & it) const;
+  const_iterator up(const_iterator const& it) const;
+  const_iterator down(const_iterator const& it) const;
 
- private:
-
+private:
   Container m_items;
 };
 
-std::ostream &
-operator<<(std::ostream & o, Path const & p);
+std::ostream& operator<<(std::ostream& o, Path const& p);
 
-} // namespace tree
-} // namespace ace
+}}

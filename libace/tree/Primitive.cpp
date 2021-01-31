@@ -23,170 +23,182 @@
 #include <ace/tree/Primitive.h>
 #include <string>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
 template<>
-Primitive::Primitive(std::string const & n, bool const & v)
-  : Value(n, Type::Boolean), m_content(new TypedContent<bool>(v)) {
-}
+Primitive::Primitive(std::string const& n, bool const& v)
+  : Value(n, Type::Boolean), m_content(new TypedContent<bool>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, char const & v)
-  : Value(n, Type::String), m_content(new TypedContent<std::string>(std::string(1, v))) {
-}
+Primitive::Primitive(std::string const& n, char const& v)
+  : Value(n, Type::String)
+  , m_content(new TypedContent<std::string>(std::string(1, v)))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned char const & v)
-  : Value(n, Type::String), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, unsigned char const& v)
+  : Value(n, Type::String), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, short const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, short const& v)
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned short const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, unsigned short const& v)
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, int const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, int const& v)
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned int const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, unsigned int const& v)
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, long const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, long const& v)
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned long const & v)
-  : Value(n, Type::Integer), m_content(new TypedContent<long>(v)) {
-}
+Primitive::Primitive(std::string const& n, unsigned long const& v)
+  : Value(n, Type::Integer), m_content(new TypedContent<long>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, float const & v)
-  : Value(n, Type::Float), m_content(new TypedContent<double>(v)) {
-}
+Primitive::Primitive(std::string const& n, float const& v)
+  : Value(n, Type::Float), m_content(new TypedContent<double>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, double const & v)
-  : Value(n, Type::Float), m_content(new TypedContent<double>(v)) {
-}
+Primitive::Primitive(std::string const& n, double const& v)
+  : Value(n, Type::Float), m_content(new TypedContent<double>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, char * const & v)
-  : Value(n, Type::String), m_content(new TypedContent<std::string>(v)) {
-}
+Primitive::Primitive(std::string const& n, char* const& v)
+  : Value(n, Type::String), m_content(new TypedContent<std::string>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, const char * const & v)
-  : Value(n, Type::String), m_content(new TypedContent<std::string>(v)) {
-}
+Primitive::Primitive(std::string const& n, const char* const& v)
+  : Value(n, Type::String), m_content(new TypedContent<std::string>(v))
+{}
 
 template<>
-Primitive::Primitive(std::string const & n, std::string const & v)
-  : Value(n, Type::String), m_content(new TypedContent<std::string>(v)) {
-}
+Primitive::Primitive(std::string const& n, std::string const& v)
+  : Value(n, Type::String), m_content(new TypedContent<std::string>(v))
+{}
 
-Primitive::Primitive(Primitive const & p)
-  : Value(p), m_content(p.m_content->clone()) {
-}
+Primitive::Primitive(Primitive const& p)
+  : Value(p), m_content(p.m_content->clone())
+{}
 
 Value::Ref
-Primitive::clone() const {
+Primitive::clone() const
+{
   return Value::Ref(new Primitive(*this));
 }
 
 template<>
 bool
-Primitive::is<bool>() const {
+Primitive::is<bool>() const
+{
   return m_type == Value::Type::Boolean;
 }
 
 template<>
 bool
-Primitive::is<short>() const {
+Primitive::is<short>() const
+{
   return m_type == Value::Type::Integer;
 }
 
 template<>
 bool
-Primitive::is<unsigned short>() const {
+Primitive::is<unsigned short>() const
+{
   return m_type == Value::Type::Integer;
 }
 
 template<>
 bool
-Primitive::is<int>() const {
+Primitive::is<int>() const
+{
   return m_type == Value::Type::Integer;
 }
 
 template<>
 bool
-Primitive::is<unsigned int>() const {
+Primitive::is<unsigned int>() const
+{
   return m_type == Value::Type::Integer;
 }
 
 template<>
 bool
-Primitive::is<long>() const {
+Primitive::is<long>() const
+{
   return m_type == Value::Type::Integer;
 }
 
 template<>
 bool
-Primitive::is<unsigned long>() const {
+Primitive::is<unsigned long>() const
+{
   return m_type == Value::Type::Integer;
 }
 
 template<>
 bool
-Primitive::is<float>() const {
+Primitive::is<float>() const
+{
   return is<int>() or m_type == Value::Type::Float;
 }
 
 template<>
 bool
-Primitive::is<double>() const {
+Primitive::is<double>() const
+{
   return is<long>() or is<unsigned long>() or m_type == Value::Type::Float;
 }
 
 template<>
 bool
-Primitive::is<std::string>() const {
+Primitive::is<std::string>() const
+{
   return m_type == Value::Type::String;
 }
 
 void
-Primitive::stringify() {
+Primitive::stringify()
+{
   m_type = Value::Type::String;
 }
 
 std::string
-Primitive::value() const {
+Primitive::value() const
+{
   return m_content->toString();
 }
 
 template<>
 double
-Primitive::value() const {
+Primitive::value() const
+{
   if (m_type == Value::Type::Float) {
-    return static_cast<TypedContent<double> const &>(*m_content).value();
+    return static_cast<TypedContent<double> const&>(*m_content).value();
   } else if (m_type == Value::Type::Integer) {
-    return static_cast<TypedContent<long> const &>(*m_content).value();
+    return static_cast<TypedContent<long> const&>(*m_content).value();
   } else {
     return 0.0;
   }
 }
 
-} // namespace tree
-} // namespace ace
-
+}}

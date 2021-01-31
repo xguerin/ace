@@ -31,51 +31,49 @@
 #include <map>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Section : public Object {
- public:
-
+class Section : public Object
+{
+public:
   using Types = std::map<std::string, BasicType::Ref>;
   using iterator = Types::iterator;
   using const_iterator = Types::const_iterator;
 
- public:
-
+public:
   Section();
 
   // Object
 
   tree::Path path(const bool local = false) const;
 
-  virtual bool checkModel(tree::Value const & t) const;
-  virtual void loadModel(tree::Value const & t);
+  virtual bool checkModel(tree::Value const& t) const;
+  virtual void loadModel(tree::Value const& t);
   virtual bool flattenModel();
   virtual bool validateModel();
 
   // Local
 
-  bool merge(Section const & b);
-  bool override(Section const & b);
+  bool merge(Section const& b);
+  bool override(Section const& b);
 
-  bool has(std::string const & k) const;
-  bool has(tree::Path const & path) const;
-  bool has(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  bool has(std::string const& k) const;
+  bool has(tree::Path const& path) const;
+  bool has(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
-  BasicType & get(std::string const & k);
-  BasicType const & get(std::string const & k) const;
+  BasicType& get(std::string const& k);
+  BasicType const& get(std::string const& k) const;
 
-  void get(tree::Path const & path, std::list<BasicType::Ref> & r) const;
+  void get(tree::Path const& path, std::list<BasicType::Ref>& r) const;
 
-  void get(tree::Path const & p, tree::Path::const_iterator const & i,
-           std::list<BasicType::Ref> & r) const;
+  void get(tree::Path const& p, tree::Path::const_iterator const& i,
+           std::list<BasicType::Ref>& r) const;
 
-  void promoteArity(tree::Path const & p);
-  void promoteArity(tree::Path const & p, tree::Path::const_iterator const & i);
+  void promoteArity(tree::Path const& p);
+  void promoteArity(tree::Path const& p, tree::Path::const_iterator const& i);
 
-  void disable(tree::Path const & p);
-  void disable(tree::Path const & p, tree::Path::const_iterator const & i);
+  void disable(tree::Path const& p);
+  void disable(tree::Path const& p, tree::Path::const_iterator const& i);
 
   // Iterators
 
@@ -85,27 +83,26 @@ class Section : public Object {
   const_iterator begin() const;
   const_iterator end() const;
 
- private:
+private:
+  bool checkName(std::string const& n) const;
+  template<typename T>
+  bool checkType(std::string const& n, tree::Value const& t) const;
 
-  bool checkName(std::string const & n) const;
-  template<typename T> bool checkType(std::string const & n, tree::Value const & t) const;
-
- protected:
-
-  bool checkType(std::string const & n, tree::Value const & t) const;
-  void loadType(std::string const & n, tree::Value const & t);
+protected:
+  bool checkType(std::string const& n, tree::Value const& t) const;
+  void loadType(std::string const& n, tree::Value const& t);
 
   Types m_types;
 };
 
 template<typename T>
 bool
-Section::checkType(std::string const & n, tree::Value const & t) const {
+Section::checkType(std::string const& n, tree::Value const& t) const
+{
   T type;
   type.setName(n);
   type.setParent(this);
   return type.checkModel(t);
 }
 
-} // namespace model
-} // namespace ace
+}}

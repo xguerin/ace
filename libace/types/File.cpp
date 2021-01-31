@@ -23,7 +23,7 @@
 #include <ace/types/File.h>
 #include <ace/common/String.h>
 #include <ace/filesystem/Directory.h>
-#include <ace/filesystem/File.h>  // NOLINT
+#include <ace/filesystem/File.h> // NOLINT
 #include <ace/filesystem/Node.h>
 #include <ace/filesystem/Utils.h>
 #include <ace/tree/Checker.h>
@@ -36,14 +36,16 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // File comparator
 
 bool
-FileTypeCompare::operator() (std::string const & a, std::string const & b) const {
-  if (a == "auto") return true;
+FileTypeCompare::operator()(std::string const& a, std::string const& b) const
+{
+  if (a == "auto") {
+    return true;
+  }
   fs::Path path(a);
   fs::Node::Type t = fs::Node::type(a);
   if (t != fs::Node::Type::Unknown) {
@@ -57,26 +59,32 @@ FileTypeCompare::operator() (std::string const & a, std::string const & b) const
 
 // File format checker
 
-FileFormatChecker::FileFormatChecker(const BasicType * o) : FormatChecker(o) { }
+FileFormatChecker::FileFormatChecker(const BasicType* o) : FormatChecker(o) {}
 
 bool
-FileFormatChecker::operator() (tree::Object const & r, tree::Value const & v) const {
-  if (not FormatChecker<std::string>::operator()(r, v)) return false;
+FileFormatChecker::operator()(tree::Object const& r, tree::Value const& v) const
+{
+  if (not FormatChecker<std::string>::operator()(r, v)) {
+    return false;
+  }
   int score = 0;
-  v.each([&](tree::Value const & w) {
-    tree::Primitive const & p = static_cast<tree::Primitive const &>(w);
-    if (p.value() != "auto" and not checkFormat(v.name(), p.value())) score += 1;
+  v.each([&](tree::Value const& w) {
+    tree::Primitive const& p = static_cast<tree::Primitive const&>(w);
+    if (p.value() != "auto" and not checkFormat(v.name(), p.value())) {
+      score += 1;
+    }
   });
   return score == 0;
 }
 
 bool
-FileFormatChecker::checkFormat(std::string const & n, std::string const & b) const {
-  File const & file = *dynamic_cast<const File *>(m_owner);
+FileFormatChecker::checkFormat(std::string const& n, std::string const& b) const
+{
+  File const& file = *dynamic_cast<const File*>(m_owner);
   int flags = file.fileModeAttribute().flags();
   auto path = fs::Path(b);
   switch (fs::Node::type(path)) {
-    case fs::Node::Type::Unknown : {
+    case fs::Node::Type::Unknown: {
       if ((flags & O_CREAT) == 0) {
         ERROR_O(m_owner, "file \"", n, "\": ", ERR_FILE_NO_SUCH_FILE(b));
         return false;
@@ -88,11 +96,15 @@ FileFormatChecker::checkFormat(std::string const & n, std::string const & b) con
     } break;
     default: {
       std::string mode = file.fileModeAttribute().value();
-      if ((flags & O_RDONLY or flags & O_RDWR) and not fs::Node::readable(path)) {
-        ERROR_O(m_owner, "file \"", n, "\": ", ERR_FILE_CANNOT_OPEN_MODE(b, mode));
+      if ((flags & O_RDONLY or flags & O_RDWR) and
+          not fs::Node::readable(path)) {
+        ERROR_O(m_owner, "file \"", n,
+                "\": ", ERR_FILE_CANNOT_OPEN_MODE(b, mode));
       }
-      if ((flags & O_WRONLY or flags & O_RDWR) and not fs::Node::writeable(path)) {
-        ERROR_O(m_owner, "file \"", n, "\": ", ERR_FILE_CANNOT_OPEN_MODE(b, mode));
+      if ((flags & O_WRONLY or flags & O_RDWR) and
+          not fs::Node::writeable(path)) {
+        ERROR_O(m_owner, "file \"", n,
+                "\": ", ERR_FILE_CANNOT_OPEN_MODE(b, mode));
       }
     } break;
   }
@@ -101,47 +113,57 @@ FileFormatChecker::checkFormat(std::string const & n, std::string const & b) con
 
 // File class
 
-File::File() : Type(BasicType::Kind::File), EnumeratedType(BasicType::Kind::File) {
+File::File()
+  : Type(BasicType::Kind::File), EnumeratedType(BasicType::Kind::File)
+{
   m_attributes.define<FileModeAttribute>("mode", false);
 }
 
 bool
-File::validateModel() {
-  if (not EnumeratedType::validateModel()) return false;
+File::validateModel()
+{
+  if (not EnumeratedType::validateModel()) {
+    return false;
+  }
   int score = 0;
-  if (hasEitherAttribute()) for (auto & e : eitherAttribute().values()) {
-    if (fs::Node::parseType(e) == fs::Node::Type::Unknown) {
-      ERROR(ERR_INVALID_EITHER_FILE_TYPE(e));
-      score += 1;
+  if (hasEitherAttribute()) {
+    for (auto& e : eitherAttribute().values()) {
+      if (fs::Node::parseType(e) == fs::Node::Type::Unknown) {
+        ERROR(ERR_INVALID_EITHER_FILE_TYPE(e));
+        score += 1;
+      }
     }
   }
   return score == 0;
 }
 
 void
-File::collectInterfaceIncludes(std::set<std::string> & i) const {
+File::collectInterfaceIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 void
-File::collectImplementationIncludes(std::set<std::string> & i) const {
+File::collectImplementationIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 BasicType::Ref
-File::clone(std::string const & n) const {
-  File * uri = new File(*this);
+File::clone(std::string const& n) const
+{
+  File* uri = new File(*this);
   uri->setName(n);
   return BasicType::Ref(uri);
 }
 
-FileModeAttribute const &
-File::fileModeAttribute() const {
-  Attribute const & attr = *this->m_attributes["mode"];
-  return static_cast<FileModeAttribute const &>(attr);
+FileModeAttribute const&
+File::fileModeAttribute() const
+{
+  Attribute const& attr = *this->m_attributes["mode"];
+  return static_cast<FileModeAttribute const&>(attr);
 }
 
-} // namespace model
-} // namespace ace
+}}

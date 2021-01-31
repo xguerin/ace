@@ -24,15 +24,16 @@
 #include <string>
 #include <fcntl.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-ModelAttribute::ModelAttribute(std::string const & n, bool o)
-  : Attribute(n, o), m_value(), m_model(nullptr) { }
+ModelAttribute::ModelAttribute(std::string const& n, bool o)
+  : Attribute(n, o), m_value(), m_model(nullptr)
+{}
 
 bool
-ModelAttribute::checkModel(tree::Value const & t) const {
-  std::string n = static_cast<tree::Primitive const &>(t).value<std::string>();
+ModelAttribute::checkModel(tree::Value const& t) const
+{
+  std::string n = static_cast<tree::Primitive const&>(t).value<std::string>();
   DEBUG("Check \"", n, "\"");
   if (not Model::check(this, n)) {
     ERROR(ERR_INVALID_MODEL(n));
@@ -42,49 +43,61 @@ ModelAttribute::checkModel(tree::Value const & t) const {
 }
 
 void
-ModelAttribute::loadModel(tree::Value const & t) {
-  m_value = static_cast<tree::Primitive const &>(t).value<std::string>();
+ModelAttribute::loadModel(tree::Value const& t)
+{
+  m_value = static_cast<tree::Primitive const&>(t).value<std::string>();
   m_model = Model::load(this, m_value);
 }
 
 void
-ModelAttribute::load(Attribute const & a) {
-  ModelAttribute const & ra = static_cast<ModelAttribute const &>(a);
+ModelAttribute::load(Attribute const& a)
+{
+  ModelAttribute const& ra = static_cast<ModelAttribute const&>(a);
   m_value = ra.m_value;
   m_model = ra.m_model;
 }
 
 bool
-ModelAttribute::flattenModel() {
+ModelAttribute::flattenModel()
+{
   return m_model->flattenModel();
 }
 
 bool
-ModelAttribute::validateModel() {
+ModelAttribute::validateModel()
+{
   return m_model->validateModel();
 }
 
-ModelAttribute::operator tree::Checker::Pattern() const {
+ModelAttribute::operator tree::Checker::Pattern() const
+{
   return tree::Checker::Pattern(tree::Value::Type::String, false);
 }
 
-ModelAttribute::operator std::string() const {
+ModelAttribute::operator std::string() const
+{
   return m_value;
 }
 
 Attribute::Ref
-ModelAttribute::clone() const {
-  ModelAttribute * attr = new ModelAttribute(*this);
+ModelAttribute::clone() const
+{
+  ModelAttribute* attr = new ModelAttribute(*this);
   attr->m_model = Model::Ref(new Model(*m_model));
   attr->m_model->setParent(attr);
   return Attribute::Ref(attr);
 }
 
 bool
-ModelAttribute::merge(Attribute const & b) {
-  if (not Attribute::merge(b)) return false;
-  ModelAttribute const & mattr = static_cast<ModelAttribute const &>(b);
-  if (m_model->filePath() == mattr.model().filePath()) return true;
+ModelAttribute::merge(Attribute const& b)
+{
+  if (not Attribute::merge(b)) {
+    return false;
+  }
+  ModelAttribute const& mattr = static_cast<ModelAttribute const&>(b);
+  if (m_model->filePath() == mattr.model().filePath()) {
+    return true;
+  }
   if (m_model->isAnAncestor(mattr.model())) {
     return true;
   } else if (mattr.model().isAnAncestor(*m_model)) {
@@ -96,21 +109,22 @@ ModelAttribute::merge(Attribute const & b) {
   return false;
 }
 
-std::string const &
-ModelAttribute::value() const {
+std::string const&
+ModelAttribute::value() const
+{
   return m_value;
 }
 
-Model &
-ModelAttribute::model() {
+Model&
+ModelAttribute::model()
+{
   return *m_model;
 }
 
-Model const &
-ModelAttribute::model() const {
+Model const&
+ModelAttribute::model() const
+{
   return *m_model;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

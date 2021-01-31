@@ -25,62 +25,74 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 Enum::Enum()
-    : Type(BasicType::Kind::Enum),
-    EnumeratedType(BasicType::Kind::Enum) {
+  : Type(BasicType::Kind::Enum), EnumeratedType(BasicType::Kind::Enum)
+{
   m_attributes.define<BindAttributeType>("bind", false);
 }
 
 bool
-Enum::hasPrivateNamespaceDefinition() const {
+Enum::hasPrivateNamespaceDefinition() const
+{
   return true;
 }
 
 void
-Enum::doPrivateNamespaceDefinition(std::ostream & o, int l) const {
+Enum::doPrivateNamespaceDefinition(std::ostream& o, int l) const
+{
   indent(o, l) << "int ";
   o << typeName() << "Parse(std::string const & v) {" << std::endl;
-  auto const & b = bindAttribute().values();
+  auto const& b = bindAttribute().values();
   indent(o, l + 2);
   for (auto e = b.begin(); e != b.end(); e++) {
     auto next = e;
     ++next;
-    if (next != b.end()) o << "if (v == \"" << e->first << "\") ";
+    if (next != b.end()) {
+      o << "if (v == \"" << e->first << "\") ";
+    }
     o << "{" << std::endl;
     indent(o, l + 4) << "return " << e->second << ";" << std::endl;
     indent(o, l + 2) << "}";
-    if (next != b.end()) o << " else ";
+    if (next != b.end()) {
+      o << " else ";
+    }
   }
   o << std::endl;
   indent(o, l) << "}" << std::endl;
 }
 
 bool
-Enum::hasTypeDeclaration() const {
+Enum::hasTypeDeclaration() const
+{
   return true;
 }
 
 void
-Enum::doTypeDeclaration(std::ostream & o, int l) const {
+Enum::doTypeDeclaration(std::ostream& o, int l) const
+{
   indent(o, l) << "typedef enum _" << typeName() << " {" << std::endl;
-  for (auto const & e : bindAttribute().values()) {
+  for (auto const& e : bindAttribute().values()) {
     indent(o, l + 2) << e.first << " = " << e.second << "," << std::endl;
   }
   indent(o, l) << "} " << typeName() << ";" << std::endl;
 }
 
 void
-Enum::doBuildDefinition(std::string const & s, std::string const & v, std::string const & e,
-                        std::ostream & o, int l) const {
+Enum::doBuildDefinition(std::string const& s, std::string const& v,
+                        std::string const& e, std::ostream& o, int l) const
+{
   indent(o, l);
   std::string tn = "std::string";
-  if (multiple()) tn = "std::vector<" + tn + ">";
+  if (multiple()) {
+    tn = "std::vector<" + tn + ">";
+  }
   o << tn << " " << declName() << ";" << std::endl;
   indent(o, l);
-  if (optional() and not multiple()) o << s << " = ";
+  if (optional() and not multiple()) {
+    o << s << " = ";
+  }
   o << "ace::tree::utils::parsePrimitive<std::string>";
   o << "(r, " << e << ", " << declName() << ");" << std::endl;
   indent(o, l);
@@ -90,26 +102,35 @@ Enum::doBuildDefinition(std::string const & s, std::string const & v, std::strin
 }
 
 void
-Enum::doGetterInterface(std::ostream & o, int l) const {
+Enum::doGetterInterface(std::ostream& o, int l) const
+{
   std::string tn = typeName();
-  if (multiple()) tn = "std::vector<" + tn + ">";
+  if (multiple()) {
+    tn = "std::vector<" + tn + ">";
+  }
   indent(o, l) << "virtual " << tn << " const & ";
   o << m_declName << "() const = 0;" << std::endl;
 }
 
 void
-Enum::doGetterDeclaration(std::ostream & o, int l) const {
+Enum::doGetterDeclaration(std::ostream& o, int l) const
+{
   std::string tn = typeName();
-  if (multiple()) tn = "std::vector<" + tn + ">";
+  if (multiple()) {
+    tn = "std::vector<" + tn + ">";
+  }
   indent(o, l) << tn << " const & " << m_declName << "() const;" << std::endl;
 }
 
 void
-Enum::doGetterDefinition(std::ostream & o, int l) const {
-  const Model * m = static_cast<const Model *>(owner());
-  std::string const & h = m->normalizedName();
+Enum::doGetterDefinition(std::ostream& o, int l) const
+{
+  const Model* m = static_cast<const Model*>(owner());
+  std::string const& h = m->normalizedName();
   std::string tn = h + "::" + typeName();
-  if (multiple()) tn = "std::vector<" + tn + ">";
+  if (multiple()) {
+    tn = "std::vector<" + tn + ">";
+  }
   indent(o, l) << tn << " const & " << h << "::";
   o << m_declName << "() const {" << std::endl;
   indent(o, l + 2) << "return m_" << m_declName << ";" << std::endl;
@@ -117,40 +138,45 @@ Enum::doGetterDefinition(std::ostream & o, int l) const {
 }
 
 void
-Enum::collectInterfaceIncludes(std::set<std::string> & i) const {
+Enum::collectInterfaceIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 void
-Enum::collectImplementationIncludes(std::set<std::string> & i) const {
+Enum::collectImplementationIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 BasicType::Ref
-Enum::clone(std::string const & n) const {
-  Enum * str = new Enum(*this);
+Enum::clone(std::string const& n) const
+{
+  Enum* str = new Enum(*this);
   str->setName(n);
   return BasicType::Ref(str);
 }
 
 std::string
-Enum::typeName() const {
+Enum::typeName() const
+{
   return common::String::camelify(name()) + "Type";
 }
 
-Enum::BindAttributeType &
-Enum::bindAttribute() {
-  Attribute & attr = *m_attributes["bind"];
-  return static_cast<BindAttributeType &>(attr);
+Enum::BindAttributeType&
+Enum::bindAttribute()
+{
+  Attribute& attr = *m_attributes["bind"];
+  return static_cast<BindAttributeType&>(attr);
 }
 
-Enum::BindAttributeType const &
-Enum::bindAttribute() const {
-  Attribute const & attr = *m_attributes["bind"];
-  return static_cast<BindAttributeType const &>(attr);
+Enum::BindAttributeType const&
+Enum::bindAttribute() const
+{
+  Attribute const& attr = *m_attributes["bind"];
+  return static_cast<BindAttributeType const&>(attr);
 }
 
-} // namespace model
-} // namespace ace
+}}

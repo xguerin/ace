@@ -26,26 +26,23 @@
 #include <ace/filesystem/Path.h>
 #include <functional>
 
-namespace ace {
-namespace fs {
+namespace ace { namespace fs {
 
-class Directory : public Node {
- public:
-
+class Directory : public Node
+{
+public:
   Directory();
-  explicit Directory(fs::Path const & p);
+  explicit Directory(fs::Path const& p);
 
-  bool has(fs::Path const & fp) const;
-  Node get(fs::Path const & fp) const;
+  bool has(fs::Path const& fp) const;
+  Node get(fs::Path const& fp) const;
 
-  void each(std::function<void(Node const &)> op) const;
+  void each(std::function<void(Node const&)> const& op) const;
 
   Node parent() const;
 
- private:
-
-  bool has(fs::Path const & p, fs::Path::const_iterator const & i) const;
+private:
+  bool has(fs::Path const& p, fs::Path::const_iterator const& i) const;
 };
 
-} // namespace fs
-} // namespace ace
+}}

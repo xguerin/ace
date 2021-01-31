@@ -27,32 +27,31 @@
 #include <functional>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // CPUID format checker
 
-class CPUIDFormatChecker : public FormatChecker<long> {
- public:
-
+class CPUIDFormatChecker : public FormatChecker<long>
+{
+public:
   CPUIDFormatChecker() = delete;
-  explicit CPUIDFormatChecker(const BasicType * o);
-  bool operator()(tree::Object const & r, tree::Value const & v) const;
+  explicit CPUIDFormatChecker(const BasicType* o);
+  bool operator()(tree::Object const& r, tree::Value const& v) const;
 };
 
 // CPUID class
 
-class CPUID : public RangedType<long, true, std::less<long>, CPUIDFormatChecker>,
-    public EnumeratedType<long, true, std::less<long>, CPUIDFormatChecker> {
- public:
-
+class CPUID
+  : public RangedType<long, true, std::less<long>, CPUIDFormatChecker>
+  , public EnumeratedType<long, true, std::less<long>, CPUIDFormatChecker>
+{
+public:
   CPUID();
 
   bool validateModel();
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  BasicType::Ref clone(std::string const & n) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  BasicType::Ref clone(std::string const& n) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

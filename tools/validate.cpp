@@ -31,27 +31,35 @@
 #include <string>
 #include <vector>
 
-template<typename T> using UA = TCLAP::UnlabeledMultiArg<T>;
-template<typename T> using MA = TCLAP::MultiArg<T>;
-template<typename T> using VA = TCLAP::ValueArg<T>;
+template<typename T>
+using UA = TCLAP::UnlabeledMultiArg<T>;
+template<typename T>
+using MA = TCLAP::MultiArg<T>;
+template<typename T>
+using VA = TCLAP::ValueArg<T>;
 using SA = TCLAP::SwitchArg;
 
-int main(int argc, char * argv[]) try {
-  char ** nargv = ace::common::Arguments::normalize(argc, argv);
+int
+main(int argc, char* argv[])
+try {
+  char** nargv = ace::common::Arguments::normalize(argc, argv);
   TCLAP::CmdLine cmd("Advanced Configuration Validator", ' ', ACE_VERSION);
-  MA<std::string> libPath("I", "include", "Model include path", false, "string", cmd);
-  VA<std::string> dumpPath("D", "dump", "Resolved configuration file", false, "", "string", cmd);
-  SA              optArg("o", "show-optional", "Show undefined optional values", cmd);
-  SA              unexArg("x", "show-unexpected", "Show unexpected values (garbage)", cmd);
-  SA              verbArg("v", "verbose", "Show summary", cmd);
-  SA              stctArg("s", "strict", "Strict mode", cmd);
-  VA<std::string> cfgPath("c", "config", "Configuration file", false, "", "string", cmd);
+  MA<std::string> libPath("I", "include", "Model include path", false, "string",
+                          cmd);
+  VA<std::string> dumpPath("D", "dump", "Resolved configuration file", false,
+                           "", "string", cmd);
+  SA optArg("o", "show-optional", "Show undefined optional values", cmd);
+  SA unexArg("x", "show-unexpected", "Show unexpected values (garbage)", cmd);
+  SA verbArg("v", "verbose", "Show summary", cmd);
+  SA stctArg("s", "strict", "Strict mode", cmd);
+  VA<std::string> cfgPath("c", "config", "Configuration file", false, "",
+                          "string", cmd);
   UA<std::string> mdlPath("models", "Model files", true, "string", cmd);
   cmd.parse(argc, nargv);
 
   // Update parameters
 
-  for (auto & p : libPath.getValue()) {
+  for (auto& p : libPath.getValue()) {
     MASTER.addModelDirectory(ace::fs::Path(p, true));
   }
 
@@ -59,9 +67,11 @@ int main(int argc, char * argv[]) try {
 
   std::vector<ace::model::Model::Ref> models(mdlPath.getValue().size());
   ace::model::Model::Ref mdl;
-  for (auto & m : mdlPath.getValue()) {
+  for (auto& m : mdlPath.getValue()) {
     mdl = ace::model::Model::load(m);
-    if (mdl == nullptr) return -1;
+    if (mdl == nullptr) {
+      return -1;
+    }
     models.push_back(mdl);
   }
   ACE_LOG(Warning, "*** Models are VALID ***");
@@ -86,10 +96,16 @@ int main(int argc, char * argv[]) try {
     }
 
     int filters = ace::engine::Master::Option::Relevant;
-    if (optArg.isSet()) filters |= ace::engine::Master::Option::Undefined;
-    if (unexArg.isSet()) filters |= ace::engine::Master::Option::Unexpected;
+    if (optArg.isSet()) {
+      filters |= ace::engine::Master::Option::Undefined;
+    }
+    if (unexArg.isSet()) {
+      filters |= ace::engine::Master::Option::Unexpected;
+    }
 
-    if (verbArg.isSet()) MASTER.summarize(std::cout, filters);
+    if (verbArg.isSet()) {
+      MASTER.summarize(std::cout, filters);
+    }
     ACE_LOG(Warning, "*** Configuration file is VALID ***");
 
     if (dumpPath.isSet()) {
@@ -104,27 +120,27 @@ int main(int argc, char * argv[]) try {
         ACE_LOG(Error, "Cannot open \"", dn, "\" for writing");
         return -1;
       }
-      MASTER.scannerByExtension(dn).dump(*svr, ace::tree::Scanner::Format::Default, odf);
+      MASTER.scannerByExtension(dn).dump(
+        *svr, ace::tree::Scanner::Format::Default, odf);
       odf.close();
     }
   }
 
   // Free the normalized arguments resource
 
-  for (int i = 0; i < argc; i += 1) free(nargv[i]);
+  for (int i = 0; i < argc; i += 1) {
+    free(nargv[i]);
+  }
   free(nargv);
 
   return 0;
-}
-catch (TCLAP::ArgException const & e) {
+} catch (TCLAP::ArgException const& e) {
   ACE_LOG(Error, e.error(), " for argument ", e.argId());
   return -1;
-}
-catch (std::invalid_argument const & e) {
+} catch (std::invalid_argument const& e) {
   ACE_LOG(Error, "Invalid argument: ", e.what());
   return -1;
-}
-catch (std::runtime_error const & e) {
+} catch (std::runtime_error const& e) {
   ACE_LOG(Error, "Runtime error: ", e.what());
   return -1;
 }

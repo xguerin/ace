@@ -27,15 +27,14 @@
 #include <ace/tree/Array.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace tomlfmt {
-namespace Array {
+namespace ace { namespace tomlfmt { namespace Array {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & ary) {
+build(std::string const& name, toml::Value const& ary)
+{
   tree::Array::Ref array = tree::Array::build(name);
   size_t index = 0;
-  const toml::Array & ar = ary.as<toml::Array>();
+  const toml::Array& ar = ary.as<toml::Array>();
   for (index = 0; index < ar.size(); index += 1) {
     tree::Value::Ref v = Common::build(std::to_string(index), ar[index]);
     if (v == nullptr) {
@@ -48,8 +47,9 @@ build(std::string const & name, toml::Value const & ary) {
 }
 
 toml::Value
-dump(tree::Value const & v) {
-  tree::Array const & ary = static_cast<tree::Array const &>(v);
+dump(tree::Value const& v)
+{
+  tree::Array const& ary = static_cast<tree::Array const&>(v);
   toml::Array array(ary.size());
   for (size_t i = 0; i < ary.size(); i += 1) {
     array[i] = Common::dump(*ary.at(i));
@@ -57,6 +57,4 @@ dump(tree::Value const & v) {
   return array;
 }
 
-} // namespace Array
-} // namespace tomlfmt
-} // namespace ace
+}}}

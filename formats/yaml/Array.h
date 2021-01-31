@@ -26,16 +26,10 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-namespace ace {
-namespace yamlfmt {
-namespace Array {
+namespace ace { namespace yamlfmt { namespace Array {
 
-tree::Value::Ref
-build(std::string const & name, YAML::Node const & n);
+tree::Value::Ref build(std::string const& name, YAML::Node const& n);
 
-void
-dump(tree::Value const & v, YAML::Emitter & e);
+void dump(tree::Value const& v, YAML::Emitter& e);
 
-} // namespace Array
-} // namespace yamlfmt
-} // namespace ace
+}}}

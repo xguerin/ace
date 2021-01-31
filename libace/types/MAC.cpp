@@ -35,20 +35,22 @@
 
 namespace {
 
-static bool checkFormat(std::string const & n, std::string const & b) {
+static bool
+checkFormat(std::string const& n, std::string const& b)
+{
   std::vector<std::string> addrParts;
   ace::common::String::split(b, ':', addrParts);
   if (addrParts.size() != 6) {
     ACE_LOG(Error, "mac \"", n, "\": ", ERR_MAC_BAD_ADDRESS(b));
     return false;
   }
-  for (auto & e : addrParts) {
+  for (auto& e : addrParts) {
     if (e.size() != 2) {
       ACE_LOG(Error, "mac \"", n, "\": ", ERR_MAC_BAD_ADDRESS(b));
       return false;
     }
-    char * inval = nullptr;
-    long m = strtol(e.c_str(), & inval, 16);
+    char* inval = nullptr;
+    long m = strtol(e.c_str(), &inval, 16);
     if (*inval != '\0' or errno == ERANGE or errno == EINVAL) {
       ACE_LOG(Error, "mac \"", n, "\": ", ERR_MAC_BAD_ADDRESS(b));
       return false;
@@ -61,48 +63,54 @@ static bool checkFormat(std::string const & n, std::string const & b) {
   return true;
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // MAC format checker
 
-MACFormatChecker::MACFormatChecker(const BasicType * o) : FormatChecker(o) { }
+MACFormatChecker::MACFormatChecker(const BasicType* o) : FormatChecker(o) {}
 
 bool
-MACFormatChecker::operator() (tree::Object const & r, tree::Value const & v) const {
-  if (not FormatChecker<std::string>::operator()(r, v)) return false;
+MACFormatChecker::operator()(tree::Object const& r, tree::Value const& v) const
+{
+  if (not FormatChecker<std::string>::operator()(r, v)) {
+    return false;
+  }
   int score = 0;
-  v.each([&](tree::Value const & w) {
-    tree::Primitive const & p = static_cast<tree::Primitive const &>(w);
-    if (p.value() != "auto" and not checkFormat(v.name(), p.value())) score += 1;
+  v.each([&](tree::Value const& w) {
+    tree::Primitive const& p = static_cast<tree::Primitive const&>(w);
+    if (p.value() != "auto" and not checkFormat(v.name(), p.value())) {
+      score += 1;
+    }
   });
   return score == 0;
 }
 
 // MAC class
 
-MAC::MAC() : Type(BasicType::Kind::MAC), EnumeratedType(BasicType::Kind::MAC) { }
+MAC::MAC() : Type(BasicType::Kind::MAC), EnumeratedType(BasicType::Kind::MAC) {}
 
 void
-MAC::collectInterfaceIncludes(std::set<std::string> & i) const {
+MAC::collectInterfaceIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 void
-MAC::collectImplementationIncludes(std::set<std::string> & i) const {
+MAC::collectImplementationIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 BasicType::Ref
-MAC::clone(std::string const & n) const {
-  MAC * mac = new MAC(*this);
+MAC::clone(std::string const& n) const
+{
+  MAC* mac = new MAC(*this);
   mac->setName(n);
   return BasicType::Ref(mac);
 }
 
-} // namespace model
-} // namespace ace
+}}

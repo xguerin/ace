@@ -28,31 +28,31 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // MAC format checker
 
-class MACFormatChecker : public FormatChecker<std::string> {
- public:
-
+class MACFormatChecker : public FormatChecker<std::string>
+{
+public:
   MACFormatChecker() = delete;
-  explicit MACFormatChecker(const BasicType * o);
-  bool operator()(tree::Object const & r, tree::Value const & v) const;
+  explicit MACFormatChecker(const BasicType* o);
+  bool operator()(tree::Object const& r, tree::Value const& v) const;
 };
 
 // MAC class
 
-class MAC : public EnumeratedType<std::string, true, std::equal_to<std::string>, MACFormatChecker> {
- public:
-
+class MAC
+  : public EnumeratedType<std::string, true, std::equal_to<std::string>,
+                          MACFormatChecker>
+{
+public:
   MAC();
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

@@ -24,61 +24,79 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-Attribute::Attribute(std::string const & n, bool opt, bool ovr)
-    : m_optional(opt), m_override(ovr) {
+Attribute::Attribute(std::string const& n, bool opt, bool ovr)
+  : m_optional(opt), m_override(ovr)
+{
   setName(n);
 }
 
 tree::Path
-Attribute::path(const bool local) const {
+Attribute::path(const bool local) const
+{
   return m_parent->path(local);
 }
 
 bool
-Attribute::checkInstance(tree::Object const & r, tree::Value const & v) const {
+Attribute::checkInstance(tree::Object const& r, tree::Value const& v) const
+{
   return true;
 }
 
 bool
-Attribute::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+Attribute::resolveInstance(tree::Object const& r, tree::Value const& v) const
+{
   return true;
 }
 
 void
-Attribute::expandInstance(tree::Object & r, tree::Value & v) {
+Attribute::expandInstance(tree::Object& r, tree::Value& v)
+{}
+
+bool
+Attribute::flattenInstance(tree::Object& r, tree::Value& v)
+{
+  return true;
 }
 
 bool
-Attribute::flattenInstance(tree::Object & r, tree::Value & v) {
+Attribute::merge(Attribute const& b)
+{
+  if (m_optional != b.m_optional) {
+    return false;
+  }
+  if (m_override != b.m_override) {
+    return false;
+  }
   return true;
 }
 
-bool Attribute::merge(Attribute const & b) {
-  if (m_optional != b.m_optional) return false;
-  if (m_override != b.m_override) return false;
+bool
+Attribute::override(Attribute const& b)
+{
+  if (not m_override) {
+    return false;
+  }
   return true;
 }
 
-bool Attribute::override(Attribute const & b) {
-  if (not m_override) return false;
-  return true;
-}
-
-void Attribute::print(std::ostream & o, int l) const {
+void
+Attribute::print(std::ostream& o, int l) const
+{
   o << operator std::string() << std::endl;
 }
 
-bool Attribute::optional() const {
+bool
+Attribute::optional() const
+{
   return m_optional;
 }
 
-bool Attribute::overridable() const {
+bool
+Attribute::overridable() const
+{
   return m_override;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

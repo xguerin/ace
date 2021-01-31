@@ -28,10 +28,10 @@
 #include <strings.h>
 #include <unistd.h>
 
-namespace ace {
-namespace fs {
+namespace ace { namespace fs {
 
-File::File(fs::Path const & p) : Node() {
+File::File(fs::Path const& p) : Node()
+{
   if (not p.empty() and not p.isDirectory()) {
     fs::Path fullPath(p);
     if (not p.isAbsolute()) {
@@ -39,7 +39,9 @@ File::File(fs::Path const & p) : Node() {
       bzero(buffer, PATH_MAX);
       getcwd(buffer, PATH_MAX);
       std::string base(buffer);
-      if (*base.rbegin() != '/') base += "/";
+      if (*base.rbegin() != '/') {
+        base += "/";
+      }
       fullPath = fs::Path(base) / p;
     }
     m_fd = open(fullPath.toString().c_str(), 0, O_RDWR);
@@ -48,13 +50,16 @@ File::File(fs::Path const & p) : Node() {
 }
 
 Node
-File::parent() const {
-  if (m_fd == -1) return Node();
+File::parent() const
+{
+  if (m_fd == -1) {
+    return Node();
+  }
   fs::Path up("/");
-  if (m_path != up) up = m_path.prune();
+  if (m_path != up) {
+    up = m_path.prune();
+  }
   return fs::Directory(up);
 }
 
-} // namespace ace
-} // namespace fs
-
+}}

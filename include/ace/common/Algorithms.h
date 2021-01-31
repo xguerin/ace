@@ -28,10 +28,18 @@
 namespace ace {
 
 template<typename A, typename B>
-bool is_permutation(A const & a, B const & b) {
-  if (a.size() != b.size()) return false;
-  for (auto & e : a) if (b.find(e) == b.end()) return false;
+bool
+is_permutation(A const& a, B const& b)
+{
+  if (a.size() != b.size()) {
+    return false;
+  }
+  for (auto& e : a) {
+    if (b.find(e) == b.end()) {
+      return false;
+    }
+  }
   return true;
 }
 
-} // namespace ace
+}

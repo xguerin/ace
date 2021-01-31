@@ -28,15 +28,15 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace ini {
+namespace ace { namespace ini {
 
-class Value {
- public:
-
+class Value
+{
+public:
   using Ref = std::shared_ptr<Value>;
 
-  enum class Type {
+  enum class Type
+  {
     Boolean,
     Key,
     String,
@@ -48,69 +48,66 @@ class Value {
   };
 
   Value() = default;
-  Value(const Type t, std::string const & v);
+  Value(const Type t, std::string const& v);
 
-  virtual ~Value() { }
+  virtual ~Value() {}
 
   Type type() const;
 
   virtual operator std::string() const = 0;
 
- protected:
-
-  Type        m_type;
+protected:
+  Type m_type;
   std::string m_raw;
 };
 
-class Boolean : public Value {
- public:
-
+class Boolean : public Value
+{
+public:
   Boolean() = default;
-  Boolean(std::string const & v);
+  Boolean(std::string const& v);
 
-  bool const & value() const;
+  bool const& value() const;
 
   operator std::string() const;
 
- private:
-
+private:
   bool m_value;
 };
 
-class Key : public Value {
- public:
-
+class Key : public Value
+{
+public:
   Key() = default;
-  Key(std::string const & k);
+  Key(std::string const& k);
 
-  std::string const & value() const;
+  std::string const& value() const;
 
   operator std::string() const;
 
- private:
-
+private:
   std::string m_key;
 };
 
-class String : public Value {
- public:
-
+class String : public Value
+{
+public:
   String() = default;
-  String(std::string const & v);
+  String(std::string const& v);
 
-  std::string const & value() const;
+  std::string const& value() const;
 
   operator std::string() const;
 
- private:
-
+private:
   std::string m_value;
 };
 
-class Integer : public Value {
- public:
-
-  enum class Base {
+class Integer : public Value
+{
+public:
+  enum class Base
+  {
     Decimal,
     Octal,
     Hexadecimal,
@@ -118,84 +115,80 @@ class Integer : public Value {
   };
 
   Integer() = default;
-  Integer(const Base b, std::string const & v);
+  Integer(const Base b, std::string const& v);
 
-  long const & value() const;
+  long const& value() const;
 
   operator std::string() const;
 
- private:
-
+private:
   long m_value;
 };
 
-class Float : public Value {
- public:
-
+class Float : public Value
+{
+public:
   Float() = default;
-  Float(std::string const & v);
+  Float(std::string const& v);
 
-  double const & value() const;
+  double const& value() const;
 
   operator std::string() const;
 
- private:
-
+private:
   double m_value;
 };
 
-class Reference : public Value {
- public:
-
+class Reference : public Value
+{
+public:
   Reference() = default;
-  Reference(std::string const & v);
+  Reference(std::string const& v);
 
   tree::Path::Ref path() const;
 
   operator std::string() const;
 
- private:
-
+private:
   tree::Path::Ref m_path;
 };
 
-class Environment : public Value {
- public:
-
+class Environment : public Value
+{
+public:
   Environment() = default;
-  Environment(std::string const & v);
+  Environment(std::string const& v);
 
-  std::string const & value() const;
+  std::string const& value() const;
 
   operator std::string() const;
 
- private:
-
+private:
   std::string m_key;
   std::string m_value;
 };
 
-class System : public Value {
- public:
-
+class System : public Value
+{
+public:
   System() = default;
-  System(std::string const & v);
+  System(std::string const& v);
 
-  std::string const & result() const;
+  std::string const& result() const;
 
   operator std::string() const;
 
- private:
-
+private:
   std::string m_result;
 };
 
-class Statement {
- public:
-
+class Statement
+{
+public:
   using Ref = std::shared_ptr<Statement>;
 
-  enum class Type {
+  enum class Type
+  {
     Section,
     ValueList,
     Unknown
@@ -204,50 +197,46 @@ class Statement {
   Statement() = default;
   Statement(const Type t);
 
-  virtual ~Statement() { }
+  virtual ~Statement() {}
 
   Type type() const;
 
   virtual operator std::string() const = 0;
 
- private:
-
+private:
   Type m_type;
 };
 
-class Section : public Statement {
- public:
-
+class Section : public Statement
+{
+public:
   Section() = default;
-  Section(std::string const & n, tree::Path::Ref const & r);
+  Section(std::string const& n, tree::Path::Ref const& r);
 
-  std::string const & name() const;
-  tree::Path::Ref const & path() const;
+  std::string const& name() const;
+  tree::Path::Ref const& path() const;
 
   operator std::string() const;
 
- private:
-
-  std::string     m_name;
+private:
+  std::string m_name;
   tree::Path::Ref m_path;
 };
 
-class ValueList : public Statement {
- public:
-
+class ValueList : public Statement
+{
+public:
   using Data = std::list<Value::Ref>;
 
   ValueList() = default;
-  ValueList(Data const & v);
+  ValueList(Data const& v);
 
-  Data const & values() const;
+  Data const& values() const;
 
   operator std::string() const;
 
- private:
-
+private:
   Data m_values;
 };
 
-} // namespace ini
-} // namespace ace
+}}

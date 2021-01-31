@@ -25,16 +25,14 @@
 #include <ace/model/EnumeratedType.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Boolean : public EnumeratedType<bool, true> {
- public:
-
+class Boolean : public EnumeratedType<bool, true>
+{
+public:
   Boolean();
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

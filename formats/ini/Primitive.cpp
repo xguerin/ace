@@ -27,32 +27,28 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace inifmt {
-namespace Primitive {
+namespace ace { namespace inifmt { namespace Primitive {
 
 void
-dump(tree::Value const & v, std::ostream & o) {
-  auto const & p = static_cast<tree::Primitive const &>(v);
+dump(tree::Value const& v, std::ostream& o)
+{
+  auto const& p = static_cast<tree::Primitive const&>(v);
   switch (p.type()) {
-    case tree::Value::Type::Boolean : {
+    case tree::Value::Type::Boolean: {
       o << common::String::from(p.value<bool>());
     } break;
-    case tree::Value::Type::String : {
+    case tree::Value::Type::String: {
       o << '"' << p.value<std::string>() << '"';
     } break;
-    case tree::Value::Type::Integer : {
+    case tree::Value::Type::Integer: {
       o << common::String::from(p.value<long>());
     } break;
-    case tree::Value::Type::Float : {
+    case tree::Value::Type::Float: {
       o << common::String::from(p.value<double>());
     } break;
-    default : {
+    default: {
     } break;
   }
 }
 
-} // namespace Primitive
-} // namespace inifmt
-} // namespace ace
-
+}}}

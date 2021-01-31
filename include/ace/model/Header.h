@@ -30,41 +30,40 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Header : public Object, public Coach {
- public:
-
+class Header
+  : public Object
+  , public Coach
+{
+public:
   Header();
 
   tree::Path path(const bool local = false) const;
 
-  void loadModel(tree::Value const & t);
-  bool checkModel(tree::Value const & t) const;
+  void loadModel(tree::Value const& t);
+  bool checkModel(tree::Value const& t) const;
 
-  bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  bool explain(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
   std::string package() const;
   bool hasAuthor() const;
-  Author const & author() const;
-  std::list<std::string> const & nameSpace() const;
-  std::list<std::string> const & include() const;
-  std::list<tree::Path> const & trigger() const;
-  std::string const & version() const;
-  std::string const & doc() const;
+  Author const& author() const;
+  std::list<std::string> const& nameSpace() const;
+  std::list<std::string> const& include() const;
+  std::list<tree::Path> const& trigger() const;
+  std::string const& version() const;
+  std::string const& doc() const;
 
- private:
-
-  std::vector<std::string>  m_package;
-  bool                      m_hasAuthor;
-  Author                    m_author;
-  std::list<std::string>    m_nameSpace;
-  std::list<std::string>    m_include;
-  std::list<tree::Path>     m_trigger;
-  std::string               m_version;
-  std::string               m_doc;
+private:
+  std::vector<std::string> m_package;
+  bool m_hasAuthor;
+  Author m_author;
+  std::list<std::string> m_nameSpace;
+  std::list<std::string> m_include;
+  std::list<tree::Path> m_trigger;
+  std::string m_version;
+  std::string m_doc;
 };
 
-} // namespace model
-} // namespace ace
+}}

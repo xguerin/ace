@@ -24,22 +24,33 @@
 #include <string>
 #include <fcntl.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-FileModeAttribute::FileModeAttribute(std::string const & n, bool o)
-  : Attribute(n, o), m_value(), m_flags(0) { }
+FileModeAttribute::FileModeAttribute(std::string const& n, bool o)
+  : Attribute(n, o), m_value(), m_flags(0)
+{}
 
 bool
-FileModeAttribute::checkModel(tree::Value const & t) const {
-  if (t.type() != tree::Value::typeOf<std::string>()) return false;
-  std::string v = static_cast<tree::Primitive const &>(t).value<std::string>();
-  if (v.empty() or v.length() > 2) return false;
-  switch (v[0]) {
-    case 'r': case 'w': case 'a': break;
-    default: return false;
+FileModeAttribute::checkModel(tree::Value const& t) const
+{
+  if (t.type() != tree::Value::typeOf<std::string>()) {
+    return false;
   }
-  if (v.length() == 2 and v[1] != '+') return false;
+  std::string v = static_cast<tree::Primitive const&>(t).value<std::string>();
+  if (v.empty() or v.length() > 2) {
+    return false;
+  }
+  switch (v[0]) {
+    case 'r':
+    case 'w':
+    case 'a':
+      break;
+    default:
+      return false;
+  }
+  if (v.length() == 2 and v[1] != '+') {
+    return false;
+  }
   return true;
 }
 
@@ -61,8 +72,9 @@ FileModeAttribute::checkModel(tree::Value const & t) const {
 //    but output is always appended to the end of the file.
 
 void
-FileModeAttribute::loadModel(tree::Value const & t) {
-  m_value = static_cast<tree::Primitive const &>(t).value<std::string>();
+FileModeAttribute::loadModel(tree::Value const& t)
+{
+  m_value = static_cast<tree::Primitive const&>(t).value<std::string>();
   if (m_value == "r") {
     m_flags = O_RDONLY;
   } else if (m_value == "r+") {
@@ -79,35 +91,39 @@ FileModeAttribute::loadModel(tree::Value const & t) {
 }
 
 void
-FileModeAttribute::load(Attribute const & a) {
-  FileModeAttribute const & ra = static_cast<FileModeAttribute const &>(a);
+FileModeAttribute::load(Attribute const& a)
+{
+  FileModeAttribute const& ra = static_cast<FileModeAttribute const&>(a);
   m_value = ra.m_value;
   m_flags = ra.m_flags;
 }
 
-FileModeAttribute::operator tree::Checker::Pattern() const {
+FileModeAttribute::operator tree::Checker::Pattern() const
+{
   return tree::Checker::Pattern(tree::Value::Type::String, false);
 }
 
-FileModeAttribute::operator std::string() const {
+FileModeAttribute::operator std::string() const
+{
   return m_value;
 }
 
 Attribute::Ref
-FileModeAttribute::clone() const {
+FileModeAttribute::clone() const
+{
   return Attribute::Ref(new FileModeAttribute(*this));
 }
 
-std::string const &
-FileModeAttribute::value() const {
+std::string const&
+FileModeAttribute::value() const
+{
   return m_value;
 }
 
 int
-FileModeAttribute::flags() const {
+FileModeAttribute::flags() const
+{
   return m_flags;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

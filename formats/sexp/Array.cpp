@@ -27,12 +27,11 @@
 #include <ace/tree/Array.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace sexpfmt {
-namespace Array {
+namespace ace { namespace sexpfmt { namespace Array {
 
 tree::Value::Ref
-build(std::string const & name, sexp::Value::Ref const & v) {
+build(std::string const& name, sexp::Value::Ref const& v)
+{
   auto e = v;
   size_t index = 0;
   tree::Array::Ref array = tree::Array::build(name);
@@ -47,7 +46,7 @@ build(std::string const & name, sexp::Value::Ref const & v) {
         index += 1;
       } break;
       case sexp::Value::Type::List: {
-        auto const & list = static_cast<sexp::List const &>(*e);
+        auto const& list = static_cast<sexp::List const&>(*e);
         array->push_back(Common::build(std::to_string(index), list.car()));
         index += 1;
         e = list.cdr();
@@ -61,9 +60,10 @@ build(std::string const & name, sexp::Value::Ref const & v) {
 }
 
 size_t
-dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
-     std::ostream & o) {
-  auto const & a = static_cast<tree::Array const &>(v);
+dump(tree::Value const& v, const tree::Scanner::Format f, const size_t indent,
+     std::ostream& o)
+{
+  auto const& a = static_cast<tree::Array const&>(v);
   size_t nindent = indent + 1;
   o << "(";
   for (size_t i = 0; i < a.size(); i += 1) {
@@ -84,6 +84,4 @@ dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
   return nindent;
 }
 
-} // namespace Array
-} // namespace sexpfmt
-} // namespace ace
+}}}

@@ -26,38 +26,43 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-Value::Value(std::string const & n, Type t) : m_name(n), m_type(t), m_parent(nullptr) { }
+Value::Value(std::string const& n, Type t)
+  : m_name(n), m_type(t), m_parent(nullptr)
+{}
 
 void
-Value::each(Callback c) {
+Value::each(Callback const& c)
+{
   c(*this);
 }
 
 void
-Value::each(ConstCallback c) const {
+Value::each(ConstCallback const& c) const
+{
   c(*this);
 }
 
 void
-Value::dump(std::ostream & o, int l, bool i) const {
-}
+Value::dump(std::ostream& o, int l, bool i) const
+{}
 
 void
-Value::merge(Value const & o) {
-}
+Value::merge(Value const& o)
+{}
 
 bool
-Value::has(std::string const & k) const {
+Value::has(std::string const& k) const
+{
   return false;
 }
 
 bool
-Value::has(Path const & p) const {
+Value::has(Path const& p) const
+{
   if (p.global() and m_parent != nullptr) {
-    auto & parent = *m_parent;
+    auto& parent = *m_parent;
     return parent.has(p);
   } else {
     Path::const_iterator n(p.begin());
@@ -66,60 +71,74 @@ Value::has(Path const & p) const {
 }
 
 bool
-Value::has(Path const & p, Path::const_iterator const & i) const {
+Value::has(Path const& p, Path::const_iterator const& i) const
+{
   return i == p.end();
 }
 
-Value &
-Value::operator[](std::string const & k) {
+Value&
+Value::operator[](std::string const& k)
+{
   throw std::invalid_argument("tree::Value as no children");
 }
 
-Value const &
-Value::operator[](std::string const & k) const {
+Value const&
+Value::operator[](std::string const& k) const
+{
   throw std::invalid_argument("tree::Value as no children");
 }
 
-Value &
-Value::get(std::string const & k) {
+Value&
+Value::get(std::string const& k)
+{
   throw std::invalid_argument("tree::Value as no children");
 }
 
-Value const &
-Value::get(std::string const & k) const {
+Value const&
+Value::get(std::string const& k) const
+{
   throw std::invalid_argument("tree::Value as no children");
 }
 
-Value &
-Value::get(Path const & p) {
+Value&
+Value::get(Path const& p)
+{
   std::vector<Value::Ref> r;
   get(p, p.down(p.begin()), r);
-  if (r.empty()) throw "No element for the specified path";
+  if (r.empty()) {
+    throw "No element for the specified path";
+  }
   return *r[0];
 }
 
-Value const &
-Value::get(Path const & p) const {
+Value const&
+Value::get(Path const& p) const
+{
   std::vector<Value::Ref> r;
   get(p, p.down(p.begin()), r);
-  if (r.empty()) throw "No element for the specified path";
+  if (r.empty()) {
+    throw "No element for the specified path";
+  }
   return *r[0];
 }
 
 void
-Value::get(Path const & p, std::vector<Value::Ref> & r) {
+Value::get(Path const& p, std::vector<Value::Ref>& r)
+{
   get(p, p.down(p.begin()), r);
 }
 
 void
-Value::get(Path const & p, std::vector<Value::Ref> & r) const {
+Value::get(Path const& p, std::vector<Value::Ref>& r) const
+{
   get(p, p.down(p.begin()), r);
 }
 
 void
-Value::get(Path const & p, callback op) {
+Value::get(Path const& p, Callback const& op)
+{
   if (p.global() and m_parent != nullptr) {
-    auto & parent = *m_parent;
+    auto& parent = *m_parent;
     parent.get(p, op);
   } else {
     get(p, p.down(p.begin()), op);
@@ -127,9 +146,10 @@ Value::get(Path const & p, callback op) {
 }
 
 void
-Value::get(Path const & p, const_callback op) const {
+Value::get(Path const& p, ConstCallback const& op) const
+{
   if (p.global() and m_parent != nullptr) {
-    auto const & parent = *m_parent;
+    auto const& parent = *m_parent;
     parent.get(p, op);
   } else {
     get(p, p.down(p.begin()), op);
@@ -137,96 +157,122 @@ Value::get(Path const & p, const_callback op) const {
 }
 
 void
-Value::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) {
+Value::get(Path const& p, Path::const_iterator const& i,
+           std::vector<Value::Ref>& r)
+{
   // Nothing to get
 }
 
 void
-Value::get(Path const & p, Path::const_iterator const & i, std::vector<Value::Ref> & r) const {
+Value::get(Path const& p, Path::const_iterator const& i,
+           std::vector<Value::Ref>& r) const
+{
   // Nothing to get
 }
 
 void
-Value::get(Path const & p, Path::const_iterator const & i, callback op) {
+Value::get(Path const& p, Path::const_iterator const& i, Callback const& op)
+{
   std::vector<Value::Ref> result;
   get(p, i, result);
-  for (auto & r: result) op(*r);
+  for (auto& r : result) {
+    op(*r);
+  }
 }
 
 void
-Value::get(Path const & p, Path::const_iterator const & i, const_callback op) const {
+Value::get(Path const& p, Path::const_iterator const& i,
+           ConstCallback const& op) const
+{
   std::vector<Value::Ref> result;
   get(p, i, result);
-  for (auto & r: result) op(*r);
+  for (auto& r : result) {
+    op(*r);
+  }
 }
 
 void
-Value::erase(std::string const & k) {
+Value::erase(std::string const& k)
+{
   throw std::invalid_argument("tree::Value as no children");
 }
 
 void
-Value::erase(Path const & p) {
+Value::erase(Path const& p)
+{
   Path::const_iterator n(p.begin());
   erase(p, p.down(n));
 }
 
 void
-Value::erase(Path const & p, Path::const_iterator const & i) {
-  if (i == p.end()) return;
+Value::erase(Path const& p, Path::const_iterator const& i)
+{
+  if (i == p.end()) {
+    return;
+  }
   throw std::invalid_argument("tree::Value as no children");
 }
 
 void
-Value::setName(std::string const & n) {
+Value::setName(std::string const& n)
+{
   m_name = n;
 }
 
-std::string const &
-Value::name() const {
+std::string const&
+Value::name() const
+{
   return m_name;
 }
 
 bool
-Value::isPrimitive() const {
-  return m_type == Type::String
-    or m_type == Type::Float
-    or m_type == Type::Integer
-    or m_type == Type::Boolean;
+Value::isPrimitive() const
+{
+  return m_type == Type::String or m_type == Type::Float or
+         m_type == Type::Integer or m_type == Type::Boolean;
 }
 
 bool
-Value::isArray() const {
+Value::isArray() const
+{
   return m_type == Type::Array;
 }
 
 bool
-Value::isObject() const {
+Value::isObject() const
+{
   return m_type == Type::Object;
 }
 
 Value::Type
-Value::type() const {
+Value::type() const
+{
   return m_type;
 }
 
-Value *
-Value::parent() {
+Value*
+Value::parent()
+{
   return m_parent;
 }
 
-const Value *
-Value::parent() const {
+const Value*
+Value::parent() const
+{
   return m_parent;
 }
 
 Path
-Value::path() const {
+Value::path() const
+{
   Path apath;
-  if (m_parent != nullptr) apath = m_parent->path();
+  if (m_parent != nullptr) {
+    apath = m_parent->path();
+  }
   if (std::all_of(m_name.begin(), m_name.end(), ::isdigit)) {
     size_t index = common::String::value<size_t>(m_name);
-    apath.push(path::Item::build(path::Item::Type::Indexed, std::vector<size_t> { index }));
+    apath.push(path::Item::build(path::Item::Type::Indexed,
+                                 std::vector<size_t>{ index }));
   } else {
     apath.push(path::Item::build(path::Item::Type::Named, m_name));
   }
@@ -234,10 +280,9 @@ Value::path() const {
 }
 
 bool
-Value::put(Path const & p, Path::const_iterator const & i, Value::Ref const & r) {
+Value::put(Path const& p, Path::const_iterator const& i, Value::Ref const& r)
+{
   return false;
 }
 
-} // namespace tree
-} // namespace ace
-
+}}

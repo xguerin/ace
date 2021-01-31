@@ -25,27 +25,20 @@
 #include <ace/filesystem/Path.h>
 #include <string>
 
-namespace ace {
-namespace fs {
-namespace Utils {
+namespace ace { namespace fs { namespace Utils {
 
-bool
-canSelfCreate(fs::Path const & p);
+bool canSelfCreate(fs::Path const& p);
 
 /**
  * @brief Get the prefix of the running process
  * @return the prefix of the running process
  */
-std::string
-processPrefix();
+std::string processPrefix();
 
 /**
  * @brief Get the prefix of the loaded ACE library
  * @return  the prefix of the loaded ACE library
  */
-std::string
-libraryPrefix();
+std::string libraryPrefix();
 
-} // namespace Utils
-} // namespace fs
-} // namespace ace
+}}}

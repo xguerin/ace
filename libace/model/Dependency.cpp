@@ -33,33 +33,37 @@
 
 namespace {
 
-ace::model::BasicType *
-basicTypeFor(ace::model::Object * o) {
-  return static_cast<ace::model::BasicType *>(o->parent()->parent()->parent());
+ace::model::BasicType*
+basicTypeFor(ace::model::Object* o)
+{
+  return static_cast<ace::model::BasicType*>(o->parent()->parent()->parent());
 }
 
-ace::model::Model *
-modelFor(ace::model::Object * o) {
-  return static_cast<ace::model::Model *>(o->owner());
+ace::model::Model*
+modelFor(ace::model::Object* o)
+{
+  return static_cast<ace::model::Model*>(o->owner());
 }
 
-ace::model::Body *
-bodyFor(ace::model::Object * o) {
-  return & modelFor(o)->body();
+ace::model::Body*
+bodyFor(ace::model::Object* o)
+{
+  return &modelFor(o)->body();
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 tree::Path
-Dependency::path(const bool local) const {
+Dependency::path(const bool local) const
+{
   return m_parent->path(local);
 }
 
 bool
-Dependency::checkModel(tree::Value const & t) const {
+Dependency::checkModel(tree::Value const& t) const
+{
   tree::Checker chk(path(), t);
   if (not chk.validate(m_schm)) {
     return false;
@@ -68,13 +72,14 @@ Dependency::checkModel(tree::Value const & t) const {
 }
 
 void
-Dependency::loadModel(tree::Value const & t) {
-}
+Dependency::loadModel(tree::Value const& t)
+{}
 
 bool
-Dependency::validateModel() {
-  BasicType * type = basicTypeFor(this);
-  for (auto & dep : m_deps) {
+Dependency::validateModel()
+{
+  BasicType* type = basicTypeFor(this);
+  for (auto& dep : m_deps) {
     /**
      * Check if the path is valid
      */
@@ -84,7 +89,7 @@ Dependency::validateModel() {
     tree::Path p;
     try {
       p = tree::Path::parse(ev);
-    } catch (std::invalid_argument const &) {
+    } catch (std::invalid_argument const&) {
       ERROR(ERR_INVALID_PATH_FORMAT(ev));
       return false;
     }
@@ -100,7 +105,7 @@ Dependency::validateModel() {
         ERROR(ERR_WRONG_TYPE_FOR_VALUE_EXP);
         return false;
       }
-      String * st = dynamic_cast<String *>(type);
+      String* st = dynamic_cast<String*>(type);
       if (st != nullptr and not st->hasEitherAttribute()) {
         ERROR(ERR_UNBOUND_VALUE_EXP);
         return false;
@@ -111,20 +116,22 @@ Dependency::validateModel() {
 }
 
 bool
-Dependency::checkInstance(tree::Object const & r, tree::Value const & v) const {
+Dependency::checkInstance(tree::Object const& r, tree::Value const& v) const
+{
   return true;
 }
 
 void
-Dependency::expandInstance(tree::Object & r, tree::Value & v) {
-}
+Dependency::expandInstance(tree::Object& r, tree::Value& v)
+{}
 
 bool
-Dependency::flattenInstance(tree::Object & r, tree::Value & v) {
+Dependency::flattenInstance(tree::Object& r, tree::Value& v)
+{
   int score = 0;
-  Body * body = bodyFor(this);
-  Model * model = modelFor(this);
-  for (auto & dep : m_deps) {
+  Body* body = bodyFor(this);
+  Model* model = modelFor(this);
+  for (auto& dep : m_deps) {
     tree::Path dest;
     if (not buildModelPath(dep, r, dest)) {
       return false;
@@ -138,48 +145,56 @@ Dependency::flattenInstance(tree::Object & r, tree::Value & v) {
 }
 
 bool
-Dependency::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+Dependency::resolveInstance(tree::Object const& r, tree::Value const& v) const
+{
   return true;
 }
 
 bool
-Dependency::canMerge(Dependency const & o) const {
+Dependency::canMerge(Dependency const& o) const
+{
   return true;
 }
 
 void
-Dependency::merge(Dependency const & o) {
-  for (auto & e : o.m_deps) m_deps.insert(e);
+Dependency::merge(Dependency const& o)
+{
+  for (auto& e : o.m_deps) {
+    m_deps.insert(e);
+  }
 }
 
 bool
-Dependency::hasPlaceHolder(std::string const & d) const {
+Dependency::hasPlaceHolder(std::string const& d) const
+{
   return d.find(PlaceHolder) != std::string::npos;
 }
 
 std::string
-Dependency::expandPlaceHolder(std::string const & d, std::string const & v) const {
+Dependency::expandPlaceHolder(std::string const& d, std::string const& v) const
+{
   return common::String::expand(d, PlaceHolder, v);
 }
 
 bool
-Dependency::buildModelPath(std::string const & d, tree::Object const & o,
-                           tree::Path & r) const {
-  if (not d.empty()) try {
-    auto prefix = o.path();
-    auto path = tree::Path::parse(d);
-    if (path.global()) {
-      ERROR(ERR_DEPS_PATH_GLOBAL(d));
+Dependency::buildModelPath(std::string const& d, tree::Object const& o,
+                           tree::Path& r) const
+{
+  if (not d.empty()) {
+    try {
+      auto prefix = o.path();
+      auto path = tree::Path::parse(d);
+      if (path.global()) {
+        ERROR(ERR_DEPS_PATH_GLOBAL(d));
+        return false;
+      }
+      r = prefix.merge(path);
+    } catch (std::invalid_argument const&) {
+      ERROR(ERR_INVALID_PATH_FORMAT(d));
       return false;
     }
-    r = prefix.merge(path);
-  } catch (std::invalid_argument const &) {
-    ERROR(ERR_INVALID_PATH_FORMAT(d));
-    return false;
   }
   return true;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

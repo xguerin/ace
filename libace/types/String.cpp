@@ -25,22 +25,25 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 String::String()
   : Type(BasicType::Kind::String)
   , EnumeratedType(BasicType::Kind::String)
-  , m_length() {
+  , m_length()
+{
   m_attributes.define<LengthAttributeType>("length", true);
 }
 
 bool
-String::checkModel(tree::Value const & t) const {
-  if (not Type::checkModel(t)) return false;
-  auto const & o = static_cast<tree::Object const &>(t);
+String::checkModel(tree::Value const& t) const
+{
+  if (not Type::checkModel(t)) {
+    return false;
+  }
+  auto const& o = static_cast<tree::Object const&>(t);
   if (o.has("length")) {
-    auto const & s = static_cast<tree::Primitive const &>(o["length"]);
+    auto const& s = static_cast<tree::Primitive const&>(o["length"]);
     common::Range<long> r;
     if (not common::Range<long>::parse(s.value<std::string>(), r)) {
       ERROR(ERR_RANGE_FORMAT(s.value<std::string>()));
@@ -51,20 +54,25 @@ String::checkModel(tree::Value const & t) const {
 }
 
 void
-String::loadModel(tree::Value const & t) {
+String::loadModel(tree::Value const& t)
+{
   Type::loadModel(t);
   if (m_attributes.has("length")) {
-    auto const & a = static_cast<LengthAttributeType const &>(*m_attributes["length"]);
+    auto const& a =
+      static_cast<LengthAttributeType const&>(*m_attributes["length"]);
     common::Range<long>::parse(a.head(), m_length);
   }
 }
 
 bool
-String::checkInstance(tree::Object const & r, tree::Value const & v) const {
-  if (not Type::checkInstance(r, v)) return false;
+String::checkInstance(tree::Object const& r, tree::Value const& v) const
+{
+  if (not Type::checkInstance(r, v)) {
+    return false;
+  }
   size_t score = 0;
-  v.each([&](tree::Value const & w) {
-    auto const & s = static_cast<tree::Primitive const &>(w);
+  v.each([&](tree::Value const& w) {
+    auto const& s = static_cast<tree::Primitive const&>(w);
     if (not m_length.contains(s.value<std::string>().length())) {
       ERROR(ERR_STR_LEN_OUTSIDE_OF_CONSTRAINT);
       score += 1;
@@ -74,23 +82,25 @@ String::checkInstance(tree::Object const & r, tree::Value const & v) const {
 }
 
 void
-String::collectInterfaceIncludes(std::set<std::string> & i) const {
+String::collectInterfaceIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 void
-String::collectImplementationIncludes(std::set<std::string> & i) const {
+String::collectImplementationIncludes(std::set<std::string>& i) const
+{
   BasicType::collectInterfaceIncludes(i);
   i.insert("<string>");
 }
 
 BasicType::Ref
-String::clone(std::string const & n) const {
-  String * str = new String(*this);
+String::clone(std::string const& n) const
+{
+  String* str = new String(*this);
   str->setName(n);
   return BasicType::Ref(str);
 }
 
-} // namespace model
-} // namespace ace
+}}

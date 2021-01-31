@@ -26,23 +26,15 @@
 #include <ace/tree/Scanner.h>
 #include <string>
 
-namespace ace {
-namespace sexpfmt {
-namespace Common {
+namespace ace { namespace sexpfmt { namespace Common {
 
-tree::Value::Ref
-parseFile(std::string const & path);
+tree::Value::Ref parseFile(std::string const& path);
 
-tree::Value::Ref
-parseString(std::string const & str);
+tree::Value::Ref parseString(std::string const& str);
 
-tree::Value::Ref
-build(std::string const & name, sexp::Value::Ref const & v);
+tree::Value::Ref build(std::string const& name, sexp::Value::Ref const& v);
 
-size_t
-dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
-     std::ostream & o);
+size_t dump(tree::Value const& v, const tree::Scanner::Format f,
+            const size_t indent, std::ostream& o);
 
-} // namespace Common
-} // namespace sexpfmt
-} // namespace ace
+}}}

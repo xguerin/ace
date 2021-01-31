@@ -28,15 +28,14 @@
 #include <string>
 #include <iomanip>
 
-namespace ace {
-namespace yamlfmt {
-namespace Object {
+namespace ace { namespace yamlfmt { namespace Object {
 
 tree::Value::Ref
-build(std::string const & name, YAML::Node const & p) {
+build(std::string const& name, YAML::Node const& p)
+{
   tree::Object::Ref res = tree::Object::build(name);
-  for (auto const & e: p) {
-    std::string key =  e.first.as<std::string>();
+  for (auto const& e : p) {
+    std::string key = e.first.as<std::string>();
     auto v = Common::build(key, e.second);
     if (v != nullptr) {
       res->put(key, v);
@@ -46,10 +45,11 @@ build(std::string const & name, YAML::Node const & p) {
 }
 
 void
-dump(tree::Value const & v, YAML::Emitter & e) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
+dump(tree::Value const& v, YAML::Emitter& e)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
   e << YAML::BeginMap;
-  for (auto const & i : w) {
+  for (auto const& i : w) {
     e << YAML::Key << i.first;
     e << YAML::Value;
     Common::dump(*i.second, e);
@@ -57,6 +57,4 @@ dump(tree::Value const & v, YAML::Emitter & e) {
   e << YAML::EndMap;
 }
 
-} // namespace Object
-} // namespace yamlfmt
-} // namespace ace
+}}}

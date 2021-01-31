@@ -22,9 +22,7 @@
 
 #pragma once
 
-namespace ace {
-namespace common {
-namespace Arguments {
+namespace ace { namespace common { namespace Arguments {
 
 /**
  * @brief Normalize -L and -I arguments
@@ -34,9 +32,6 @@ namespace Arguments {
  *
  * @return  the normalized argument array
  */
-char **
-normalize(const int argc, const char * const argv[]);
+char** normalize(const int argc, const char* const argv[]);
 
-} // namespace Arguments
-} // namespace common
-} // namespace ace
+}}}

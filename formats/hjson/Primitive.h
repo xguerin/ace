@@ -26,16 +26,10 @@
 #include <string>
 #include <hjson/hjson.h>
 
-namespace ace {
-namespace hjsonfmt {
-namespace Primitive {
+namespace ace { namespace hjsonfmt { namespace Primitive {
 
-tree::Value::Ref
-build(std::string const & name, Hjson::Value const& pri);
+tree::Value::Ref build(std::string const& name, Hjson::Value const& pri);
 
-Hjson::Value
-dump(tree::Value const & v);
+Hjson::Value dump(tree::Value const& v);
 
-} // namespace Primitive
-} // namespace hjsonfmt
-} // namespace ace
+}}}

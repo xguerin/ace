@@ -29,42 +29,37 @@
 #include <utility>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-class Checker {
- public:
-
-  class Pattern {
-   public:
-
+class Checker
+{
+public:
+  class Pattern
+  {
+  public:
     Pattern();
     Pattern(const Value::Type t, const bool o);
-    Pattern(std::vector<Value::Type> const & t, const bool o);
+    Pattern(std::vector<Value::Type> const& t, const bool o);
 
-    std::vector<Value::Type> const & types() const;
+    std::vector<Value::Type> const& types() const;
     bool optional() const;
 
-   private:
-
-    std::vector<Value::Type>  m_types;
-    bool                      m_opt;
+  private:
+    std::vector<Value::Type> m_types;
+    bool m_opt;
   };
 
   using Schema = std::map<std::string, Pattern>;
 
- public:
-
+public:
   Checker() = delete;
-  Checker(std::string const & hdr, Value const & t);
+  Checker(std::string const& hdr, Value const& t);
 
-  bool validate(Schema const & schm) const;
+  bool validate(Schema const& schm) const;
 
- private:
-
+private:
   const std::string m_hdr;
-  Value const &     m_token;
+  Value const& m_token;
 };
 
-} // namespace tree
-} // namespace ace
+}}

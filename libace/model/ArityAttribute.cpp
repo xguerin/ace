@@ -26,89 +26,107 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-ArityAttribute::ArityAttribute(std::string const & n, bool o)
-  : Attribute(n, o, false), m_arity() { }
+ArityAttribute::ArityAttribute(std::string const& n, bool o)
+  : Attribute(n, o, false), m_arity()
+{}
 
-bool ArityAttribute::checkModel(tree::Value const & t) const {
+bool
+ArityAttribute::checkModel(tree::Value const& t) const
+{
   if (t.type() != tree::Value::Type::String) {
     ERROR(ERR_ARITY_INVALID_TYPE);
     return false;
   }
   Arity r;
-  return Arity::parse(static_cast<tree::Primitive const &>(t).value<std::string>(), r);
+  return Arity::parse(
+    static_cast<tree::Primitive const&>(t).value<std::string>(), r);
 }
 
 void
-ArityAttribute::loadModel(tree::Value const & t) {
-  Arity::parse(static_cast<tree::Primitive const &>(t).value<std::string>(), m_arity);
+ArityAttribute::loadModel(tree::Value const& t)
+{
+  Arity::parse(static_cast<tree::Primitive const&>(t).value<std::string>(),
+               m_arity);
 }
 
 bool
-ArityAttribute::checkInstance(tree::Object const & r, tree::Value const & v) const {
+ArityAttribute::checkInstance(tree::Object const& r, tree::Value const& v) const
+{
   return validate(r, v);
 }
 
 bool
-ArityAttribute::resolveInstance(tree::Object const & r, tree::Value const & v) const {
+ArityAttribute::resolveInstance(tree::Object const& r,
+                                tree::Value const& v) const
+{
   return validate(r, v);
 }
 
 void
-ArityAttribute::load(Attribute const & a) {
-  ArityAttribute const & ra = static_cast<ArityAttribute const &>(a);
+ArityAttribute::load(Attribute const& a)
+{
+  ArityAttribute const& ra = static_cast<ArityAttribute const&>(a);
   m_arity = ra.m_arity;
 }
 
 bool
-ArityAttribute::validate(tree::Object const & r, tree::Value const & v) const {
+ArityAttribute::validate(tree::Object const& r, tree::Value const& v) const
+{
   if (v.type() == tree::Value::Type::Array) {
-    auto const & ary = static_cast<tree::Array const &>(v);
+    auto const& ary = static_cast<tree::Array const&>(v);
     return check(ary.size());
   }
   return check(1);
 }
 
 bool
-ArityAttribute::check(const size_t v) const {
+ArityAttribute::check(const size_t v) const
+{
   return m_arity.check(v);
 }
 
-Arity &
-ArityAttribute::value() {
+Arity&
+ArityAttribute::value()
+{
   return m_arity;
 }
 
-Arity const &
-ArityAttribute::value() const {
+Arity const&
+ArityAttribute::value() const
+{
   return m_arity;
 }
 
 bool
-ArityAttribute::merge(Attribute const & b) {
-  if (not Attribute::merge(b)) return false;
-  ArityAttribute const & rb = static_cast<ArityAttribute const &>(b);
+ArityAttribute::merge(Attribute const& b)
+{
+  if (not Attribute::merge(b)) {
+    return false;
+  }
+  ArityAttribute const& rb = static_cast<ArityAttribute const&>(b);
   m_arity = m_arity.intersect(rb.m_arity);
   return m_arity.isValid();
 }
 
-ArityAttribute::operator tree::Checker::Pattern() const {
+ArityAttribute::operator tree::Checker::Pattern() const
+{
   std::vector<tree::Value::Type> types = { tree::Value::Type::String };
   return tree::Checker::Pattern(types, m_optional);
 }
 
-ArityAttribute::operator std::string() const {
+ArityAttribute::operator std::string() const
+{
   std::ostringstream oss;
   oss << m_arity;
   return oss.str();
 }
 
-Attribute::Ref ArityAttribute::clone() const {
+Attribute::Ref
+ArityAttribute::clone() const
+{
   return Attribute::Ref(new ArityAttribute(*this));
 }
 
-} // namespace model
-} // namespace ace
-
+}}

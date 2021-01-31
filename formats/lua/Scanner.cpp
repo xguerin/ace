@@ -33,13 +33,17 @@
 
 namespace {
 
-static void report_errors(lua_State * L) {
-  const char * str = lua_tostring(L, -1);
+static void
+report_errors(lua_State* L)
+{
+  const char* str = lua_tostring(L, -1);
   std::cerr << "-- " << str << std::endl;
   lua_pop(L, 1);
 }
 
-static void build_args(lua_State * L, int argc, char ** argv) {
+static void
+build_args(lua_State* L, int argc, char** argv)
+{
   lua_newtable(L);
   for (int i = 0; i < argc; i += 1) {
     lua_pushstring(L, argv[i]);
@@ -48,19 +52,19 @@ static void build_args(lua_State * L, int argc, char ** argv) {
   lua_setglobal(L, "arg");
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace luafmt {
+namespace ace { namespace luafmt {
 
 tree::Value::Ref
-Scanner::open(std::string const & fn, int argc, char ** argv) {
+Scanner::open(std::string const& fn, int argc, char** argv)
+{
   if (argc == 0 or argv == nullptr) {
     ACE_LOG(Error, "invalid ARGC/ARGV arguments");
     return nullptr;
   }
   tree::Value::Ref obj;
-  lua_State * L = luaL_newstate();
+  lua_State* L = luaL_newstate();
   luaL_openlibs(L);
   shift(fn, argc, argv);
   build_args(L, argc, argv);
@@ -81,18 +85,19 @@ Scanner::open(std::string const & fn, int argc, char ** argv) {
   obj = Object::build("", L);
   lua_pop(L, 1);
 
- error:
+error:
   return obj;
 }
 
 tree::Value::Ref
-Scanner::parse(std::string const & s, int argc, char ** argv) {
+Scanner::parse(std::string const& s, int argc, char** argv)
+{
   if (argc == 0 or argv == nullptr) {
     ACE_LOG(Error, "invalid ARGC/ARGV arguments");
     return nullptr;
   }
   tree::Value::Ref obj;
-  lua_State * L = luaL_newstate();
+  lua_State* L = luaL_newstate();
   luaL_openlibs(L);
   shift("", argc, argv);
   build_args(L, argc, argv);
@@ -113,20 +118,22 @@ Scanner::parse(std::string const & s, int argc, char ** argv) {
   obj = Object::build("", L);
   lua_pop(L, 1);
 
- error:
+error:
   return obj;
 }
 
 void
-Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
+Scanner::dump(tree::Value const& v, const Format f, std::ostream& o) const
+{
   o << "config = ";
   dump_value(v, o, 0, true);
   o << std::endl;
 }
 
 bool
-Scanner::openAll(std::string const & fn, int argc, char ** argv,
-                 std::list<tree::Value::Ref> & values) {
+Scanner::openAll(std::string const& fn, int argc, char** argv,
+                 std::list<tree::Value::Ref>& values)
+{
   auto res = open(fn, argc, argv);
   if (res == nullptr) {
     return false;
@@ -136,8 +143,9 @@ Scanner::openAll(std::string const & fn, int argc, char ** argv,
 }
 
 bool
-Scanner::parseAll(std::string const & s, int argc, char ** argv,
-                  std::list<tree::Value::Ref> & values) {
+Scanner::parseAll(std::string const& s, int argc, char** argv,
+                  std::list<tree::Value::Ref>& values)
+{
   auto res = parse(s, argc, argv);
   if (res == nullptr) {
     return false;
@@ -147,8 +155,9 @@ Scanner::parseAll(std::string const & s, int argc, char ** argv,
 }
 
 bool
-Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
-                 std::ostream & o) const {
+Scanner::dumpAll(std::list<tree::Value::Ref>& values, const Format f,
+                 std::ostream& o) const
+{
   if (values.size() != 1) {
     return false;
   }
@@ -157,20 +166,23 @@ Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
 }
 
 std::string
-Scanner::name() const {
+Scanner::name() const
+{
   return "lua";
 }
 
 std::string
-Scanner::extension() const {
+Scanner::extension() const
+{
   return "lua";
 }
 
-} // namespace luafmt
-} // namespace ace
+}}
 
 extern "C" {
-void * loadPlugin() {
+void*
+loadPlugin()
+{
   return new ace::luafmt::Scanner();
 }
 }

@@ -34,60 +34,63 @@
 #include <string>
 #include <utility>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // Existence comparator
 
 template<typename T>
-struct TrueCompare : public std::binary_function<T, T, bool> {
-  bool operator() (T const & a, T const & b) const;
+struct TrueCompare : public std::binary_function<T, T, bool>
+{
+  bool operator()(T const& a, T const& b) const;
 };
 
 template<typename T>
 bool
-TrueCompare<T>::operator() (T const & a, T const & b) const {
+TrueCompare<T>::operator()(T const& a, T const& b) const
+{
   return true;
 }
 
 // Attribute
 
-class Attribute : public Object, public Instance {
- public:
-
-   /**
-    * @brief Unique reference to an Attribute
-    */
+class Attribute
+  : public Object
+  , public Instance
+{
+public:
+  /**
+   * @brief Unique reference to an Attribute
+   */
   using Ref = std::shared_ptr<Attribute>;
 
   Attribute() = delete;
-  explicit Attribute(Attribute const &) = default;
-  virtual ~Attribute() { }
+  explicit Attribute(Attribute const&) = default;
+  virtual ~Attribute() {}
 
   tree::Path path(const bool local = false) const;
 
   // Object operations
 
-  using Object::loadModel;
   using Object::checkModel;
+  using Object::loadModel;
 
   // Instance operations
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  void expandInstance(tree::Object & r, tree::Value & v);
-  bool flattenInstance(tree::Object & r, tree::Value & v);
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  void expandInstance(tree::Object& r, tree::Value& v);
+  bool flattenInstance(tree::Object& r, tree::Value& v);
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
   // Class operations
 
-  virtual void load(Attribute const & a) = 0;
+  virtual void load(Attribute const& a) = 0;
 
-  virtual bool merge(Attribute const & b);
-  virtual bool override(Attribute const & b);
+  virtual bool merge(Attribute const& b);
+  virtual bool override(Attribute const& b);
 
   virtual operator tree::Checker::Pattern() const = 0;
 
-  virtual void print(std::ostream & o, int l) const;
+  virtual void print(std::ostream& o, int l) const;
   virtual operator std::string() const = 0;
 
   virtual Attribute::Ref clone() const = 0;
@@ -95,13 +98,11 @@ class Attribute : public Object, public Instance {
   bool optional() const;
   bool overridable() const;
 
- protected:
+protected:
+  Attribute(std::string const& n, bool opt, bool ovr = false);
 
-  Attribute(std::string const & n, bool opt, bool ovr = false);
-
-  bool  m_optional;
-  bool  m_override;
+  bool m_optional;
+  bool m_override;
 };
 
-} // namespace model
-} // namespace ace
+}}

@@ -26,28 +26,18 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-namespace ace {
-namespace yamlfmt {
-namespace Common {
+namespace ace { namespace yamlfmt { namespace Common {
 
-tree::Value::Ref
-parseFile(std::string const & path);
+tree::Value::Ref parseFile(std::string const& path);
 
-bool
-parseFile(std::string const & path, std::list<tree::Value::Ref> & r);
+bool parseFile(std::string const& path, std::list<tree::Value::Ref>& r);
 
-tree::Value::Ref
-parseString(std::string const & str);
+tree::Value::Ref parseString(std::string const& str);
 
-bool
-parseString(std::string const & str, std::list<tree::Value::Ref> & r);
+bool parseString(std::string const& str, std::list<tree::Value::Ref>& r);
 
-tree::Value::Ref
-build(std::string const & name, YAML::Node const & n);
+tree::Value::Ref build(std::string const& name, YAML::Node const& n);
 
-void
-dump(tree::Value const & v, YAML::Emitter & e);
+void dump(tree::Value const& v, YAML::Emitter& e);
 
-} // namespace Common
-} // namespace yamlfmt
-} // namespace ace
+}}}

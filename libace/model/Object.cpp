@@ -23,58 +23,74 @@
 #include <ace/model/Object.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-Object::Object() : m_id(0), m_name(), m_parent(nullptr) {
+Object::Object() : m_id(0), m_name(), m_parent(nullptr)
+{
   static int s_id = 0;
-  m_id = __sync_add_and_fetch(& s_id, 1);
+  m_id = __sync_add_and_fetch(&s_id, 1);
 }
 
-Object::Object(Object const & o) : Object() {
+Object::Object(Object const& o) : Object()
+{
   m_name = o.m_name;
   m_parent = o.m_parent;
 }
 
-int Object::id() const {
+int
+Object::id() const
+{
   return m_id;
 }
 
 std::string
-Object::name() const {
-  if (m_name.empty()) return "Object_" + std::to_string(m_id);
+Object::name() const
+{
+  if (m_name.empty()) {
+    return "Object_" + std::to_string(m_id);
+  }
   return m_name;
 }
 
 void
-Object::setName(std::string const & n) {
+Object::setName(std::string const& n)
+{
   m_name = n;
 }
 
-Object *
-Object::owner() {
+Object*
+Object::owner()
+{
   return m_parent == nullptr ? nullptr : m_parent->owner();
 }
 
-const Object *
-Object::owner() const {
+const Object*
+Object::owner() const
+{
   return m_parent == nullptr ? nullptr : m_parent->owner();
 }
 
-Object * Object::parent() {
+Object*
+Object::parent()
+{
   return m_parent;
 }
 
-const Object * Object::parent() const {
+const Object*
+Object::parent() const
+{
   return m_parent;
 }
 
-void Object::setParent(const Object * p) {
-  m_parent = const_cast<Object *>(p);
+void
+Object::setParent(const Object* p)
+{
+  m_parent = const_cast<Object*>(p);
 };
 
 tree::Path
-Object::path(const bool local) const {
+Object::path(const bool local) const
+{
   tree::Path result;
   if (m_parent == nullptr) {
     result.push(tree::path::Item::build(tree::path::Item::Type::Global));
@@ -88,20 +104,26 @@ Object::path(const bool local) const {
   return result;
 }
 
-bool Object::flattenModel() {
-  return true;
-}
-
-bool Object::validateModel() {
+bool
+Object::flattenModel()
+{
   return true;
 }
 
 bool
-Object::injectInherited(tree::Object const & r, Object const & o, tree::Value & v) const {
-  if (m_parent == nullptr) return false;
+Object::validateModel()
+{
+  return true;
+}
+
+bool
+Object::injectInherited(tree::Object const& r, Object const& o,
+                        tree::Value& v) const
+{
+  if (m_parent == nullptr) {
+    return false;
+  }
   return m_parent->injectInherited(r, o, v);
 }
 
-} // namespace model
-} // namespace ace
-
+}}

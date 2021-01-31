@@ -27,49 +27,56 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
 // Pattern
 
-Checker::Pattern::Pattern()
-  : m_types(), m_opt(false) { }
+Checker::Pattern::Pattern() : m_types(), m_opt(false) {}
 
 Checker::Pattern::Pattern(const Value::Type t, const bool o)
-  : m_types({ t }), m_opt(o) { }
+  : m_types({ t }), m_opt(o)
+{}
 
-Checker::Pattern::Pattern(std::vector<Value::Type> const & t, const bool o)
-  : m_types(t), m_opt(o) { }
+Checker::Pattern::Pattern(std::vector<Value::Type> const& t, const bool o)
+  : m_types(t), m_opt(o)
+{}
 
-std::vector<Value::Type> const &
-Checker::Pattern::types() const {
+std::vector<Value::Type> const&
+Checker::Pattern::types() const
+{
   return m_types;
 }
 
 bool
-Checker::Pattern::optional() const {
+Checker::Pattern::optional() const
+{
   return m_opt;
 }
 
 // Checker
 
-Checker::Checker(std::string const & hdr, Value const & t)
-    : m_hdr(hdr), m_token(t) { }
+Checker::Checker(std::string const& hdr, Value const& t)
+  : m_hdr(hdr), m_token(t)
+{}
 
-bool Checker::validate(Schema const & schm) const {
+bool
+Checker::validate(Schema const& schm) const
+{
   size_t score = 0;
   Schema wSchm(schm);
   if (not m_token.isObject()) {
     ACE_LOG(Error, "must be an Object");
     return false;
   }
-  auto const & obj = static_cast<tree::Object const &>(m_token);
-  for (auto & t : obj) {
+  auto const& obj = static_cast<tree::Object const&>(m_token);
+  for (auto& t : obj) {
     if (wSchm.find(t.first) != wSchm.end()) {
       bool match = false;
-      for (auto & u : wSchm[t.first].types()) if (t.second->type() == u) {
-        match = true;
-        break;
+      for (auto& u : wSchm[t.first].types()) {
+        if (t.second->type() == u) {
+          match = true;
+          break;
+        }
       }
       if (not match) {
         ACE_LOG(Error, "[" + m_hdr + "] Wrong type for \"", t.first, "\"");
@@ -82,12 +89,13 @@ bool Checker::validate(Schema const & schm) const {
       score += 1;
     }
   }
-  for (auto & e : wSchm) if (not e . second . optional()) {
-    ACE_LOG(Error, "missing \"", e.first, "\"");
-    score += 1;
+  for (auto& e : wSchm) {
+    if (not e.second.optional()) {
+      ACE_LOG(Error, "missing \"", e.first, "\"");
+      score += 1;
+    }
   }
   return score == 0;
 }
 
-} // namespace tree
-} // namespace ace
+}}

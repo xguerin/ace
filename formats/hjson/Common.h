@@ -26,22 +26,14 @@
 #include <string>
 #include <hjson/hjson.h>
 
-namespace ace {
-namespace hjsonfmt {
-namespace Common {
+namespace ace { namespace hjsonfmt { namespace Common {
 
-tree::Value::Ref
-build(std::string const & name, Hjson::Value const& value);
+tree::Value::Ref build(std::string const& name, Hjson::Value const& value);
 
-tree::Value::Ref
-parseFile(std::string const & path);
+tree::Value::Ref parseFile(std::string const& path);
 
-tree::Value::Ref
-parseString(std::string const & str);
+tree::Value::Ref parseString(std::string const& str);
 
-Hjson::Value
-dump(tree::Value const & v);
+Hjson::Value dump(tree::Value const& v);
 
-} // namespace Common
-} // namespace hjsonfmt
-} // namespace ace
+}}}

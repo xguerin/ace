@@ -25,31 +25,33 @@
 #include <ace/tree/Primitive.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 Integer::Integer()
-    : Type(BasicType::Kind::Integer),
-    RangedType(BasicType::Kind::Integer),
-    EnumeratedType(BasicType::Kind::Integer) { }
+  : Type(BasicType::Kind::Integer)
+  , RangedType(BasicType::Kind::Integer)
+  , EnumeratedType(BasicType::Kind::Integer)
+{}
 
 bool
-Integer::validateModel() {
+Integer::validateModel()
+{
   return RangedType::validateModel() and EnumeratedType::validateModel();
 }
 
 bool
-Integer::checkInstance(tree::Object const & r, tree::Value const & v) const {
-  return RangedType::checkInstance(r, v) and EnumeratedType::checkInstance(r, v);
+Integer::checkInstance(tree::Object const& r, tree::Value const& v) const
+{
+  return RangedType::checkInstance(r, v) and
+         EnumeratedType::checkInstance(r, v);
 }
 
 BasicType::Ref
-Integer::clone(std::string const & n) const {
-  Integer * it = new Integer(*this);
+Integer::clone(std::string const& n) const
+{
+  Integer* it = new Integer(*this);
   it->setName(n);
   return BasicType::Ref(it);
 }
 
-} // namespace model
-} // namespace ace
-
+}}

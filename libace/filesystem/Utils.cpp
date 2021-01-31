@@ -27,25 +27,28 @@
 #include <iostream>
 #include <string>
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE
+#define GNU_SOURCE
 #endif
 #include <dlfcn.h>
 #include <libgen.h>
 #include <limits.h>
 #include <unistd.h>
 
-namespace ace {
-namespace fs {
-namespace Utils {
+namespace ace { namespace fs { namespace Utils {
 
 bool
-canSelfCreate(fs::Path const & p) {
+canSelfCreate(fs::Path const& p)
+{
   fs::Path fullPath(p);
-  if (not p.isAbsolute()) fullPath = fs::Directory().path() / p;
+  if (not p.isAbsolute()) {
+    fullPath = fs::Directory().path() / p;
+  }
 
   if (fullPath.isDirectory() and fs::Directory(fullPath).isValid()) {
     return false;
-  } else if (fs::File(p).isValid()) {
+  }
+
+  if (fs::File(p).isValid()) {
     return false;
   }
 
@@ -56,9 +59,17 @@ canSelfCreate(fs::Path const & p) {
     fullPath = fullPath.prune();
     fs::Directory dir(fullPath);
     if (dir.isValid()) {
-      if (dir.permissions() & Node::Permission::OtherWrite) return true;
-      if (dir.groupID() == gid and dir.permissions() & Node::Permission::GroupWrite) return true;
-      if (dir.userID() == uid and dir.permissions() & Node::Permission::UserWrite) return true;
+      if (dir.permissions() & Node::Permission::OtherWrite) {
+        return true;
+      }
+      if (dir.groupID() == gid and
+          dir.permissions() & Node::Permission::GroupWrite) {
+        return true;
+      }
+      if (dir.userID() == uid and
+          dir.permissions() & Node::Permission::UserWrite) {
+        return true;
+      }
       return false;
     }
   } while (fullPath != fs::Path("/"));
@@ -67,7 +78,8 @@ canSelfCreate(fs::Path const & p) {
 }
 
 std::string
-processPrefix() {
+processPrefix()
+{
   char buffer[4096];
   ssize_t n = readlink("/proc/self/exe", buffer, sizeof(buffer));
   buffer[n] = '\0';
@@ -75,9 +87,10 @@ processPrefix() {
 }
 
 std::string
-libraryPrefix() {
+libraryPrefix()
+{
   Dl_info libInfo;
-  if (dladdr(reinterpret_cast<void *>(&libraryPrefix), &libInfo) != 0) {
+  if (dladdr(reinterpret_cast<void*>(&libraryPrefix), &libInfo) != 0) {
     char buffer[4096];
 #if defined(__OpenBSD__)
     strlcpy(buffer, libInfo.dli_fname, 4096);
@@ -89,7 +102,4 @@ libraryPrefix() {
   return "";
 }
 
-} // namespace Utils
-} // namespace fs
-} // namespace ace
-
+}}}

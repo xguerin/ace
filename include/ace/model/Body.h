@@ -31,31 +31,33 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Body : public Section, public Instance, public Coach {
- public:
-
+class Body
+  : public Section
+  , public Instance
+  , public Coach
+{
+public:
   Body() = default;
-  explicit Body(Body const & o);
+  explicit Body(Body const& o);
 
   // Object
 
-  bool injectInherited(tree::Object const & r, Object const & o, tree::Value & v) const;
+  bool injectInherited(tree::Object const& r, Object const& o,
+                       tree::Value& v) const;
 
   // Instance
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  void expandInstance(tree::Object & r, tree::Value & v);
-  bool flattenInstance(tree::Object & r, tree::Value & v);
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  void expandInstance(tree::Object& r, tree::Value& v);
+  bool flattenInstance(tree::Object& r, tree::Value& v);
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
   // Coach
 
-  void display(Coach::Branch const & br) const;
-  bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  void display(Coach::Branch const& br) const;
+  bool explain(tree::Path const& p, tree::Path::const_iterator const& i) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

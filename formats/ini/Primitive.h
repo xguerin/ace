@@ -26,13 +26,8 @@
 #include <ace/tree/Scanner.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace inifmt {
-namespace Primitive {
+namespace ace { namespace inifmt { namespace Primitive {
 
-void
-dump(tree::Value const & v, std::ostream & o);
+void dump(tree::Value const& v, std::ostream& o);
 
-} // namespace Primitive
-} // namespace inifmt
-} // namespace ace
+}}}

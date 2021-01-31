@@ -26,12 +26,11 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace hjsonfmt {
-namespace Primitive {
+namespace ace { namespace hjsonfmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & name, Hjson::Value const& pri) {
+build(std::string const& name, Hjson::Value const& pri)
+{
   tree::Primitive::Ref result = nullptr;
   switch (pri.type()) {
     case Hjson::Type::String: {
@@ -56,8 +55,9 @@ build(std::string const & name, Hjson::Value const& pri) {
 }
 
 Hjson::Value
-dump(tree::Value const & v) {
-  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
+dump(tree::Value const& v)
+{
+  tree::Primitive const& p = static_cast<tree::Primitive const&>(v);
   if (p.is<bool>()) {
     return Hjson::Value(p.value<bool>());
   }
@@ -73,6 +73,4 @@ dump(tree::Value const & v) {
   return nullptr;
 }
 
-} // namespace Primitive
-} // namespace hjsonfmt
-} // namespace ace
+}}}

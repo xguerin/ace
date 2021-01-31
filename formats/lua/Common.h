@@ -28,17 +28,12 @@
 #include <iostream>
 #include <string>
 
-namespace ace {
-namespace luafmt {
+namespace ace { namespace luafmt {
 
-void
-stack_dump(lua_State *L);
+void stack_dump(lua_State* L);
 
-tree::Value::Ref
-build_value(std::string const & n, lua_State * L);
+tree::Value::Ref build_value(std::string const& n, lua_State* L);
 
-void
-dump_value(tree::Value const & v, std::ostream & o, int l, bool i);
+void dump_value(tree::Value const& v, std::ostream& o, int l, bool i);
 
-} // namespace inifmt
-} // namespace ace
+}}

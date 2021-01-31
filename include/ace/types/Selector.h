@@ -33,25 +33,25 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // Selector format checker
 
-class SelectorFormatChecker : public FormatChecker<std::string> {
- public:
-
+class SelectorFormatChecker : public FormatChecker<std::string>
+{
+public:
   SelectorFormatChecker() = delete;
-  explicit SelectorFormatChecker(const BasicType * o);
-  bool operator()(tree::Object const & r, tree::Value const & v) const;
+  explicit SelectorFormatChecker(const BasicType* o);
+  bool operator()(tree::Object const& r, tree::Value const& v) const;
 };
 
 // Selector class
 
 class Selector
-    : public EnumeratedType<std::string, false, std::equal_to<std::string>, SelectorFormatChecker> {
- public:
-
+  : public EnumeratedType<std::string, false, std::equal_to<std::string>,
+                          SelectorFormatChecker>
+{
+public:
   using TemplateAttributeType = FlagAttribute<std::string>;
   using SizeAttributeType = ArityAttribute;
 
@@ -62,71 +62,70 @@ class Selector
   bool flattenModel();
   bool validateModel();
 
-  bool injectInherited(tree::Object const & r, Object const & o, tree::Value & v) const;
+  bool injectInherited(tree::Object const& r, Object const& o,
+                       tree::Value& v) const;
 
   // Instance
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  void expandInstance(tree::Object & r, tree::Value & v);
-  bool flattenInstance(tree::Object & r, tree::Value & v);
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  void expandInstance(tree::Object& r, tree::Value& v);
+  bool flattenInstance(tree::Object& r, tree::Value& v);
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
   // Coach
 
-  void display(Coach::Branch const & br) const;
-  bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  void display(Coach::Branch const& br) const;
+  bool explain(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
   // Basic Type
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
   std::string typeName() const;
 
-  bool has(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  bool has(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
-  void get(tree::Path const & p, tree::Path::const_iterator const & i,
-           std::list<BasicType::Ref> & r) const;
+  void get(tree::Path const& p, tree::Path::const_iterator const& i,
+           std::list<BasicType::Ref>& r) const;
 
-  void promoteArity(tree::Path const & p, tree::Path::const_iterator const & i);
-  void disable(tree::Path const & p, tree::Path::const_iterator const & i);
+  void promoteArity(tree::Path const& p, tree::Path::const_iterator const& i);
+  void disable(tree::Path const& p, tree::Path::const_iterator const& i);
 
   bool isObject() const;
 
-  std::vector<std::string> values(tree::Object const & r) const;
+  std::vector<std::string> values(tree::Object const& r) const;
 
   // Code generation
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
   using EnumeratedType::doBuildDefinition;
-  void doBuildDefinition(std::string const & s, std::string const & v, std::string const & e,
-                         std::ostream & o, int l) const;
+  void doBuildDefinition(std::string const& s, std::string const& v,
+                         std::string const& e, std::ostream& o, int l) const;
 
   using EnumeratedType::doSerializerDefinition;
-  void doSerializerDefinition(std::string const & c, std::string const & n,
-                              std::string const & v, const bool b,
-                              std::ostream & o, int l) const;
+  void doSerializerDefinition(std::string const& c, std::string const& n,
+                              std::string const& v, const bool b,
+                              std::ostream& o, int l) const;
 
-  void doGetterInterface(std::ostream & o, int l = 0) const;
-  void doGetterDeclaration(std::ostream & o, int l = 0) const;
-  void doGetterDefinition(std::ostream & o, int l = 0) const;
+  void doGetterInterface(std::ostream& o, int l = 0) const;
+  void doGetterDeclaration(std::ostream& o, int l = 0) const;
+  void doGetterDefinition(std::ostream& o, int l = 0) const;
 
   // Accessors
 
-  SizeAttributeType const & sizeAttribute() const;
+  SizeAttributeType const& sizeAttribute() const;
 
   bool hasSize() const;
-  Arity const & size() const;
+  Arity const& size() const;
 
-  TemplateAttributeType const & templateAttribute() const;
-  BasicType const & templateType() const;
+  TemplateAttributeType const& templateAttribute() const;
+  BasicType const& templateType() const;
 
- private:
-
-  BasicType::Ref                        m_template;
+private:
+  BasicType::Ref m_template;
   std::map<std::string, BasicType::Ref> m_types;
   std::map<std::string, BasicType::Ref> m_instances;
 };
 
-} // namespace model
-} // namespace ace
+}}

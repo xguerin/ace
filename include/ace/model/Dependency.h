@@ -30,39 +30,40 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Dependency : public Object, public Instance {
- public:
-
-   /**
-    * @brief Unique reference to an Dependency
-    */
+class Dependency
+  : public Object
+  , public Instance
+{
+public:
+  /**
+   * @brief Unique reference to an Dependency
+   */
   using Ref = std::shared_ptr<Dependency>;
 
   static constexpr char PlaceHolder = '%'; // NOLINT
 
- public:
-
+public:
   Dependency() = default;
-  explicit Dependency(Dependency const &) = default;
-  virtual ~Dependency() { }
+  explicit Dependency(Dependency const&) = default;
+  virtual ~Dependency() {}
 
   // Object
 
   tree::Path path(const bool local = false) const;
 
-  virtual bool checkModel(tree::Value const & t) const;
-  virtual void loadModel(tree::Value const & t);
+  virtual bool checkModel(tree::Value const& t) const;
+  virtual void loadModel(tree::Value const& t);
   virtual bool validateModel();
 
   // Instance
 
-  virtual bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  virtual void expandInstance(tree::Object & r, tree::Value & v);
-  virtual bool flattenInstance(tree::Object & r, tree::Value & v);
-  virtual bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  virtual bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  virtual void expandInstance(tree::Object& r, tree::Value& v);
+  virtual bool flattenInstance(tree::Object& r, tree::Value& v);
+  virtual bool resolveInstance(tree::Object const& r,
+                               tree::Value const& v) const;
 
   // Local
 
@@ -70,21 +71,21 @@ class Dependency : public Object, public Instance {
 
   virtual Dependency::Ref clone() const = 0;
 
-  virtual bool canMerge(Dependency const & o) const;
-  virtual void merge(Dependency const & o);
+  virtual bool canMerge(Dependency const& o) const;
+  virtual void merge(Dependency const& o);
 
   virtual operator std::string() const = 0;
 
- protected:
+protected:
+  bool hasPlaceHolder(std::string const& d) const;
+  std::string expandPlaceHolder(std::string const& d,
+                                std::string const& v) const;
 
-  bool hasPlaceHolder(std::string const & d) const;
-  std::string expandPlaceHolder(std::string const & d, std::string const & v) const;
-
-  bool buildModelPath(std::string const & d, tree::Object const & o, tree::Path & r) const;
+  bool buildModelPath(std::string const& d, tree::Object const& o,
+                      tree::Path& r) const;
 
   tree::Checker::Schema m_schm;
   std::set<std::string> m_deps;
 };
 
-} // namespace model
-} // namespace ace
+}}

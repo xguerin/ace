@@ -28,12 +28,11 @@
 #include <ace/common/Log.h>
 #include <string>
 
-namespace ace {
-namespace hjsonfmt {
-namespace Common {
+namespace ace { namespace hjsonfmt { namespace Common {
 
 tree::Value::Ref
-build(std::string const & name, Hjson::Value const& value) {
+build(std::string const& name, Hjson::Value const& value)
+{
   tree::Value::Ref result = nullptr;
   switch (value.type()) {
     case Hjson::Type::Map: {
@@ -55,7 +54,8 @@ build(std::string const & name, Hjson::Value const& value) {
 }
 
 tree::Value::Ref
-parseFile(std::string const & path) {
+parseFile(std::string const& path)
+{
   Hjson::Value value = Hjson::UnmarshalFromFile(path);
   if (value.type() != Hjson::Type::Map) {
     ACE_LOG(Error, "root item is not an object");
@@ -65,7 +65,8 @@ parseFile(std::string const & path) {
 }
 
 tree::Value::Ref
-parseString(std::string const & str) {
+parseString(std::string const& str)
+{
   Hjson::Value value = Hjson::Unmarshal(str);
   if (value.type() != Hjson::Type::Map) {
     ACE_LOG(Error, "root item is not an object");
@@ -75,18 +76,21 @@ parseString(std::string const & str) {
 }
 
 Hjson::Value
-dump(tree::Value const & v) {
+dump(tree::Value const& v)
+{
   switch (v.type()) {
-    case tree::Value::Type::Boolean   :
-    case tree::Value::Type::Float     :
-    case tree::Value::Type::Integer   :
-    case tree::Value::Type::String    : return Primitive::dump(v);
-    case tree::Value::Type::Array     : return Array::dump(v);
-    case tree::Value::Type::Object    : return Object::dump(v);
-    default                           : return Hjson::Value();
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::Float:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::String:
+      return Primitive::dump(v);
+    case tree::Value::Type::Array:
+      return Array::dump(v);
+    case tree::Value::Type::Object:
+      return Object::dump(v);
+    default:
+      return Hjson::Value();
   }
 }
 
-} // namespace Common
-} // namespace hjsonfmt
-} // namespace ace
+}}}

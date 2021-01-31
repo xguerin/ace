@@ -33,64 +33,64 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 /**
-  * @brief General case
-  *
-  * @tparam typename...DEPTYPES
-  */
-template<typename...DEPTYPES> class DependencyAttribute;
+ * @brief General case
+ *
+ * @tparam typename...DEPTYPES
+ */
+template<typename... DEPTYPES>
+class DependencyAttribute;
 
 /**
  * @brief Base Case
  */
 template<>
-class DependencyAttribute<> : public Attribute {
- private:
-
-  struct Comparator : public std::binary_function<Dependency::Ref, Dependency::Ref, bool> {
-    bool operator()(Dependency::Ref const & a, Dependency::Ref const & b) const;
+class DependencyAttribute<> : public Attribute
+{
+private:
+  struct Comparator
+    : public std::binary_function<Dependency::Ref, Dependency::Ref, bool>
+  {
+    bool operator()(Dependency::Ref const& a, Dependency::Ref const& b) const;
   };
 
- public:
-
+public:
   using Dependencies = std::multiset<Dependency::Ref, Comparator>;
 
   DependencyAttribute() = delete;
-  explicit DependencyAttribute(DependencyAttribute const & o);
-  DependencyAttribute(std::string const & name, bool o);
+  explicit DependencyAttribute(DependencyAttribute const& o);
+  DependencyAttribute(std::string const& name, bool o);
 
   // Object
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
   bool validateModel();
 
-  virtual bool checkDependency(tree::Value const & t) const;
-  virtual void loadDependency(tree::Value const & t);
+  virtual bool checkDependency(tree::Value const& t) const;
+  virtual void loadDependency(tree::Value const& t);
 
   // Instance
 
-  void load(Attribute const & a);
+  void load(Attribute const& a);
 
   // Attribute
 
-  bool merge(Attribute const & b);
+  bool merge(Attribute const& b);
   operator tree::Checker::Pattern() const;
 
-  void print(std::ostream & o, int l) const;
+  void print(std::ostream& o, int l) const;
   operator std::string() const;
 
   virtual Attribute::Ref clone() const = 0;
 
   // Accessors
 
-  Dependencies const & values() const;
+  Dependencies const& values() const;
 
- protected:
-
+protected:
   Dependencies m_values;
 };
 
@@ -100,45 +100,54 @@ class DependencyAttribute<> : public Attribute {
  * @tparam T
  * @tparam typename...DEPTYPES
  */
-template<typename T, typename...DEPTYPES>
-class DependencyAttribute<T, DEPTYPES...> : public DependencyAttribute<DEPTYPES...> {
- public:
+template<typename T, typename... DEPTYPES>
+class DependencyAttribute<T, DEPTYPES...>
+  : public DependencyAttribute<DEPTYPES...>
+{
+public:
+  explicit DependencyAttribute(DependencyAttribute const& o);
+  DependencyAttribute(std::string const& name, bool o);
 
-  explicit DependencyAttribute(DependencyAttribute const & o);
-  DependencyAttribute(std::string const & name, bool o);
-
-  bool checkDependency(tree::Value const & t) const;
-  void loadDependency(tree::Value const & t);
+  bool checkDependency(tree::Value const& t) const;
+  void loadDependency(tree::Value const& t);
 
   // Attribute
 
   virtual Attribute::Ref clone() const;
 };
 
-template<typename T, typename...DEPTYPES>
-DependencyAttribute<T, DEPTYPES...>::DependencyAttribute(DependencyAttribute const & o)
-  : DependencyAttribute<DEPTYPES...>(o) { }
+template<typename T, typename... DEPTYPES>
+DependencyAttribute<T, DEPTYPES...>::DependencyAttribute(
+  DependencyAttribute const& o)
+  : DependencyAttribute<DEPTYPES...>(o)
+{}
 
-template<typename T, typename...DEPTYPES>
-DependencyAttribute<T, DEPTYPES...>::DependencyAttribute(std::string const & n, bool o)
-  : DependencyAttribute<DEPTYPES...>(n, o) { }
+template<typename T, typename... DEPTYPES>
+DependencyAttribute<T, DEPTYPES...>::DependencyAttribute(std::string const& n,
+                                                         bool o)
+  : DependencyAttribute<DEPTYPES...>(n, o)
+{}
 
-template<typename T, typename...DEPTYPES>
+template<typename T, typename... DEPTYPES>
 bool
-DependencyAttribute<T, DEPTYPES...>::checkDependency(tree::Value const & t) const {
+DependencyAttribute<T, DEPTYPES...>::checkDependency(tree::Value const& t) const
+{
   if (T::match(t)) {
     T vd;
     vd.setParent(this);
-    if (not vd.checkModel(t)) return false;
+    if (not vd.checkModel(t)) {
+      return false;
+    }
     return true;
   } else {
     return DependencyAttribute<DEPTYPES...>::checkDependency(t);
   }
 }
 
-template<typename T, typename...DEPTYPES>
+template<typename T, typename... DEPTYPES>
 void
-DependencyAttribute<T, DEPTYPES...>::loadDependency(tree::Value const & t) {
+DependencyAttribute<T, DEPTYPES...>::loadDependency(tree::Value const& t)
+{
   if (T::match(t)) {
     Dependency::Ref dr(new T);
     dr->setParent(this);
@@ -149,11 +158,11 @@ DependencyAttribute<T, DEPTYPES...>::loadDependency(tree::Value const & t) {
   }
 }
 
-template<typename T, typename...DEPTYPES>
+template<typename T, typename... DEPTYPES>
 Attribute::Ref
-DependencyAttribute<T, DEPTYPES...>::clone() const {
+DependencyAttribute<T, DEPTYPES...>::clone() const
+{
   return Attribute::Ref(new DependencyAttribute<T, DEPTYPES...>(*this));
 }
 
-} // namespace model
-} // namespace ace
+}}

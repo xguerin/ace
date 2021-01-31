@@ -27,22 +27,23 @@
 
 namespace {
 
-static bool escape(const char c) {
+static bool
+escape(const char c)
+{
   return c == '\'';
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace pyfmt {
-namespace Primitive {
+namespace ace { namespace pyfmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & n, PyObject * o) {
+build(std::string const& n, PyObject* o)
+{
   if (PyBool_Check(o)) {
     bool v = PyObject_Compare(o, Py_True) == 0;
     return tree::Primitive::build(n, v);
-  } else if (PyInt_Check(o))  {
+  } else if (PyInt_Check(o)) {
     long v = PyInt_AsLong(o);
     return tree::Primitive::build(n, v);
   } else if (PyLong_Check(o)) {
@@ -59,16 +60,21 @@ build(std::string const & n, PyObject * o) {
 }
 
 void
-dump(tree::Value const & v, std::ostream & o, int l, bool i) {
-  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
-  if (not i) common::String::indent(o, l);
+dump(tree::Value const& v, std::ostream& o, int l, bool i)
+{
+  tree::Primitive const& p = static_cast<tree::Primitive const&>(v);
+  if (not i) {
+    common::String::indent(o, l);
+  }
   if (p.is<bool>()) {
     o << (p.value<bool>() ? "True" : "False");
   } else {
     if (p.is<std::string>()) {
       o << '\'';
-      for (auto & c : p.value()) {
-        if (escape(c)) o << '\\';
+      for (auto& c : p.value()) {
+        if (escape(c)) {
+          o << '\\';
+        }
         o << c;
       }
       o << '\'';
@@ -78,7 +84,4 @@ dump(tree::Value const & v, std::ostream & o, int l, bool i) {
   }
 }
 
-} // namespace Primitive
-} // namespace pyfmt
-} // namespace ace
-
+}}}

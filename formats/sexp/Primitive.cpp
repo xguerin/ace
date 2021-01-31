@@ -27,40 +27,38 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace sexpfmt {
-namespace Primitive {
+namespace ace { namespace sexpfmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & name, sexp::Value::Ref const & obj) {
+build(std::string const& name, sexp::Value::Ref const& obj)
+{
   return nullptr;
 }
 
 size_t
-dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
-     std::ostream & o) {
+dump(tree::Value const& v, const tree::Scanner::Format f, const size_t indent,
+     std::ostream& o)
+{
   std::string value;
-  auto const & p = static_cast<tree::Primitive const &>(v);
+  auto const& p = static_cast<tree::Primitive const&>(v);
   switch (p.type()) {
-    case tree::Value::Type::Boolean : {
+    case tree::Value::Type::Boolean: {
       value = common::String::from(p.value<bool>());
     } break;
-    case tree::Value::Type::String : {
+    case tree::Value::Type::String: {
       value = '"' + p.value<std::string>() + '"';
     } break;
-    case tree::Value::Type::Integer : {
+    case tree::Value::Type::Integer: {
       value = common::String::from(p.value<long>());
     } break;
-    case tree::Value::Type::Float : {
-      value =common::String::from(p.value<double>());
+    case tree::Value::Type::Float: {
+      value = common::String::from(p.value<double>());
     } break;
-    default : {
+    default: {
     } break;
   }
   o << value;
   return value.length();
 }
 
-} // namespace Primitive
-} // namespace sexpfmt
-} // namespace ace
+}}}

@@ -32,20 +32,20 @@
 #include <cstdio>
 #include <string>
 
-namespace ace {
-namespace yamlfmt {
-namespace Common {
+namespace ace { namespace yamlfmt { namespace Common {
 
 tree::Value::Ref
-parseFile(std::string const & path) {
+parseFile(std::string const& path)
+{
   auto node = YAML::LoadFile(path);
   return build("", node);
 }
 
 bool
-parseFile(std::string const & path, std::list<tree::Value::Ref> & r) {
+parseFile(std::string const& path, std::list<tree::Value::Ref>& r)
+{
   auto nodes = YAML::LoadAllFromFile(path);
-  for (auto & node: nodes) {
+  for (auto& node : nodes) {
     auto res = build("", node);
     if (res == nullptr) {
       return false;
@@ -56,15 +56,17 @@ parseFile(std::string const & path, std::list<tree::Value::Ref> & r) {
 }
 
 tree::Value::Ref
-parseString(std::string const & str) {
+parseString(std::string const& str)
+{
   auto node = YAML::Load(str);
   return build("", node);
 }
 
 bool
-parseString(std::string const & str, std::list<tree::Value::Ref> & r) {
+parseString(std::string const& str, std::list<tree::Value::Ref>& r)
+{
   auto nodes = YAML::LoadAll(str);
-  for (auto & node: nodes) {
+  for (auto& node : nodes) {
     auto res = build("", node);
     if (res == nullptr) {
       return false;
@@ -75,7 +77,8 @@ parseString(std::string const & str, std::list<tree::Value::Ref> & r) {
 }
 
 tree::Value::Ref
-build(std::string const & name, YAML::Node const & n) {
+build(std::string const& name, YAML::Node const& n)
+{
   switch (n.Type()) {
     case YAML::NodeType::Map: {
       return Object::build(name, n);
@@ -99,7 +102,8 @@ build(std::string const & name, YAML::Node const & n) {
 }
 
 void
-dump(tree::Value const & v, YAML::Emitter & e) {
+dump(tree::Value const& v, YAML::Emitter& e)
+{
   switch (v.type()) {
     case tree::Value::Type::Array: {
       return Array::dump(v, e);
@@ -118,7 +122,4 @@ dump(tree::Value const & v, YAML::Emitter & e) {
   }
 }
 
-} // namespace Common
-} // namespace yamlfmt
-} // namespace ace
-
+}}}

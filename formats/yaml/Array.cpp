@@ -27,15 +27,14 @@
 #include <ace/tree/Array.h>
 #include <string>
 
-namespace ace {
-namespace yamlfmt {
-namespace Array {
+namespace ace { namespace yamlfmt { namespace Array {
 
 tree::Value::Ref
-build(std::string const & name, YAML::Node const & n) {
+build(std::string const& name, YAML::Node const& n)
+{
   size_t index = 0;
   tree::Array::Ref res = tree::Array::build(name);
-  for (auto const & i: n) {
+  for (auto const& i : n) {
     auto v = Common::build(std::to_string(index), i);
     res->push_back(v);
     index += 1;
@@ -44,8 +43,9 @@ build(std::string const & name, YAML::Node const & n) {
 }
 
 void
-dump(tree::Value const & v, YAML::Emitter & e) {
-  tree::Array const & ary = static_cast<tree::Array const &>(v);
+dump(tree::Value const& v, YAML::Emitter& e)
+{
+  tree::Array const& ary = static_cast<tree::Array const&>(v);
   e << YAML::BeginSeq;
   for (size_t i = 0; i < ary.size(); i += 1) {
     Common::dump(*ary.at(i), e);
@@ -53,6 +53,4 @@ dump(tree::Value const & v, YAML::Emitter & e) {
   e << YAML::EndSeq;
 }
 
-} // namespace Array
-} // namespace yamlfmt
-} // namespace ace
+}}}

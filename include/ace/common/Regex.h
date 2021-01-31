@@ -24,15 +24,11 @@
 
 #include <string>
 
-namespace ace {
-namespace common {
-namespace Regex {
+namespace ace { namespace common { namespace Regex {
 
-bool match(std::string const & s, std::string const & r);
+bool match(std::string const& s, std::string const& r);
 
-bool expand(std::string const & s, std::string const & r,
-                  std::string const & p, std::string & v);
+bool expand(std::string const& s, std::string const& r, std::string const& p,
+            std::string& v);
 
-} // namespace Regex
-} // namespace common
-} // namespace ace
+}}}

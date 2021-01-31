@@ -30,40 +30,40 @@
 #include <string>
 #include <type_traits>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // Generic format checker
 
 template<typename T>
-class FormatChecker {
- public:
-
+class FormatChecker
+{
+public:
   FormatChecker() = delete;
-  explicit FormatChecker(const BasicType * o);
-  explicit FormatChecker(FormatChecker<T> const &) = default;
-  virtual ~FormatChecker() { }
+  explicit FormatChecker(const BasicType* o);
+  explicit FormatChecker(FormatChecker<T> const&) = default;
+  virtual ~FormatChecker() {}
 
-  virtual bool operator()(tree::Object const & r, tree::Value const & v) const;
+  virtual bool operator()(tree::Object const& r, tree::Value const& v) const;
 
- protected:
-
-  const BasicType * m_owner;
+protected:
+  const BasicType* m_owner;
 };
 
 template<typename T>
-FormatChecker<T>::FormatChecker(const BasicType * o) : m_owner(o) { }
+FormatChecker<T>::FormatChecker(const BasicType* o) : m_owner(o)
+{}
 
 template<typename T>
 bool
-FormatChecker<T>::operator()(tree::Object const & r, tree::Value const & v) const {
+FormatChecker<T>::operator()(tree::Object const& r, tree::Value const& v) const
+{
   int score = 0;
-  v.each([&](tree::Value const & w) {
+  v.each([&](tree::Value const& w) {
     if (not w.isPrimitive()) {
       ERROR_O(m_owner, ERR_VALUE_NOT_PRIMITIVE);
       score += 1;
     } else {
-      tree::Primitive const & p = static_cast<tree::Primitive const &>(w);
+      tree::Primitive const& p = static_cast<tree::Primitive const&>(w);
       if (p.value().empty()) {
         ERROR_O(m_owner, ERR_EMPTY_VALUE);
         score += 1;
@@ -79,20 +79,18 @@ FormatChecker<T>::operator()(tree::Object const & r, tree::Value const & v) cons
 // Specialized format checker
 
 template<>
-class FormatChecker<void> {
- public:
-
+class FormatChecker<void>
+{
+public:
   FormatChecker() = delete;
-  explicit FormatChecker(const BasicType * o);
-  explicit FormatChecker(FormatChecker<void> const &) = default;
-  virtual ~FormatChecker() { }
+  explicit FormatChecker(const BasicType* o);
+  explicit FormatChecker(FormatChecker<void> const&) = default;
+  virtual ~FormatChecker() {}
 
-  virtual bool operator()(tree::Object const & r, tree::Value const & v) const;
+  virtual bool operator()(tree::Object const& r, tree::Value const& v) const;
 
- protected:
-
-  const BasicType * m_owner;
+protected:
+  const BasicType* m_owner;
 };
 
-} // namespace model
-} // namespace ace
+}}

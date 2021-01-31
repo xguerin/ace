@@ -25,52 +25,61 @@
 #include <tclap/CmdLine.h>
 
 using SA = TCLAP::SwitchArg;
-template<typename T> using VA = TCLAP::ValueArg<T>;
-template<typename T> using MA = TCLAP::MultiArg<T>;
-template<typename T> using UA = TCLAP::UnlabeledMultiArg<T>;
+template<typename T>
+using VA = TCLAP::ValueArg<T>;
+template<typename T>
+using MA = TCLAP::MultiArg<T>;
+template<typename T>
+using UA = TCLAP::UnlabeledMultiArg<T>;
 
 using namespace ace::tree;
 
 std::string
-dot(path::Item const & i) {
-  if (i.recursive()) return "..";
+dot(path::Item const& i)
+{
+  if (i.recursive()) {
+    return "..";
+  }
   return ".";
 }
 
 void
-parse(std::vector<std::string> const & paths) {
-  for (auto const & s : paths) {
+parse(std::vector<std::string> const& paths)
+{
+  for (auto const& s : paths) {
     auto path = Path::parse(s);
     /**
      * Print the path
      */
-    for (auto const & e : path) {
+    for (auto const& e : path) {
       /*
        * Check the item
        */
       switch (e->type()) {
-        case path::Item::Type::Any : {
+        case path::Item::Type::Any: {
           std::cout << dot(*e) << "Any(*)";
         } break;
-        case path::Item::Type::Global : {
+        case path::Item::Type::Global: {
           std::cout << "Global($)";
         } break;
-        case path::Item::Type::Local : {
+        case path::Item::Type::Local: {
           std::cout << "Local(@)";
         } break;
-        case path::Item::Type::Named : {
+        case path::Item::Type::Named: {
           std::cout << dot(*e) << "Named(" << e->value() << ")";
         } break;
-        case path::Item::Type::Indexed : {
+        case path::Item::Type::Indexed: {
           std::cout << dot(*e) << "Indexed(";
-          auto & indexes = e->indexes();
+          auto& indexes = e->indexes();
           for (size_t i = 0; i < indexes.size(); i += 1) {
             std::cout << indexes[i];
-            if (i + 1 < indexes.size()) std::cout << ",";
+            if (i + 1 < indexes.size()) {
+              std::cout << ",";
+            }
           }
           std::cout << ")";
         } break;
-        case path::Item::Type::Ranged : {
+        case path::Item::Type::Ranged: {
           std::cout << dot(*e) << "Ranged(";
           std::cout << e->range().low;
           std::cout << ":";
@@ -86,7 +95,8 @@ parse(std::vector<std::string> const & paths) {
 }
 
 void
-match(std::vector<std::string> const & paths) {
+match(std::vector<std::string> const& paths)
+{
   if (paths.size() != 2) {
     ACE_LOG(Error, "Exactly two paths must be provided for matching");
   } else {
@@ -100,9 +110,11 @@ match(std::vector<std::string> const & paths) {
   }
 }
 
-int main(int argc, char * argv[]) try {
+int
+main(int argc, char* argv[])
+try {
   TCLAP::CmdLine cmd("Advanced Configuration Path Checker", ' ', ACE_VERSION);
-  SA              cmpA("m", "match", "Match two paths", cmd);
+  SA cmpA("m", "match", "Match two paths", cmd);
   UA<std::string> pthA("path", "JSONPath", true, "string", cmd);
   cmd.parse(argc, argv);
   /**
@@ -122,7 +134,6 @@ int main(int argc, char * argv[]) try {
    * Return
    */
   return 0;
-}
-catch (std::invalid_argument const & e) {
+} catch (std::invalid_argument const& e) {
   return __LINE__;
 }

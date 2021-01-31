@@ -26,13 +26,8 @@
 #include <ace/tree/Scanner.h>
 #include <string>
 
-namespace ace {
-namespace inifmt {
-namespace Array {
+namespace ace { namespace inifmt { namespace Array {
 
-void
-dump(tree::Value const & v, std::ostream & o);
+void dump(tree::Value const& v, std::ostream& o);
 
-} // namespace Array
-} // namespace inifmt
-} // namespace ace
+}}}

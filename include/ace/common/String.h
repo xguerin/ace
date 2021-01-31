@@ -30,16 +30,14 @@
 #include <string>
 #include <locale>
 
-namespace ace {
-namespace common {
-namespace String {
+namespace ace { namespace common { namespace String {
 
-std::ostream &
-indent(std::ostream & o, int l);
+std::ostream& indent(std::ostream& o, int l);
 
 template<typename T>
 bool
-is(std::string const & s) {
+is(std::string const& s)
+{
   T r;
   std::istringstream iss(s);
   iss >> std::boolalpha >> r;
@@ -47,16 +45,15 @@ is(std::string const & s) {
 }
 
 template<>
-bool
-is<long>(std::string const & s);
+bool is<long>(std::string const& s);
 
 template<>
-bool
-is<double>(std::string const & s);
+bool is<double>(std::string const& s);
 
 template<typename T>
 T
-value(std::string const & s) {
+value(std::string const& s)
+{
   T r;
   std::istringstream iss(s);
   iss >> std::boolalpha >> r;
@@ -64,28 +61,30 @@ value(std::string const & s) {
 }
 
 template<>
-double
-value<double>(std::string const & s);
+double value<double>(std::string const& s);
 
 template<>
-std::string
-value(std::string const & s);
+std::string value(std::string const& s);
 
 template<typename T>
 std::string
-from(T const & v) {
+from(T const& v)
+{
   std::ostringstream oss;
   oss << std::boolalpha << std::scientific << v;
   return oss.str();
 }
 
-template<template <class, class> class C, class A = std::allocator<std::string>>
+template<template<class, class> class C, class A = std::allocator<std::string>>
 void
-split(std::string const & s, const char d, C<std::string, A> & r) {
+split(std::string const& s, const char d, C<std::string, A>& r)
+{
   r.clear();
-  if (s.empty()) return;
+  if (s.empty()) {
+    return;
+  }
   std::string buffer;
-  for (auto & c : s) {
+  for (auto& c : s) {
     if (c == d) {
       r.push_back(buffer);
       buffer.clear();
@@ -96,42 +95,35 @@ split(std::string const & s, const char d, C<std::string, A> & r) {
   r.push_back(buffer);
 }
 
-template<template <class, class> class C, class A = std::allocator<std::string>>
+template<template<class, class> class C, class A = std::allocator<std::string>>
 std::string
-join(C<std::string, A> const & r, const char d) {
+join(C<std::string, A> const& r, const char d)
+{
   std::ostringstream oss;
   size_t cnt = 0;
-  for (auto & e : r) {
+  for (auto& e : r) {
     oss << e;
-    if (cnt++ < r.size() - 1) oss << d;
+    if (cnt++ < r.size() - 1) {
+      oss << d;
+    }
   }
   return oss.str();
 }
 
-std::string
-prefix(std::string const & a, std::string const & b);
+std::string prefix(std::string const& a, std::string const& b);
 
-std::string
-normalize(std::string const & in);
+std::string normalize(std::string const& in);
 
-std::string
-expand(std::string const & s, const char c, std::string const & v);
+std::string expand(std::string const& s, const char c, std::string const& v);
 
-std::string &
-ltrim(std::string & s);
+std::string& ltrim(std::string& s);
 
-std::string &
-rtrim(std::string & s);
+std::string& rtrim(std::string& s);
 
-std::string &
-trim(std::string & s);
+std::string& trim(std::string& s);
 
-std::string
-camelify(std::string const & s);
+std::string camelify(std::string const& s);
 
-void
-dumpCharArray(std::string const & s, std::ostream & o);
+void dumpCharArray(std::string const& s, std::ostream& o);
 
-} // namespace String
-} // namespace common
-} // namespace ace
+}}}

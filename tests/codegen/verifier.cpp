@@ -24,21 +24,23 @@
 #include <Model.ac.h>
 #include <ace/model/Helper.h>
 
-class Verification : public ::testing::Test {
- public:
-  static void SetUpTestCase() { }
+class Verification : public ::testing::Test
+{
+public:
+  static void SetUpTestCase() {}
 
- protected:
-  static const char * prgnam;
+protected:
+  static const char* prgnam;
 };
 
-const char * Verification::prgnam = "verification";
+const char* Verification::prgnam = "verification";
 
 using namespace ace::model::Helper;
 
-TEST_F(Verification, ParseTOML) {
+TEST_F(Verification, ParseTOML)
+{
   WRITE_HEADER;
   std::vector<std::string> defs;
   ASSERT_TRUE(validateFile<Model>("config.toml", defs, false, 1,
-                                  const_cast<char **>(&prgnam)));
+                                  const_cast<char**>(&prgnam)));
 }

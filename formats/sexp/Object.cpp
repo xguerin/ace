@@ -28,12 +28,11 @@
 #include <string>
 #include <iomanip>
 
-namespace ace {
-namespace sexpfmt {
-namespace Object {
+namespace ace { namespace sexpfmt { namespace Object {
 
 bool
-is(sexp::Value::Ref const & v) {
+is(sexp::Value::Ref const& v)
+{
   bool result = false;
   auto e = v;
   /**
@@ -64,7 +63,7 @@ is(sexp::Value::Ref const & v) {
     /**
      * E is a list check if the first element is a list
      */
-    auto lst = static_cast<sexp::List const &>(*e);
+    auto lst = static_cast<sexp::List const&>(*e);
     auto car = lst.car();
     if (car->type() != sexp::Value::Type::List) {
       return false;
@@ -72,7 +71,7 @@ is(sexp::Value::Ref const & v) {
     /**
      * CAR is a list check if the first element is an atom
      */
-    auto pair = static_cast<sexp::List const &>(*car);
+    auto pair = static_cast<sexp::List const&>(*car);
     auto pcar = pair.car();
     if (pcar->type() != sexp::Value::Type::Atom) {
       return false;
@@ -80,7 +79,7 @@ is(sexp::Value::Ref const & v) {
     /**
      * PCAR is an atom check if it is a symbol
      */
-    auto const & atm = static_cast<sexp::Atom const &>(*pcar);
+    auto const& atm = static_cast<sexp::Atom const&>(*pcar);
     if (atm.type() != sexp::Atom::Type::Symbol) {
       return false;
     }
@@ -96,7 +95,8 @@ is(sexp::Value::Ref const & v) {
 }
 
 tree::Value::Ref
-build(std::string const & name, sexp::Value::Ref const & v) {
+build(std::string const& name, sexp::Value::Ref const& v)
+{
   auto e = v;
   tree::Object::Ref object = tree::Object::build(name);
   /**
@@ -118,7 +118,7 @@ build(std::string const & name, sexp::Value::Ref const & v) {
     /**
      * E is a list check if the first element is a list
      */
-    auto lst = static_cast<sexp::List const &>(*e);
+    auto lst = static_cast<sexp::List const&>(*e);
     auto car = lst.car();
     if (car->type() != sexp::Value::Type::List) {
       return nullptr;
@@ -126,7 +126,7 @@ build(std::string const & name, sexp::Value::Ref const & v) {
     /**
      * CAR is a list check if the first element is an atom
      */
-    auto pair = static_cast<sexp::List const &>(*car);
+    auto pair = static_cast<sexp::List const&>(*car);
     auto pcar = pair.car();
     if (pcar->type() != sexp::Value::Type::Atom) {
       return nullptr;
@@ -134,14 +134,14 @@ build(std::string const & name, sexp::Value::Ref const & v) {
     /**
      * PCAR is an atom check if it is a symbol
      */
-    auto const & atm = static_cast<sexp::Atom const &>(*pcar);
+    auto const& atm = static_cast<sexp::Atom const&>(*pcar);
     if (atm.type() != sexp::Atom::Type::Symbol) {
       return nullptr;
     }
     /**
      * Put the new entry in the object
      */
-    auto const & sym = static_cast<sexp::Symbol const &>(atm);
+    auto const& sym = static_cast<sexp::Symbol const&>(atm);
     object->put(sym.value(), Common::build(sym.value(), pair.cdr()));
     /**
      * Go to the next element
@@ -155,15 +155,16 @@ build(std::string const & name, sexp::Value::Ref const & v) {
 }
 
 size_t
-dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
-     std::ostream & o) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
+dump(tree::Value const& v, const tree::Scanner::Format f, const size_t indent,
+     std::ostream& o)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
   size_t nindent = indent + 1;
   /**
    * Compute the largest key
    */
   size_t max = 0;
-  for (auto const & e: w) {
+  for (auto const& e : w) {
     if (e.first.length() > max) {
       max = e.first.length();
     }
@@ -173,7 +174,7 @@ dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
    */
   o << "(";
   auto it = w.begin();
-  while(it != w.end()) {
+  while (it != w.end()) {
     o << "(";
     if (f == tree::Scanner::Format::Default) {
       o << std::setw(max) << std::left;
@@ -195,6 +196,4 @@ dump(tree::Value const & v, const tree::Scanner::Format f, const size_t indent,
   return nindent;
 }
 
-} // namespace Object
-} // namespace sexpfmt
-} // namespace ace
+}}}

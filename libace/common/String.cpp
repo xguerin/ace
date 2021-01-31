@@ -27,20 +27,26 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace common {
-namespace String {
+namespace ace { namespace common { namespace String {
 
-std::ostream &
-indent(std::ostream & o, int l) {
-  for (int i = 0; i < l; i += 1) o << ' ';
+std::ostream&
+indent(std::ostream& o, int l)
+{
+  for (int i = 0; i < l; i += 1) {
+    o << ' ';
+  }
   return o;
 }
 
 template<>
 bool
-is<long>(std::string const & s) {
-  for (auto & c : s) if (not isdigit(c) and c != '-' and c != '+') return false;
+is<long>(std::string const& s)
+{
+  for (auto& c : s) {
+    if (not isdigit(c) and c != '-' and c != '+') {
+      return false;
+    }
+  }
   long r;
   std::istringstream iss(s);
   iss >> std::boolalpha >> r;
@@ -49,10 +55,21 @@ is<long>(std::string const & s) {
 
 template<>
 bool
-is<double>(std::string const & s) {
-  for (auto & c : s) if (not isdigit(c)) switch (c) {
-    case '.': case '-': case '+': case 'e': case 'E': break;
-    default: return false;
+is<double>(std::string const& s)
+{
+  for (auto& c : s) {
+    if (not isdigit(c)) {
+      switch (c) {
+        case '.':
+        case '-':
+        case '+':
+        case 'e':
+        case 'E':
+          break;
+        default:
+          return false;
+      }
+    }
   }
   if (s.find_first_of('.') == std::string::npos and
       s.find_first_of('e') == std::string::npos and
@@ -83,7 +100,8 @@ is<double>(std::string const & s) {
 
 template<>
 double
-value<double>(std::string const & s) {
+value<double>(std::string const& s)
+{
   double r;
   std::istringstream iss(s);
   iss >> std::boolalpha >> r;
@@ -92,17 +110,21 @@ value<double>(std::string const & s) {
 
 template<>
 std::string
-value(std::string const & s) {
+value(std::string const& s)
+{
   return s;
 }
 
 std::string
-prefix(std::string const & a, std::string const & b) {
+prefix(std::string const& a, std::string const& b)
+{
   std::ostringstream oss;
   auto ita = a.begin();
   auto itb = b.begin();
   while (ita != a.end() and itb != b.end()) {
-    if (*ita != *itb) break;
+    if (*ita != *itb) {
+      break;
+    }
     oss << *ita;
     ita++;
     itb++;
@@ -111,72 +133,98 @@ prefix(std::string const & a, std::string const & b) {
 }
 
 std::string
-normalize(std::string const & in) {
+normalize(std::string const& in)
+{
   std::locale loc;
   std::ostringstream oss;
-  if (std::isdigit(in[0])) oss << "_";
-  for (auto & c : in) oss << (std::isalnum(c, loc) ? c : '_');
-  return oss.str();
-}
-
-std::string
-expand(std::string const & s, const char c, std::string const & v) {
-  std::ostringstream oss;
-  for (auto & e : s) if (e == c) {
-    oss << v;
-  } else {
-    oss << e;
+  if (std::isdigit(in[0])) {
+    oss << "_";
+  }
+  for (auto& c : in) {
+    oss << (std::isalnum(c, loc) ? c : '_');
   }
   return oss.str();
 }
 
-std::string &
-ltrim(std::string & s) {
+std::string
+expand(std::string const& s, const char c, std::string const& v)
+{
+  std::ostringstream oss;
+  for (auto& e : s) {
+    if (e == c) {
+      oss << v;
+    } else {
+      oss << e;
+    }
+  }
+  return oss.str();
+}
+
+std::string&
+ltrim(std::string& s)
+{
   s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-                                  [](int c){ return !std::isspace(c); }));
+                                  [](int c) { return !std::isspace(c); }));
   return s;
 }
 
-std::string &
-rtrim(std::string & s) {
-  s.erase(std::find_if(s.rbegin(), s.rend(),
-                       [](int c){ return !std::isspace(c); }).base(), s.end());
+std::string&
+rtrim(std::string& s)
+{
+  s.erase(
+    std::find_if(s.rbegin(), s.rend(), [](int c) { return !std::isspace(c); })
+      .base(),
+    s.end());
   return s;
 }
 
-std::string &
-trim(std::string & s) {
+std::string&
+trim(std::string& s)
+{
   return ltrim(rtrim(s));
 }
 
 std::string
-camelify(std::string const & s) {
+camelify(std::string const& s)
+{
   std::vector<std::string> parts;
   split(s, '_', parts);
   std::ostringstream oss;
-  for (auto const & e : parts) if (not e.empty()) {
-    std::string temp(e);
-    if (std::isalpha(temp[0])) temp[0] = std::toupper(temp[0]);
-    oss << temp;
+  for (auto const& e : parts) {
+    if (not e.empty()) {
+      std::string temp(e);
+      if (std::isalpha(temp[0])) {
+        temp[0] = std::toupper(temp[0]);
+      }
+      oss << temp;
+    }
   }
   return oss.str();
 }
 
 void
-dumpCharArray(std::string const & s, std::ostream & o){
+dumpCharArray(std::string const& s, std::ostream& o)
+{
   o << std::setw(2) << std::setfill('0');
   size_t count = 0;
-  for (auto const & e : s) {
-    if (count % 13 == 0) o << "  ";
+  for (auto const& e : s) {
+    if (count % 13 == 0) {
+      o << "  ";
+    }
     o << "0x" << std::hex << static_cast<int>(e);
     count += 1;
-    if (count < s.size()) o << ",";
-    if (count % 13 == 0) o <<std::endl;
-    else o << " ";
+    if (count < s.size()) {
+      o << ",";
+    }
+    if (count % 13 == 0) {
+      o << std::endl;
+    } else {
+      o << " ";
+    }
   }
-  if (count % 13 != 0) o << std::endl;
+  if (count % 13 != 0) {
+    o << std::endl;
+  }
 }
 
-} // namespace String
-} // namespace common
-} // namespace ace
+}}}

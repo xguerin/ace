@@ -25,31 +25,30 @@
 #include "Attribute.h"
 #include <ace/model/Hook.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class HookAttribute : public Attribute {
- public:
-
+class HookAttribute : public Attribute
+{
+public:
   HookAttribute() = delete;
-  HookAttribute(std::string const & n, bool o);
+  HookAttribute(std::string const& n, bool o);
 
   // Object
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
 
   // Instance
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  bool flattenInstance(tree::Object & r, tree::Value & v);
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  bool flattenInstance(tree::Object& r, tree::Value& v);
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
-  void load(Attribute const & a);
+  void load(Attribute const& a);
 
   // Attribute
 
-  bool merge(Attribute const & b);
+  bool merge(Attribute const& b);
 
   operator tree::Checker::Pattern() const;
   operator std::string() const;
@@ -58,12 +57,10 @@ class HookAttribute : public Attribute {
 
   // Accessors
 
-  Hook const & hook() const;
+  Hook const& hook() const;
 
- private:
-
+private:
   Hook m_hook;
 };
 
-} // namespace model
-} // namespace ace
+}}

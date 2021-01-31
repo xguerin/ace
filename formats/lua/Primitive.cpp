@@ -29,18 +29,19 @@
 
 namespace {
 
-static bool escape(const char c) {
+static bool
+escape(const char c)
+{
   return c == '\'';
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace luafmt {
-namespace Primitive {
+namespace ace { namespace luafmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & n, lua_State * L) {
+build(std::string const& n, lua_State* L)
+{
   switch (lua_type(L, -1)) {
     case LUA_TBOOLEAN: {
       bool v = lua_toboolean(L, -1);
@@ -60,19 +61,25 @@ build(std::string const & n, lua_State * L) {
       std::string v(lua_tostring(L, -1));
       return tree::Primitive::build(n, v);
     }
-    default: break;
+    default:
+      break;
   }
   return tree::Value::Ref();
 }
 
 void
-dump(tree::Value const & v, std::ostream & o, int l, bool i) {
-  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
-  if (not i) common::String::indent(o, l);
+dump(tree::Value const& v, std::ostream& o, int l, bool i)
+{
+  tree::Primitive const& p = static_cast<tree::Primitive const&>(v);
+  if (not i) {
+    common::String::indent(o, l);
+  }
   if (p.is<std::string>()) {
     o << '\'';
-    for (auto & c : p.value()) {
-      if (escape(c)) o << '\\';
+    for (auto& c : p.value()) {
+      if (escape(c)) {
+        o << '\\';
+      }
       o << c;
     }
     o << '\'';
@@ -81,7 +88,4 @@ dump(tree::Value const & v, std::ostream & o, int l, bool i) {
   }
 }
 
-} // namespace Primitive
-} // namespace luafmt
-} // namespace ace
-
+}}}

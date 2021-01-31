@@ -26,32 +26,29 @@
 #include <ace/tree/Path.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Hook {
- public:
+class Hook
+{
+public:
+  Hook() : m_exact(false) {}
 
-  Hook() : m_exact(false) { }
+  static bool validate(tree::Object const& r);
+  void load(tree::Object const& r);
 
-  static bool validate(tree::Object const & r);
-  void load(tree::Object const & r);
+  bool match(std::string const& s) const;
+  bool transform(std::string const& v, std::string& r) const;
 
-  bool match(std::string const & s) const;
-  bool transform(std::string const & v, std::string & r) const;
-
-  tree::Path const & path() const;
-  std::string const & pattern() const;
-  std::string const & value() const;
+  tree::Path const& path() const;
+  std::string const& pattern() const;
+  std::string const& value() const;
   bool exact() const;
 
- private:
-
-  tree::Path  m_path;
+private:
+  tree::Path m_path;
   std::string m_pattern;
   std::string m_value;
-  bool        m_exact;
+  bool m_exact;
 };
 
-} // namespace model
-} // namespace ace
+}}

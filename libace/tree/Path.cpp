@@ -34,8 +34,9 @@ using namespace ace::tree;
 using namespace ace::tree::path;
 
 static bool
-match(Path const & a, Path const & b, Path::const_iterator const & i,
-      Path::const_iterator const & j) {
+match(Path const& a, Path const& b, Path::const_iterator const& i,
+      Path::const_iterator const& j)
+{
   //
   // Match if both path are done
   //
@@ -77,7 +78,8 @@ match(Path const & a, Path const & b, Path::const_iterator const & i,
   //
   // Ranged items
   //
-  if ((*i)->type() == Item::Type::Ranged && (*j)->type() == Item::Type::Ranged) {
+  if ((*i)->type() == Item::Type::Ranged &&
+      (*j)->type() == Item::Type::Ranged) {
     if ((*i)->range().contains((*j)->range().low)) {
       return match(a, b, a.down(i), b.down(j));
     } else {
@@ -85,8 +87,9 @@ match(Path const & a, Path const & b, Path::const_iterator const & i,
       return false;
     }
   }
-  if ((*i)->type() == Item::Type::Indexed && (*j)->type() == Item::Type::Ranged) {
-    auto const & x = (*i)->indexes();
+  if ((*i)->type() == Item::Type::Indexed &&
+      (*j)->type() == Item::Type::Ranged) {
+    auto const& x = (*i)->indexes();
     if (std::find(x.begin(), x.end(), (*j)->range().low) != x.end()) {
       return match(a, b, a.down(i), b.down(j));
     } else {
@@ -97,8 +100,9 @@ match(Path const & a, Path const & b, Path::const_iterator const & i,
   //
   // Indexed items
   //
-  if ((*i)->type() == Item::Type::Indexed && (*j)->type() == Item::Type::Indexed) {
-    auto const & x = (*i)->indexes();
+  if ((*i)->type() == Item::Type::Indexed &&
+      (*j)->type() == Item::Type::Indexed) {
+    auto const& x = (*i)->indexes();
     if (std::find(x.begin(), x.end(), (*j)->indexes().front()) != x.end()) {
       return match(a, b, a.down(i), b.down(j));
     } else {
@@ -106,7 +110,8 @@ match(Path const & a, Path const & b, Path::const_iterator const & i,
       return false;
     }
   }
-  if ((*i)->type() == Item::Type::Ranged && (*j)->type() == Item::Type::Indexed) {
+  if ((*i)->type() == Item::Type::Ranged &&
+      (*j)->type() == Item::Type::Indexed) {
     if ((*i)->range().contains((*j)->indexes().front())) {
       return match(a, b, a.down(i), b.down(j));
     } else {
@@ -117,34 +122,37 @@ match(Path const & a, Path const & b, Path::const_iterator const & i,
   //
   // Return default value
   //
-  ACE_LOG(Debug, (*i)->toString(), " and ", (*j)->toString(), " are not compatible");
+  ACE_LOG(Debug, (*i)->toString(), " and ", (*j)->toString(),
+          " are not compatible");
   return false;
 }
 
 }
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
 Path::Ref
-Path::build(Path const & p) {
+Path::build(Path const& p)
+{
   return Ref(new Path(p));
 }
 
 Path
-Path::parse(std::string const & s) {
-  std::string v(s);
-  return path::Scan().parse(v);
+Path::parse(std::string const& s)
+{
+  return path::Scan().parse(s);
 }
 
-Path &
-Path::push(path::Item::Ref const & ir) {
+Path&
+Path::push(path::Item::Ref const& ir)
+{
   m_items.push_back(ir);
   return *this;
 }
 
 Path
-Path::sub(const_iterator const & from, const_iterator const & to) const {
+Path::sub(const_iterator const& from, const_iterator const& to) const
+{
   Path result;
   if (from != begin() && !m_items.empty()) {
     result.m_items.push_back(m_items[0]);
@@ -156,20 +164,24 @@ Path::sub(const_iterator const & from, const_iterator const & to) const {
 }
 
 Path
-Path::merge(Path const & o) const {
+Path::merge(Path const& o) const
+{
   if (m_items.empty()) {
     return o;
   }
   Path result(*this);
-  for (auto & e: o.m_items) if (!e->root()) {
-    result.m_items.push_back(e);
+  for (auto& e : o.m_items) {
+    if (!e->root()) {
+      result.m_items.push_back(e);
+    }
   }
   return result;
 }
 
 bool
-Path::generative() const {
-  for (auto & e : m_items) {
+Path::generative() const
+{
+  for (auto& e : m_items) {
     if (e->type() == path::Item::Type::Any or e->recursive()) {
       return true;
     }
@@ -177,7 +189,7 @@ Path::generative() const {
       return true;
     }
     if (e->type() == path::Item::Type::Ranged) {
-      auto const & range = e->range();
+      auto const& range = e->range();
       if ((range.high - range.low) / range.steps > 1) {
         return true;
       }
@@ -187,32 +199,44 @@ Path::generative() const {
 }
 
 bool
-Path::global() const {
-  if (m_items.empty()) return false;
+Path::global() const
+{
+  if (m_items.empty()) {
+    return false;
+  }
   return m_items.front()->type() == path::Item::Type::Global;
 }
 
 bool
-Path::operator<(Path const & o) const {
+Path::operator<(Path const& o) const
+{
   return toString() < o.toString();
 }
 
 bool
-Path::operator==(Path const & o) const {
-  if (m_items.size() != o.m_items.size()) return false;
-  for (auto lit = m_items.begin(), rit = o.m_items.begin(); lit != m_items.end(); lit++, rit++) {
-    if (**lit != **rit) return false;
+Path::operator==(Path const& o) const
+{
+  if (m_items.size() != o.m_items.size()) {
+    return false;
+  }
+  for (auto lit = m_items.begin(), rit = o.m_items.begin();
+       lit != m_items.end(); lit++, rit++) {
+    if (**lit != **rit) {
+      return false;
+    }
   }
   return true;
 }
 
 bool
-Path::operator!=(Path const & o) const {
+Path::operator!=(Path const& o) const
+{
   return not operator==(o);
 }
 
 bool
-Path::match(Path const & p) const {
+Path::match(Path const& p) const
+{
   if (m_items.empty() || p.m_items.empty()) {
     ACE_LOG(Debug, "Matching paths cannot be empty");
     return false;
@@ -225,7 +249,8 @@ Path::match(Path const & p) const {
 }
 
 std::string
-Path::toString(const bool useBrackets) const {
+Path::toString(const bool useBrackets) const
+{
   std::ostringstream o;
   for (size_t i = 0; i < m_items.size(); i += 1) {
     o << m_items[i]->toString(useBrackets);
@@ -233,80 +258,92 @@ Path::toString(const bool useBrackets) const {
   return o.str();
 }
 
-Path::operator std::string() const {
+Path::operator std::string() const
+{
   return toString();
 }
 
 Path::iterator
-Path::begin() {
+Path::begin()
+{
   return m_items.begin();
 }
 
 Path::iterator
-Path::end() {
+Path::end()
+{
   return m_items.end();
 }
 
 Path::reverse_iterator
-Path::rbegin() {
+Path::rbegin()
+{
   return m_items.rbegin();
 }
 
 Path::reverse_iterator
-Path::rend() {
+Path::rend()
+{
   return m_items.rend();
 }
 
 Path::const_iterator
-Path::begin() const {
+Path::begin() const
+{
   return m_items.begin();
 }
 
 Path::const_iterator
-Path::end() const {
+Path::end() const
+{
   return m_items.end();
 }
 
 Path::const_reverse_iterator
-Path::rbegin() const {
+Path::rbegin() const
+{
   return m_items.rbegin();
 }
 
 Path::const_reverse_iterator
-Path::rend() const {
+Path::rend() const
+{
   return m_items.rend();
 }
 
 Path::iterator
-Path::up(iterator const & it) const {
+Path::up(iterator const& it) const
+{
   auto nit(it);
   return --nit;
 }
 
 Path::iterator
-Path::down(iterator const & it) const {
+Path::down(iterator const& it) const
+{
   auto nit(it);
   return ++nit;
 }
 
 Path::const_iterator
-Path::up(const_iterator const & it) const {
+Path::up(const_iterator const& it) const
+{
   auto nit(it);
   return --nit;
 }
 
 Path::const_iterator
-Path::down(const_iterator const & it) const {
+Path::down(const_iterator const& it) const
+{
   auto nit(it);
   return ++nit;
 }
 
-std::ostream &
-operator<<(std::ostream & o, Path const & p) {
+std::ostream&
+operator<<(std::ostream& o, Path const& p)
+{
   o << p.toString();
   return o;
 }
 
-} // namespace tree
-} // namespace ace
-
+}}

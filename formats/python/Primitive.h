@@ -26,13 +26,9 @@
 #include <ace/tree/Primitive.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace pyfmt {
-namespace Primitive {
+namespace ace { namespace pyfmt { namespace Primitive {
 
-tree::Value::Ref build(std::string const & n, PyObject * o);
-void dump(tree::Value const & v, std::ostream & o, int l, bool i);
+tree::Value::Ref build(std::string const& n, PyObject* o);
+void dump(tree::Value const& v, std::ostream& o, int l, bool i);
 
-} // namespace Primitive
-} // namespace pyfmt
-} // namespace ace
+}}}

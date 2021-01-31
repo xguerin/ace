@@ -33,95 +33,93 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Plugin : public Type<void, FormatChecker<void>> {
- public:
-
+class Plugin : public Type<void, FormatChecker<void>>
+{
+public:
   using ModelAttributeType = FlagAttribute<std::string>;
 
   Plugin();
 
-  bool match(tree::Path const & path) const;
-  Class const & getClassFor(tree::Path const & path) const;
+  bool match(tree::Path const& path) const;
+  Class const& getClassFor(tree::Path const& path) const;
 
   // Object
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
   bool flattenModel();
   bool validateModel();
 
-  bool injectInherited(tree::Object const & r, Object const & o, tree::Value & v) const;
+  bool injectInherited(tree::Object const& r, Object const& o,
+                       tree::Value& v) const;
 
   // Instance
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  void expandInstance(tree::Object & r, tree::Value & v);
-  bool flattenInstance(tree::Object & r, tree::Value & v);
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  void expandInstance(tree::Object& r, tree::Value& v);
+  bool flattenInstance(tree::Object& r, tree::Value& v);
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
   // Coach
 
-  void display(Coach::Branch const & br) const;
-  bool explain(tree::Path const & p, tree::Path::const_iterator const & i) const;
+  void display(Coach::Branch const& br) const;
+  bool explain(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
   // Generator
 
-  void collectModelFileDependencies(std::set<std::string> & d) const;
+  void collectModelFileDependencies(std::set<std::string>& d) const;
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
   using Type::doBuildDefinition;
-  void doBuildDefinition(std::string const & s, std::string const & v, std::string const & e,
-                         std::ostream & o, int l) const;
+  void doBuildDefinition(std::string const& s, std::string const& v,
+                         std::string const& e, std::ostream& o, int l) const;
 
   using Type::doSerializerDefinition;
-  void doSerializerDefinition(std::string const & c, std::string const & n,
-                              std::string const & v, const bool b,
-                              std::ostream & o, int l) const;
+  void doSerializerDefinition(std::string const& c, std::string const& n,
+                              std::string const& v, const bool b,
+                              std::ostream& o, int l) const;
 
-  void doGetterInterface(std::ostream & o, int l = 0) const;
-  void doGetterDeclaration(std::ostream & o, int l = 0) const;
-  void doGetterDefinition(std::ostream & o, int l = 0) const;
+  void doGetterInterface(std::ostream& o, int l = 0) const;
+  void doGetterDeclaration(std::ostream& o, int l = 0) const;
+  void doGetterDefinition(std::ostream& o, int l = 0) const;
 
   // Basic Type
 
-  bool merge(BasicType const & b);
-  BasicType::Ref clone(std::string const & n) const;
+  bool merge(BasicType const& b);
+  BasicType::Ref clone(std::string const& n) const;
   std::string typeName() const;
 
-  bool has(tree::Path const & path, tree::Path::const_iterator const & i) const;
+  bool has(tree::Path const& path, tree::Path::const_iterator const& i) const;
 
-  void get(tree::Path const & p, tree::Path::const_iterator const & i,
-           std::list<BasicType::Ref> & r) const;
+  void get(tree::Path const& p, tree::Path::const_iterator const& i,
+           std::list<BasicType::Ref>& r) const;
 
-  void promoteArity(tree::Path const & p, tree::Path::const_iterator const & i);
-  void disable(tree::Path const & p, tree::Path::const_iterator const & i);
+  void promoteArity(tree::Path const& p, tree::Path::const_iterator const& i);
+  void disable(tree::Path const& p, tree::Path::const_iterator const& i);
 
   bool isObject() const;
 
-  std::vector<std::string> values(tree::Object const & r) const;
+  std::vector<std::string> values(tree::Object const& r) const;
 
   // Accessors
 
-  ModelAttributeType const & modelAttribute() const;
+  ModelAttributeType const& modelAttribute() const;
 
-  Model & model();
-  Model const & model() const;
+  Model& model();
+  Model const& model() const;
 
-  std::map<tree::Path, Class::Ref> & plugins();
-  std::map<tree::Path, Class::Ref> const & plugins() const;
+  std::map<tree::Path, Class::Ref>& plugins();
+  std::map<tree::Path, Class::Ref> const& plugins() const;
 
- private:
-
-  Model::Ref                       m_model;
-  Arity                            m_targetArity;
+private:
+  Model::Ref m_model;
+  Arity m_targetArity;
   std::map<tree::Path, Class::Ref> m_plugins;
   std::map<tree::Path, Class::Ref> m_instances;
 };
 
-} // namespace model
-} // namespace ace
+}}

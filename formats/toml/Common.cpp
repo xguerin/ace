@@ -28,31 +28,25 @@
 #include <iostream>
 #include <string>
 
-namespace ace {
-namespace tomlfmt {
-namespace Common {
+namespace ace { namespace tomlfmt { namespace Common {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & value) {
+build(std::string const& name, toml::Value const& value)
+{
   tree::Value::Ref result = nullptr;
   if (value.is<toml::Table>()) {
     result = Object::build(name, value);
   } else if (value.is<toml::Array>()) {
     result = Array::build(name, value);
-  } else if (value.is<std::string>()) {
-    result = Primitive::build(name, value);
-  } else if (value.is<int64_t>()) {
-    result = Primitive::build(name, value);
-  } else if (value.is<double>()) {
-    result = Primitive::build(name, value);
-  } else if (value.is<bool>()) {
+  } else {
     result = Primitive::build(name, value);
   }
   return result;
 }
 
 tree::Value::Ref
-parseFile(std::string const & path) {
+parseFile(std::string const& path)
+{
   std::ifstream ifs(path);
   if (ifs.fail()) {
     ACE_LOG(Error, "Cannot open file: ", path);
@@ -63,7 +57,8 @@ parseFile(std::string const & path) {
 }
 
 tree::Value::Ref
-parseString(std::string const & str) {
+parseString(std::string const& str)
+{
   std::istringstream iss(str);
   tree::Value::Ref result = nullptr;
   toml::ParseResult pr = toml::parse(iss);
@@ -72,18 +67,21 @@ parseString(std::string const & str) {
 }
 
 toml::Value
-dump(tree::Value const & v) {
+dump(tree::Value const& v)
+{
   switch (v.type()) {
-    case tree::Value::Type::Boolean   :
-    case tree::Value::Type::Float     :
-    case tree::Value::Type::Integer   :
-    case tree::Value::Type::String    : return Primitive::dump(v);
-    case tree::Value::Type::Array     : return Array::dump(v);
-    case tree::Value::Type::Object    : return Object::dump(v);
-    default                           : return toml::Value();
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::Float:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::String:
+      return Primitive::dump(v);
+    case tree::Value::Type::Array:
+      return Array::dump(v);
+    case tree::Value::Type::Object:
+      return Object::dump(v);
+    default:
+      return toml::Value();
   }
 }
 
-} // namespace Common
-} // namespace inifmt
-} // namespace ace
+}}}

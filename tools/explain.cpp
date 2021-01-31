@@ -31,24 +31,29 @@
 #include <string>
 #include <vector>
 
-int main(int argc, char * argv[]) try {
-  char ** nargv = ace::common::Arguments::normalize(argc, argv);
+int
+main(int argc, char* argv[])
+try {
+  char** nargv = ace::common::Arguments::normalize(argc, argv);
   TCLAP::CmdLine cmd("Advanced Configuration Explainer", ' ', ACE_VERSION);
 
-  TCLAP::MultiArg<std::string> libPath("I", "include", "Model include path", false, "string");
+  TCLAP::MultiArg<std::string> libPath("I", "include", "Model include path",
+                                       false, "string");
   cmd.add(libPath);
 
-  TCLAP::ValueArg<std::string> optPath("p", "path", "Option path", false, "/", "string");
+  TCLAP::ValueArg<std::string> optPath("p", "path", "Option path", false, "/",
+                                       "string");
   cmd.add(optPath);
 
-  TCLAP::UnlabeledMultiArg<std::string> mdlPath("models", "Model file names", true, "string");
+  TCLAP::UnlabeledMultiArg<std::string> mdlPath("models", "Model file names",
+                                                true, "string");
   cmd.add(mdlPath);
 
   cmd.parse(argc, nargv);
 
   // update parameters
 
-  for (auto & p : libPath.getValue()) {
+  for (auto& p : libPath.getValue()) {
     MASTER.addModelDirectory(ace::fs::Path(p, true));
   }
 
@@ -56,9 +61,11 @@ int main(int argc, char * argv[]) try {
 
   std::vector<ace::model::Model::Ref> models(mdlPath.getValue().size());
   ace::model::Model::Ref mdl;
-  for (auto & m : mdlPath.getValue()) {
+  for (auto& m : mdlPath.getValue()) {
     mdl = ace::model::Model::load(m);
-    if (mdl == nullptr) return -1;
+    if (mdl == nullptr) {
+      return -1;
+    }
     models.push_back(mdl);
   }
 
@@ -76,19 +83,18 @@ int main(int argc, char * argv[]) try {
 
   // Free the normalized arguments resource
 
-  for (int i = 0; i < argc; i += 1) free(nargv[i]);
+  for (int i = 0; i < argc; i += 1) {
+    free(nargv[i]);
+  }
   free(nargv);
 
   return 0;
-}
-catch (TCLAP::ArgException const & e) {
+} catch (TCLAP::ArgException const& e) {
   ACE_LOG(Error, e.error(), " for argument ", e.argId());
-}
-catch (std::invalid_argument const & e) {
+} catch (std::invalid_argument const& e) {
   ACE_LOG(Error, "Invalid argument: ", e.what());
   return -1;
-}
-catch (std::runtime_error const & e) {
+} catch (std::runtime_error const& e) {
   ACE_LOG(Error, "Runtime error: ", e.what());
   return -1;
 }

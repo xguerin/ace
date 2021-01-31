@@ -31,46 +31,43 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class ArityAttribute : public Attribute {
- public:
-
+class ArityAttribute : public Attribute
+{
+public:
   ArityAttribute() = delete;
-  ArityAttribute(std::string const & n, bool o);
+  ArityAttribute(std::string const& n, bool o);
 
   // Object
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
 
   // Instance
 
-  bool checkInstance(tree::Object const & r, tree::Value const & v) const;
-  bool resolveInstance(tree::Object const & r, tree::Value const & v) const;
+  bool checkInstance(tree::Object const& r, tree::Value const& v) const;
+  bool resolveInstance(tree::Object const& r, tree::Value const& v) const;
 
-  void load(Attribute const & a);
+  void load(Attribute const& a);
   bool check(const size_t v) const;
 
   // Attribute
 
-  Arity & value();
-  Arity const & value() const;
+  Arity& value();
+  Arity const& value() const;
 
-  bool merge(Attribute const & b);
+  bool merge(Attribute const& b);
 
   operator tree::Checker::Pattern() const;
   operator std::string() const;
 
   Attribute::Ref clone() const;
 
- private:
-
-  bool validate(tree::Object const & r, tree::Value const & v) const;
+private:
+  bool validate(tree::Object const& r, tree::Value const& v) const;
 
   Arity m_arity;
 };
 
-} // namespace model
-} // namespace ace
+}}

@@ -26,12 +26,11 @@
 #include <ace/common/String.h>
 #include <string>
 
-namespace ace {
-namespace luafmt {
-namespace Array {
+namespace ace { namespace luafmt { namespace Array {
 
 tree::Value::Ref
-build(std::string const & n, lua_State * L) {
+build(std::string const& n, lua_State* L)
+{
   tree::Array::Ref array = tree::Array::build(n);
   tree::Value::Ref v(nullptr);
   lua_pushnil(L);
@@ -49,22 +48,25 @@ build(std::string const & n, lua_State * L) {
 }
 
 void
-dump(tree::Value const & v, std::ostream & o, int l, bool i) {
-  tree::Array const & a = static_cast<tree::Array const &>(v);
+dump(tree::Value const& v, std::ostream& o, int l, bool i)
+{
+  tree::Array const& a = static_cast<tree::Array const&>(v);
   bool inl = false;
-  if (not i) common::String::indent(o, l);
+  if (not i) {
+    common::String::indent(o, l);
+  }
   o << '{' << std::endl;
   size_t count = 0;
-  for (auto & w : a) {
+  for (auto& w : a) {
     dump_value(*w, o, l + 2, inl);
     inl = true;
-    if (count < a.size() - 1) o << ", ";
+    if (count < a.size() - 1) {
+      o << ", ";
+    }
     count += 1;
   }
   o << std::endl;
   common::String::indent(o, l) << " }";
 }
 
-} // namespace Array
-} // namespace luafmt
-} // namespace ace
+}}}

@@ -28,39 +28,37 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Enum : public EnumeratedType<std::string, true> {
- public:
-
+class Enum : public EnumeratedType<std::string, true>
+{
+public:
   using BindAttributeType = MapAttribute<int>;
 
   Enum();
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
   bool hasPrivateNamespaceDefinition() const;
-  void doPrivateNamespaceDefinition(std::ostream & o, int l) const;
+  void doPrivateNamespaceDefinition(std::ostream& o, int l) const;
 
   bool hasTypeDeclaration() const;
-  void doTypeDeclaration(std::ostream & o, int l) const;
+  void doTypeDeclaration(std::ostream& o, int l) const;
 
   using EnumeratedType::doBuildDefinition;
-  void doBuildDefinition(std::string const & s, std::string const & v, std::string const & e,
-                         std::ostream & o, int l) const;
+  void doBuildDefinition(std::string const& s, std::string const& v,
+                         std::string const& e, std::ostream& o, int l) const;
 
-  void doGetterInterface(std::ostream & o, int level = 0) const;
-  void doGetterDeclaration(std::ostream & o, int level = 0) const;
-  void doGetterDefinition(std::ostream & o, int level = 0) const;
+  void doGetterInterface(std::ostream& o, int level = 0) const;
+  void doGetterDeclaration(std::ostream& o, int level = 0) const;
+  void doGetterDefinition(std::ostream& o, int level = 0) const;
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
   std::string typeName() const;
 
-  BindAttributeType & bindAttribute();
-  BindAttributeType const & bindAttribute() const;
+  BindAttributeType& bindAttribute();
+  BindAttributeType const& bindAttribute() const;
 };
 
-} // namespace model
-} // namespace ace
+}}

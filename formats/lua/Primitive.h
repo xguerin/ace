@@ -31,13 +31,9 @@ extern "C" {
 #include <lualib.h>
 }
 
-namespace ace {
-namespace luafmt {
-namespace Primitive {
+namespace ace { namespace luafmt { namespace Primitive {
 
-tree::Value::Ref build(std::string const & n, lua_State * L);
-void dump(tree::Value const & v, std::ostream & o, int l, bool i);
+tree::Value::Ref build(std::string const& n, lua_State* L);
+void dump(tree::Value const& v, std::ostream& o, int l, bool i);
 
-} // namespace Primitive
-} // namespace luafmt
-} // namespace ace
+}}}

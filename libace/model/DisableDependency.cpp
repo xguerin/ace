@@ -34,64 +34,76 @@
 
 namespace {
 
-const ace::model::BasicType *
-basicTypeFor(const ace::model::Object * o) {
-  return static_cast<const ace::model::BasicType *>(o->parent()->parent()->parent());
+const ace::model::BasicType*
+basicTypeFor(const ace::model::Object* o)
+{
+  return static_cast<const ace::model::BasicType*>(
+    o->parent()->parent()->parent());
 }
 
-ace::model::Model *
-modelFor(ace::model::Object * o) {
-  return static_cast<ace::model::Model *>(o->owner());
+ace::model::Model*
+modelFor(ace::model::Object* o)
+{
+  return static_cast<ace::model::Model*>(o->owner());
 }
 
-ace::model::Body *
-bodyFor(ace::model::Object * o) {
-  return & modelFor(o)->body();
+ace::model::Body*
+bodyFor(ace::model::Object* o)
+{
+  return &modelFor(o)->body();
 }
 
-} // namespace
+}
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-DisableDependency::DisableDependency() {
-  m_schm["disable"] = { ace::tree::Value::Type::Array , false };
+DisableDependency::DisableDependency()
+{
+  m_schm["disable"] = { ace::tree::Value::Type::Array, false };
 }
 
 bool
-DisableDependency::match(tree::Value const & t) {
+DisableDependency::match(tree::Value const& t)
+{
   return t.has("disable");
 }
 
 bool
-DisableDependency::checkModel(tree::Value const & t) const {
-  if (not Dependency::checkModel(t)) return false;
-  auto const & ary = static_cast<tree::Array const &>(t["disable"]);
+DisableDependency::checkModel(tree::Value const& t) const
+{
+  if (not Dependency::checkModel(t)) {
+    return false;
+  }
+  auto const& ary = static_cast<tree::Array const&>(t["disable"]);
   if (ary.size() == 0) {
     ERROR(ERR_EMPTY_REQS);
     return false;
   }
-  for (auto & e : ary) if (e->type() != tree::Value::Type::String) {
-    ERROR(ERR_WRONG_REQ_TYPE);
-    return false;
+  for (auto& e : ary) {
+    if (e->type() != tree::Value::Type::String) {
+      ERROR(ERR_WRONG_REQ_TYPE);
+      return false;
+    }
   }
   return true;
 }
 
 void
-DisableDependency::loadModel(tree::Value const & t) {
-  auto const & ary = static_cast<tree::Array const &>(t["disable"]);
-  for (auto & e : ary) {
-    m_deps.insert(static_cast<tree::Primitive const &>(*e).value<std::string>());
+DisableDependency::loadModel(tree::Value const& t)
+{
+  auto const& ary = static_cast<tree::Array const&>(t["disable"]);
+  for (auto& e : ary) {
+    m_deps.insert(static_cast<tree::Primitive const&>(*e).value<std::string>());
   }
   Dependency::loadModel(t);
 }
 
 void
-DisableDependency::expandInstance(tree::Object & r, tree::Value & v) {
+DisableDependency::expandInstance(tree::Object& r, tree::Value& v)
+{
   Dependency::expandInstance(r, v);
-  Body * body = bodyFor(this);
-  for (auto & dep : m_deps) {
+  Body* body = bodyFor(this);
+  for (auto& dep : m_deps) {
     tree::Path dest;
     buildModelPath(dep, r, dest);
     if (body->has(dest)) {
@@ -102,41 +114,49 @@ DisableDependency::expandInstance(tree::Object & r, tree::Value & v) {
 }
 
 bool
-DisableDependency::flattenInstance(tree::Object & r, tree::Value & v) {
+DisableDependency::flattenInstance(tree::Object& r, tree::Value& v)
+{
   int score = 0;
-  if (not Dependency::flattenInstance(r, v)) return false;
-  Body * body = bodyFor(this);
-  for (auto & dep : m_deps) {
+  if (not Dependency::flattenInstance(r, v)) {
+    return false;
+  }
+  Body* body = bodyFor(this);
+  for (auto& dep : m_deps) {
     tree::Path dest;
     buildModelPath(dep, r, dest);
     std::list<BasicType::Ref> lasso;
     body->get(dest, lasso);
-    for (auto & e : lasso) if (not e->disabled()) {
-      ERROR(ERR_FAILED_DISABLE_TYPE(dest));
-      score += 1;
+    for (auto& e : lasso) {
+      if (not e->disabled()) {
+        ERROR(ERR_FAILED_DISABLE_TYPE(dest));
+        score += 1;
+      }
     }
   }
   return score == 0;
 }
 
 int
-DisableDependency::priority() const {
+DisableDependency::priority() const
+{
   return 1;
 }
 
 DisableDependency::Ref
-DisableDependency::clone() const {
+DisableDependency::clone() const
+{
   return DisableDependency::Ref(new DisableDependency(*this));
 }
 
-DisableDependency::operator std::string() const {
+DisableDependency::operator std::string() const
+{
   std::ostringstream o;
-  const BasicType * type = basicTypeFor(this);
+  const BasicType* type = basicTypeFor(this);
   size_t cur = 0;
   o << "disable ";
-  for (auto & e : m_deps) {
+  for (auto& e : m_deps) {
     if (hasPlaceHolder(e)) {
-      const String * strType = dynamic_cast<const String *>(type);
+      const String* strType = dynamic_cast<const String*>(type);
       if (strType != nullptr) {
         if (strType->hasEitherAttribute()) {
           o << (std::string)strType->eitherAttribute();
@@ -147,11 +167,11 @@ DisableDependency::operator std::string() const {
     } else {
       o << e;
     }
-    if (cur++ < m_deps.size() - 1) o << ", ";
+    if (cur++ < m_deps.size() - 1) {
+      o << ", ";
+    }
   }
   return o.str();
 }
 
-} // namespace model
-} // namespace ace
-
+}}

@@ -24,19 +24,19 @@
 #include "Common.h"
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>  // NOLINT
+#include <ace/tree/Object.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace jsonfmt {
-namespace Object {
+namespace ace { namespace jsonfmt { namespace Object {
 
 tree::Value::Ref
-build(std::string const & name, json_t * const obj) {
+build(std::string const& name, json_t* const obj)
+{
   tree::Object::Ref object = tree::Object::build(name);
-  const char * key = nullptr;
-  json_t * value = nullptr;
-  json_object_foreach(obj, key, value) {
+  const char* key = nullptr;
+  json_t* value = nullptr;
+  json_object_foreach(obj, key, value)
+  {
     std::string skey(key);
     tree::Value::Ref v = Common::build(skey, value);
     if (v == nullptr) {
@@ -48,17 +48,16 @@ build(std::string const & name, json_t * const obj) {
   return object;
 }
 
-json_t *
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
-  json_t * result = json_object();
-  for (auto const & e : w) {
-    json_t * value = Common::dump(*e.second);
+json_t*
+dump(tree::Value const& v)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
+  json_t* result = json_object();
+  for (auto const& e : w) {
+    json_t* value = Common::dump(*e.second);
     json_object_set_new(result, e.first.c_str(), value);
   }
   return result;
 }
 
-} // namespace Object
-} // namespace jsonfmt
-} // namespace ace
+}}}

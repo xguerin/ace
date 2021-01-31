@@ -31,56 +31,56 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 template<typename T, bool O = false, typename C = std::equal_to<T>>
-class FlagAttribute : public Attribute {
- public:
-
+class FlagAttribute : public Attribute
+{
+public:
   FlagAttribute() = delete;
-  FlagAttribute(std::string const & name, bool o);
+  FlagAttribute(std::string const& name, bool o);
 
-  bool checkModel(tree::Value const & t) const;
-  void loadModel(tree::Value const & t);
+  bool checkModel(tree::Value const& t) const;
+  void loadModel(tree::Value const& t);
   bool flattenModel();
 
-  void load(Attribute const & a);
-  bool check(T const & v) const;
+  void load(Attribute const& a);
+  bool check(T const& v) const;
 
-  bool merge(Attribute const & b);
+  bool merge(Attribute const& b);
 
   operator tree::Checker::Pattern() const;
   operator std::string() const;
 
   Attribute::Ref clone() const;
 
-  T const & head() const;
-  std::set<T> const & values() const;
+  T const& head() const;
+  std::set<T> const& values() const;
 
   void setMultiple(const bool m);
   tree::Value::Ref materialize() const;
 
- private:
-
+private:
   std::set<T> m_values;
-  C           m_comparator;
-  bool        m_multiple;
+  C m_comparator;
+  bool m_multiple;
 };
 
 template<typename T, bool O, typename C>
-FlagAttribute<T, O, C>::FlagAttribute(std::string const & n, bool o)
-  : Attribute(n, o, O), m_values(), m_comparator(), m_multiple(false) { }
+FlagAttribute<T, O, C>::FlagAttribute(std::string const& n, bool o)
+  : Attribute(n, o, O), m_values(), m_comparator(), m_multiple(false)
+{}
 
 template<typename T, bool O, typename C>
 bool
-FlagAttribute<T, O, C>::checkModel(tree::Value const & t) const {
+FlagAttribute<T, O, C>::checkModel(tree::Value const& t) const
+{
   size_t score = 0;
-  t.each([&](tree::Value const & v) {
+  t.each([&](tree::Value const& v) {
     if (v.type() != tree::Value::typeOf<T>()) {
       ERROR(ERR_INVALID_VALUE(name()));
       score += 1;
-    } else if (not static_cast<tree::Primitive const &>(v).is<T>()) {
+    } else if (not static_cast<tree::Primitive const&>(v).is<T>()) {
       ERROR(ERR_INVALID_VALUE(name()));
       score += 1;
     }
@@ -90,15 +90,17 @@ FlagAttribute<T, O, C>::checkModel(tree::Value const & t) const {
 
 template<typename T, bool O, typename C>
 void
-FlagAttribute<T, O, C>::loadModel(tree::Value const & t) {
-  t.each([&](tree::Value const & v) {
-    m_values.insert(static_cast<tree::Primitive const &>(v).value<T>());
+FlagAttribute<T, O, C>::loadModel(tree::Value const& t)
+{
+  t.each([&](tree::Value const& v) {
+    m_values.insert(static_cast<tree::Primitive const&>(v).value<T>());
   });
 }
 
 template<typename T, bool O, typename C>
 bool
-FlagAttribute<T, O, C>::flattenModel() {
+FlagAttribute<T, O, C>::flattenModel()
+{
   if (not m_multiple and m_values.size() > 1) {
     ERROR(ERR_MULTIPLE_VALUES_NOT_ALLOWED(name()));
     return false;
@@ -108,79 +110,105 @@ FlagAttribute<T, O, C>::flattenModel() {
 
 template<typename T, bool O, typename C>
 void
-FlagAttribute<T, O, C>::load(Attribute const & a) {
-  FlagAttribute<T, O, C> const & ra = static_cast<FlagAttribute<T, O, C> const &>(a);
+FlagAttribute<T, O, C>::load(Attribute const& a)
+{
+  FlagAttribute<T, O, C> const& ra =
+    static_cast<FlagAttribute<T, O, C> const&>(a);
   m_values = ra.m_values;
 }
 
 template<typename T, bool O, typename C>
-bool FlagAttribute<T, O, C>::check(T const & v) const {
+bool
+FlagAttribute<T, O, C>::check(T const& v) const
+{
   return true;
 }
 
 template<typename T, bool O, typename C>
 bool
-FlagAttribute<T, O, C>::merge(Attribute const & b) {
-  if (not Attribute::merge(b)) return false;
-  FlagAttribute<T, O, C> const & rb = static_cast<FlagAttribute<T, O, C> const &>(b);
-  if (m_values.size() != rb.m_values.size()) return false;
+FlagAttribute<T, O, C>::merge(Attribute const& b)
+{
+  if (not Attribute::merge(b)) {
+    return false;
+  }
+  FlagAttribute<T, O, C> const& rb =
+    static_cast<FlagAttribute<T, O, C> const&>(b);
+  if (m_values.size() != rb.m_values.size()) {
+    return false;
+  }
   size_t score = 0;
   auto i = m_values.begin();
   auto j = rb.m_values.begin();
   for (; i != m_values.end(); i++, j++) {
-    if (not m_comparator(*i, *j)) score += 1;
+    if (not m_comparator(*i, *j)) {
+      score += 1;
+    }
   }
   return score == 0;
 }
 
 template<typename T, bool O, typename C>
-FlagAttribute<T, O, C>::operator std::string() const {
+FlagAttribute<T, O, C>::operator std::string() const
+{
   std::ostringstream oss;
-  if (m_values.size() > 1) oss << "[ ";
-  size_t count = 0;
-  for (auto const & v : m_values) {
-    oss << v;
-    if (++count < m_values.size()) oss << ", ";
+  if (m_values.size() > 1) {
+    oss << "[ ";
   }
-  if (m_values.size() > 1) oss << "]";
+  size_t count = 0;
+  for (auto const& v : m_values) {
+    oss << v;
+    if (++count < m_values.size()) {
+      oss << ", ";
+    }
+  }
+  if (m_values.size() > 1) {
+    oss << "]";
+  }
   return oss.str();
 }
 
 template<typename T, bool O, typename C>
-FlagAttribute<T, O, C>::operator tree::Checker::Pattern() const {
-  return tree::Checker::Pattern({ tree::Value::typeOf<T>(), tree::Value::Type::Array }, m_optional);
+FlagAttribute<T, O, C>::operator tree::Checker::Pattern() const
+{
+  return tree::Checker::Pattern(
+    { tree::Value::typeOf<T>(), tree::Value::Type::Array }, m_optional);
 }
 
 template<typename T, bool O, typename C>
 Attribute::Ref
-FlagAttribute<T, O, C>::clone() const {
+FlagAttribute<T, O, C>::clone() const
+{
   return Attribute::Ref(new FlagAttribute<T, O, C>(*this));
 }
 
 template<typename T, bool O, typename C>
-T const &
-FlagAttribute<T, O, C>::head() const {
+T const&
+FlagAttribute<T, O, C>::head() const
+{
   return *m_values.begin();
 }
 
 template<typename T, bool O, typename C>
-std::set<T> const &
-FlagAttribute<T, O, C>::values() const {
+std::set<T> const&
+FlagAttribute<T, O, C>::values() const
+{
   return m_values;
 }
 
 template<typename T, bool O, typename C>
 void
-FlagAttribute<T, O, C>::setMultiple(const bool m) {
+FlagAttribute<T, O, C>::setMultiple(const bool m)
+{
   m_multiple = m;
 }
 
 template<typename T, bool O, typename C>
 tree::Value::Ref
-FlagAttribute<T, O, C>::materialize() const {
+FlagAttribute<T, O, C>::materialize() const
+{
   if (m_values.size() > 1) {
     auto ary = tree::Array::build();
-    for (auto const & v : m_values) {
+    for (auto const& v : m_values) {
       ary->push_back(tree::Primitive::build(v));
     }
     return ary;
@@ -189,5 +217,4 @@ FlagAttribute<T, O, C>::materialize() const {
   }
 }
 
-} // namespace model
-} // namespace ace
+}}

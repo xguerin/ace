@@ -25,46 +25,56 @@
 #include <ace/tree/Primitive.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-Author::Author() : m_name(), m_email() { }
+Author::Author() : m_name(), m_email() {}
 
 tree::Path
-Author::path(const bool local) const {
+Author::path(const bool local) const
+{
   return m_parent->path(local);
 }
 
-bool Author::checkModel(tree::Value const & t) const {
+bool
+Author::checkModel(tree::Value const& t) const
+{
   const ace::tree::Checker::Schema schema = {
-    { "name"  , { ace::tree::Value::Type::String, false } },
-    { "email" , { ace::tree::Value::Type::String, false } }
+    { "name", { ace::tree::Value::Type::String, false } },
+    { "email", { ace::tree::Value::Type::String, false } }
   };
   ace::tree::Checker chk(path(), t);
   return chk.validate(schema);
 }
 
-void Author::loadModel(tree::Value const & t) {
-  m_name = static_cast<tree::Primitive const &>(t["name"]).value<std::string>();
-  m_email = static_cast<tree::Primitive const &>(t["email"]).value<std::string>();
+void
+Author::loadModel(tree::Value const& t)
+{
+  m_name = static_cast<tree::Primitive const&>(t["name"]).value<std::string>();
+  m_email =
+    static_cast<tree::Primitive const&>(t["email"]).value<std::string>();
 }
 
-std::string const & Author::name() const {
+std::string const&
+Author::name() const
+{
   return m_name;
 }
 
-std::string const & Author::email() const {
+std::string const&
+Author::email() const
+{
   return m_email;
 }
 
-} // namespace model
-} // namespace ace
+}}
 
 namespace std {
 
-ostream & operator<<(ostream & o, ace::model::Author const & a) {
+ostream&
+operator<<(ostream& o, ace::model::Author const& a)
+{
   o << a.name() << " (" << a.email() << ")";
   return o;
 }
 
-} // namespace std
+}

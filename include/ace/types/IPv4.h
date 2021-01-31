@@ -28,34 +28,33 @@
 #include <set>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 // IPv4 format checker
 
-class IPv4FormatChecker : public FormatChecker<std::string> {
- public:
-
+class IPv4FormatChecker : public FormatChecker<std::string>
+{
+public:
   IPv4FormatChecker() = delete;
-  explicit IPv4FormatChecker(const BasicType * o);
-  bool operator()(tree::Object const & r, tree::Value const & v) const;
+  explicit IPv4FormatChecker(const BasicType* o);
+  bool operator()(tree::Object const& r, tree::Value const& v) const;
 
-  static bool checkFormat(std::string const & s);
+  static bool checkFormat(std::string const& s);
 };
 
 // IPv4 class
 
-class IPv4 : public EnumeratedType<std::string, true,
-    std::equal_to<std::string>, IPv4FormatChecker> {
- public:
-
+class IPv4
+  : public EnumeratedType<std::string, true, std::equal_to<std::string>,
+                          IPv4FormatChecker>
+{
+public:
   IPv4();
 
-  void collectInterfaceIncludes(std::set<std::string> & i) const;
-  void collectImplementationIncludes(std::set<std::string> & i) const;
+  void collectInterfaceIncludes(std::set<std::string>& i) const;
+  void collectImplementationIncludes(std::set<std::string>& i) const;
 
-  BasicType::Ref clone(std::string const & n) const;
+  BasicType::Ref clone(std::string const& n) const;
 };
 
-} // namespace model
-} // namespace ace
+}}

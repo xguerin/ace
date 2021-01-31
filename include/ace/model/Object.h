@@ -24,35 +24,34 @@
 
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
-#include <ace/tree/Object.h>  // NOLINT
+#include <ace/tree/Object.h> // NOLINT
 #include <ace/tree/Value.h>
 #include <memory>
 #include <string>
 
-#define DEBUG_O(__o, __a...)    ACE_LOG(Debug, "[", __o->path(), "] ", __a)
-#define DEBUG(__a...)           DEBUG_O(this, __a)
+#define DEBUG_O(__o, __a...) ACE_LOG(Debug, "[", __o->path(), "] ", __a)
+#define DEBUG(__a...) DEBUG_O(this, __a)
 
-#define EXTRA_O(__o, __a...)    ACE_LOG(Extra, "[", __o->path(), "] ", __a)
-#define EXTRA(__a...)           EXTRA_O(this, __a)
+#define EXTRA_O(__o, __a...) ACE_LOG(Extra, "[", __o->path(), "] ", __a)
+#define EXTRA(__a...) EXTRA_O(this, __a)
 
-#define INFO_O(__o, __a...)     ACE_LOG(Info, "[", __o->path(), "] ", __a)
-#define INFO(__a...)            INFO_O(this, __a)
+#define INFO_O(__o, __a...) ACE_LOG(Info, "[", __o->path(), "] ", __a)
+#define INFO(__a...) INFO_O(this, __a)
 
-#define ERROR_O(__o, __a...)    ACE_LOG(Error, "[", __o->path(), "] ", __a)
-#define ERROR(__a...)           ERROR_O(this, __a)
+#define ERROR_O(__o, __a...) ACE_LOG(Error, "[", __o->path(), "] ", __a)
+#define ERROR(__a...) ERROR_O(this, __a)
 
-#define WARNING_O(__o, __a...)  ACE_LOG(Warning, "[", __o->path(), "] ", __a)
-#define WARNING(__a...)         WARNING_O(this, __a)
+#define WARNING_O(__o, __a...) ACE_LOG(Warning, "[", __o->path(), "] ", __a)
+#define WARNING(__a...) WARNING_O(this, __a)
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Object {
- public:
-
+class Object
+{
+public:
   Object();
-  explicit Object(Object const & o);
-  virtual ~Object() { }
+  explicit Object(Object const& o);
+  virtual ~Object() {}
 
   /**
    * @brief   Return object object ID
@@ -70,37 +69,37 @@ class Object {
    * @brief   Set the name of the object
    * @param n the name of the object
    */
-  virtual void setName(std::string const & n);
+  virtual void setName(std::string const& n);
 
   /**
    * @brief Get owning model
    * @return the owning model
    */
-  virtual Object * owner();
+  virtual Object* owner();
 
   /**
    * @brief Get owning model
    * @return the owning model
    */
-  virtual const Object * owner() const;
+  virtual const Object* owner() const;
 
   /**
    * @brief   Get the Object's parent
    * @return  the object's parent
    */
-  Object * parent();
+  Object* parent();
 
   /**
    * @brief   Get the Object's parent
    * @return  the object's parent
    */
-  const Object * parent() const;
+  const Object* parent() const;
 
   /**
    * @brief   Set the parent object of the object
    * @param p the parent object
    */
-  virtual void setParent(const Object * p);
+  virtual void setParent(const Object* p);
 
   /**
    * @brief   Get the path of the type in the model
@@ -113,13 +112,13 @@ class Object {
    * @param t the Tokens for the objret
    * @return  true if the Object is valid, false otherwise
    */
-  virtual bool checkModel(tree::Value const & t) const = 0;
+  virtual bool checkModel(tree::Value const& t) const = 0;
 
   /**
    * @brief   Load an Object from a JSON Token
    * @param t the token
    */
-  virtual void loadModel(tree::Value const & t) = 0;
+  virtual void loadModel(tree::Value const& t) = 0;
 
   /**
    * @brief   Flatten the object
@@ -140,14 +139,13 @@ class Object {
    * @param v the value of the instance
    * @return  true if the injection succeeded, false otherwise
    */
-  virtual bool injectInherited(tree::Object const & r, Object const & o, tree::Value & v) const;
+  virtual bool injectInherited(tree::Object const& r, Object const& o,
+                               tree::Value& v) const;
 
- protected:
-
-  int         m_id;
+protected:
+  int m_id;
   std::string m_name;
-  Object *    m_parent;
+  Object* m_parent;
 };
 
-} // namespace model
-} // namespace ace
+}}

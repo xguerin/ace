@@ -30,38 +30,39 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 static tree::Checker::Schema schema = {
-  { "path"  , tree::Checker::Pattern(tree::Value::Type::String, false) },
-  { "from"  , tree::Checker::Pattern(tree::Value::Type::String, false) },
-  { "to"    , tree::Checker::Pattern(tree::Value::Type::String, false) },
-  { "exact", tree::Checker::Pattern(tree::Value::Type::Boolean, true ) }
+  { "path", tree::Checker::Pattern(tree::Value::Type::String, false) },
+  { "from", tree::Checker::Pattern(tree::Value::Type::String, false) },
+  { "to", tree::Checker::Pattern(tree::Value::Type::String, false) },
+  { "exact", tree::Checker::Pattern(tree::Value::Type::Boolean, true) }
 };
 
 bool
-Hook::validate(tree::Object const & r) {
+Hook::validate(tree::Object const& r)
+{
   tree::Checker checker("", r);
   if (!checker.validate(schema)) {
     ACE_LOG(Debug, "Hook schema verification failed");
     return false;
   }
-  auto const & p = r.get("path");
-  auto const & v = static_cast<tree::Primitive const &>(p);
+  auto const& p = r.get("path");
+  auto const& v = static_cast<tree::Primitive const&>(p);
   try {
     tree::Path::parse(v.value<std::string>());
-  } catch (std::invalid_argument const &) {
+  } catch (std::invalid_argument const&) {
     return false;
   }
   return true;
 }
 
 void
-Hook::load(tree::Object const & r) {
-  auto const & p = static_cast<tree::Primitive const &>(r.get("path"));
-  auto const & f = static_cast<tree::Primitive const &>(r.get("from"));
-  auto const & t = static_cast<tree::Primitive const &>(r.get("to"));
+Hook::load(tree::Object const& r)
+{
+  auto const& p = static_cast<tree::Primitive const&>(r.get("path"));
+  auto const& f = static_cast<tree::Primitive const&>(r.get("from"));
+  auto const& t = static_cast<tree::Primitive const&>(r.get("to"));
   m_path = tree::Path::parse(p.value<std::string>());
   m_pattern = f.value<std::string>();
   m_value = t.value<std::string>();
@@ -69,40 +70,45 @@ Hook::load(tree::Object const & r) {
    * Check if the exact mode is defined.
    */
   if (r.has("exact")) {
-    auto const & s = static_cast<tree::Primitive const &>(r.get("exact"));
+    auto const& s = static_cast<tree::Primitive const&>(r.get("exact"));
     m_exact = s.value<bool>();
   }
 }
 
 bool
-Hook::match(std::string const & s) const {
+Hook::match(std::string const& s) const
+{
   return common::Regex::match(s, m_pattern);
 }
 
 bool
-Hook::transform(std::string const & v, std::string & r) const {
+Hook::transform(std::string const& v, std::string& r) const
+{
   return common::Regex::expand(v, m_pattern, m_value, r);
 }
 
-tree::Path const &
-Hook::path() const {
+tree::Path const&
+Hook::path() const
+{
   return m_path;
 }
 
-std::string const &
-Hook::pattern() const {
+std::string const&
+Hook::pattern() const
+{
   return m_pattern;
 }
 
-std::string const &
-Hook::value() const {
+std::string const&
+Hook::value() const
+{
   return m_value;
 }
 
 bool
-Hook::exact() const {
+Hook::exact() const
+{
   return m_exact;
 }
 
-} // namespace model
-} // namespace ace
+}}

@@ -27,13 +27,12 @@
 #include <ace/tree/Array.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace inifmt {
-namespace Array {
+namespace ace { namespace inifmt { namespace Array {
 
 void
-dump(tree::Value const & v, std::ostream & o) {
-  auto const & a = static_cast<tree::Array const &>(v);
+dump(tree::Value const& v, std::ostream& o)
+{
+  auto const& a = static_cast<tree::Array const&>(v);
   for (size_t i = 0; i < a.size(); i += 1) {
     if (a.at(i)->type() == tree::Value::Type::Array) {
       ACE_LOG(Error, "Arrays of arrays not supported in the INI format");
@@ -41,11 +40,11 @@ dump(tree::Value const & v, std::ostream & o) {
       ACE_LOG(Error, "Arrays of objects not supported in the INI format");
     } else {
       Common::dump(*a.at(i), o);
-      if (i < a.size() - 1) o << ", ";
+      if (i < a.size() - 1) {
+        o << ", ";
+      }
     }
   }
 }
 
-} // namespace Array
-} // namespace inifmt
-} // namespace ace
+}}}

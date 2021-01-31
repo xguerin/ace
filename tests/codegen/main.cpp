@@ -25,13 +25,16 @@
 #include <fcntl.h>
 #include <cstdlib>
 
-int main(int argc, char* argv[]) {
+int
+main(int argc, char* argv[])
+{
   /**
    * Get the target build path
    */
-  char * build_path = getenv("ACE_TESTS_PATH");
+  char* build_path = getenv("ACE_TESTS_PATH");
   if (build_path == NULL) {
-    std::cerr << "ACE_TESTS_PATH must be defined (check CMakeLists.txt)" << std::endl;
+    std::cerr << "ACE_TESTS_PATH must be defined (check CMakeLists.txt)"
+              << std::endl;
     return 1;
   }
   std::string path_str(build_path);
@@ -45,8 +48,10 @@ int main(int argc, char* argv[]) {
    * Update the log level
    */
   ace::common::Log::Level l = ace::common::Log::Info;
-  const char * ll = getenv("ACE_LOG_LEVEL");
-  if (ll != 0) l = ace::common::Log::parseLogLevel(ll);
+  const char* ll = getenv("ACE_LOG_LEVEL");
+  if (ll != 0) {
+    l = ace::common::Log::parseLogLevel(ll);
+  }
   ace::common::Log::get().setLogLevel(l);
   /**
    * Initialize and run the tests

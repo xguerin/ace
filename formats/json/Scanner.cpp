@@ -29,28 +29,30 @@
 #include <string>
 #include <vector>
 
-namespace ace {
-namespace jsonfmt {
+namespace ace { namespace jsonfmt {
 
 tree::Value::Ref
-Scanner::open(std::string const & fn, int argc, char ** argv) {
+Scanner::open(std::string const& fn, int argc, char** argv)
+{
   return Common::parseFile(fn);
 }
 
 tree::Value::Ref
-Scanner::parse(std::string const & s, int argc, char ** argv) {
+Scanner::parse(std::string const& s, int argc, char** argv)
+{
   return Common::parseString(s);
 }
 
 void
-Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
-  char * data = nullptr;
-  json_t * result = Common::dump(v);
+Scanner::dump(tree::Value const& v, const Format f, std::ostream& o) const
+{
+  char* data = nullptr;
+  json_t* result = Common::dump(v);
   switch (f) {
-    case tree::Scanner::Format::Compact : {
+    case tree::Scanner::Format::Compact: {
       data = json_dumps(result, JSON_COMPACT);
     } break;
-    case tree::Scanner::Format::Default : {
+    case tree::Scanner::Format::Default: {
       data = json_dumps(result, JSON_INDENT(2));
     } break;
   }
@@ -59,8 +61,9 @@ Scanner::dump(tree::Value const & v, const Format f, std::ostream & o) const {
 }
 
 bool
-Scanner::openAll(std::string const & fn, int argc, char ** argv,
-                 std::list<tree::Value::Ref> & values) {
+Scanner::openAll(std::string const& fn, int argc, char** argv,
+                 std::list<tree::Value::Ref>& values)
+{
   auto res = open(fn, argc, argv);
   if (res == nullptr) {
     return false;
@@ -70,8 +73,9 @@ Scanner::openAll(std::string const & fn, int argc, char ** argv,
 }
 
 bool
-Scanner::parseAll(std::string const & s, int argc, char ** argv,
-                  std::list<tree::Value::Ref> & values) {
+Scanner::parseAll(std::string const& s, int argc, char** argv,
+                  std::list<tree::Value::Ref>& values)
+{
   auto res = parse(s, argc, argv);
   if (res == nullptr) {
     return false;
@@ -81,8 +85,9 @@ Scanner::parseAll(std::string const & s, int argc, char ** argv,
 }
 
 bool
-Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
-                 std::ostream & o) const {
+Scanner::dumpAll(std::list<tree::Value::Ref>& values, const Format f,
+                 std::ostream& o) const
+{
   if (values.size() != 1) {
     return false;
   }
@@ -91,20 +96,23 @@ Scanner::dumpAll(std::list<tree::Value::Ref> & values, const Format f,
 }
 
 std::string
-Scanner::name() const {
+Scanner::name() const
+{
   return "json";
 }
 
 std::string
-Scanner::extension() const {
+Scanner::extension() const
+{
   return "json";
 }
 
-} // namespace jsonfmt
-} // namespace ace
+}}
 
 extern "C" {
-void * loadPlugin() {
+void*
+loadPlugin()
+{
   return new ace::jsonfmt::Scanner();
 }
 }

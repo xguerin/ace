@@ -28,26 +28,25 @@
 #include <string>
 #include <sys/types.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class ModelAttribute : public Attribute {
- public:
-
+class ModelAttribute : public Attribute
+{
+public:
   ModelAttribute() = delete;
-  explicit ModelAttribute(ModelAttribute const & o) = default;
-  ModelAttribute(std::string const & name, bool o);
+  explicit ModelAttribute(ModelAttribute const& o) = default;
+  ModelAttribute(std::string const& name, bool o);
 
   // Object
 
-  void loadModel(tree::Value const & t);
-  bool checkModel(tree::Value const & t) const;
+  void loadModel(tree::Value const& t);
+  bool checkModel(tree::Value const& t) const;
   bool flattenModel();
   bool validateModel();
 
   // Instance
 
-  void load(Attribute const & a);
+  void load(Attribute const& a);
 
   // Attribute
 
@@ -56,20 +55,18 @@ class ModelAttribute : public Attribute {
 
   Attribute::Ref clone() const;
 
-  bool merge(Attribute const & b);
+  bool merge(Attribute const& b);
 
   // Accessors
 
-  std::string const & value() const;
+  std::string const& value() const;
 
-  Model & model();
-  Model const & model() const;
+  Model& model();
+  Model const& model() const;
 
- private:
-
+private:
   std::string m_value;
-  Model::Ref  m_model;
+  Model::Ref m_model;
 };
 
-} // namespace model
-} // namespace ace
+}}

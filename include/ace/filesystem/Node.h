@@ -26,82 +26,80 @@
 #include <string>
 #include <sys/stat.h>
 
-namespace ace {
-namespace fs {
+namespace ace { namespace fs {
 
-class Node {
- public:
-
-  enum class Type {
-    Block     = S_IFBLK,
+class Node
+{
+public:
+  enum class Type
+  {
+    Block = S_IFBLK,
     Character = S_IFCHR,
     Directory = S_IFDIR,
-    FIFO      = S_IFIFO,
-    Regular   = S_IFREG,
-    Link      = S_IFLNK,
-    Socket    = S_IFSOCK,
-    Unknown   = 0
+    FIFO = S_IFIFO,
+    Regular = S_IFREG,
+    Link = S_IFLNK,
+    Socket = S_IFSOCK,
+    Unknown = 0
   };
 
-  typedef enum _Permission {
-    SetUID      = S_ISUID,
-    SetGID      = S_ISGID,
-    Sticky      = S_ISVTX,
-    UserRead    = S_IRUSR,
-    UserWrite   = S_IWUSR,
-    UserExec    = S_IXUSR,
-    GroupRead   = S_IRGRP,
-    GroupWrite  = S_IWGRP,
-    GroupExec   = S_IXGRP,
-    OtherRead   = S_IROTH,
-    OtherWrite  = S_IWOTH,
-    OtherExec   = S_IXOTH,
-    None        = 0
+  typedef enum Permission
+  {
+    SetUID = S_ISUID,
+    SetGID = S_ISGID,
+    Sticky = S_ISVTX,
+    UserRead = S_IRUSR,
+    UserWrite = S_IWUSR,
+    UserExec = S_IXUSR,
+    GroupRead = S_IRGRP,
+    GroupWrite = S_IWGRP,
+    GroupExec = S_IXGRP,
+    OtherRead = S_IROTH,
+    OtherWrite = S_IWOTH,
+    OtherExec = S_IXOTH,
+    None = 0
   } Permission;
 
   Node();
-  Node(Node const & o); // NOLINT(runtime/explicit)
+  Node(Node const& o); // NOLINT(runtime/explicit)
   virtual ~Node();
 
   virtual bool isValid() const;
-  fs::Path const & path() const;
+  fs::Path const& path() const;
 
   Type type() const;
-  static Type type(fs::Path const & p, const bool follow = true);
+  static Type type(fs::Path const& p, const bool follow = true);
 
   Permission permissions() const;
-  static Permission permissions(fs::Path const & p, const bool follow = true);
+  static Permission permissions(fs::Path const& p, const bool follow = true);
 
-  static Type parseType(std::string const & s);
+  static Type parseType(std::string const& s);
   static std::string toString(const Type t);
 
   uid_t userID() const;
-  static uid_t userID(fs::Path const & p, const bool follow = true);
+  static uid_t userID(fs::Path const& p, const bool follow = true);
 
   gid_t groupID() const;
-  static gid_t groupID(fs::Path const & p, const bool follow = true);
+  static gid_t groupID(fs::Path const& p, const bool follow = true);
 
   bool readable() const;
-  static bool readable(fs::Path const & p, const bool follow = true);
+  static bool readable(fs::Path const& p, const bool follow = true);
 
   bool writeable() const;
-  static bool writeable(fs::Path const & p, const bool follow = true);
+  static bool writeable(fs::Path const& p, const bool follow = true);
 
   Node parent() const;
 
-  Node & operator=(Node const & o);
+  Node& operator=(Node const& o);
 
- protected:
-
+protected:
   static Type type(mode_t mode);
   static Permission permissions(mode_t mode);
 
-  int           m_fd;
-  fs::Path  m_path;
+  int m_fd;
+  fs::Path m_path;
 };
 
-std::ostream &
-operator<<(std::ostream & o, Node::Type const & t);
+std::ostream& operator<<(std::ostream& o, Node::Type const& t);
 
-} // namespace ace
-} // namespace fs
+}}

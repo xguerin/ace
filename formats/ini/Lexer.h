@@ -24,25 +24,22 @@
 
 #include "Ini.h"
 
-namespace ace {
-namespace inifmt {
+namespace ace { namespace inifmt {
 
-class Scan {
- public:
-
+class Scan
+{
+public:
   Scan();
   ~Scan();
 
-  ini::Statement::Ref parse(std::string const & str, const bool dbg = false);
+  ini::Statement::Ref parse(std::string const& str, const bool dbg = false);
 
- private:
-
-  int           cs;
-  int           act;
-  const char *  ts;
-  const char *  te;
-  void *        lparser;
+private:
+  int cs;
+  int act;
+  const char* ts;
+  const char* te;
+  void* lparser;
 };
 
-} // namespace inifmt
-} // namespace ace
+}}

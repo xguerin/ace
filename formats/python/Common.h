@@ -27,14 +27,10 @@
 #include "Primitive.h"
 #include <string>
 
-namespace ace {
-namespace pyfmt {
+namespace ace { namespace pyfmt {
 
-tree::Value::Ref
-build_value(std::string const & n, PyObject * o);
+tree::Value::Ref build_value(std::string const& n, PyObject* o);
 
-void
-dump_value(tree::Value const & v, std::ostream & o, int l, bool i);
+void dump_value(tree::Value const& v, std::ostream& o, int l, bool i);
 
-} // namespace inifmt
-} // namespace ace
+}}

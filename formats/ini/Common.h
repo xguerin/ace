@@ -26,19 +26,12 @@
 #include <ace/tree/Scanner.h>
 #include <string>
 
-namespace ace {
-namespace inifmt {
-namespace Common {
+namespace ace { namespace inifmt { namespace Common {
 
-tree::Value::Ref
-parseFile(std::string const & path);
+tree::Value::Ref parseFile(std::string const& path);
 
-tree::Value::Ref
-parseString(std::string const & str);
+tree::Value::Ref parseString(std::string const& str);
 
-void
-dump(tree::Value const & v, std::ostream & o);
+void dump(tree::Value const& v, std::ostream& o);
 
-} // namespace Common
-} // namespace inifmt
-} // namespace ace
+}}}

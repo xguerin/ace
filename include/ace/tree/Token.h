@@ -25,19 +25,22 @@
 #include <iostream>
 #include <string>
 
-struct Token {
-  virtual ~Token() { }
+struct Token
+{
+  virtual ~Token() {}
   virtual void print() const = 0;
 };
 
-struct IndexToken : public Token {
+struct IndexToken : public Token
+{
   size_t value;
-  explicit IndexToken(const size_t v) : value(v) { }
+  explicit IndexToken(const size_t v) : value(v) {}
   void print() const { std::cout << value << std::endl; }
 };
 
-struct MemberToken : public Token {
+struct MemberToken : public Token
+{
   std::string value;
-  explicit MemberToken(const std::string & v) : value(v) { }
+  explicit MemberToken(const std::string& v) : value(v) {}
   void print() const { std::cout << value << std::endl; }
 };

@@ -25,25 +25,30 @@
 #include <ostream>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-class Arity {
- public:
-
-  enum class Kind {
-    Undefined, Disabled, UpToOne, One, AtLeastOne, Any
+class Arity
+{
+public:
+  enum class Kind
+  {
+    Undefined,
+    Disabled,
+    UpToOne,
+    One,
+    AtLeastOne,
+    Any
   };
 
   Arity();
   Arity(const Kind kind, const size_t min, const size_t max);
 
-  static bool parse(std::string const & s, Arity & arity);
+  static bool parse(std::string const& s, Arity& arity);
 
   bool check(const size_t v) const;
   Kind kind() const;
 
-  Arity intersect(Arity const & o) const;
+  Arity intersect(Arity const& o) const;
 
   bool promote();
   void disable();
@@ -53,18 +58,15 @@ class Arity {
   std::string marker() const;
   std::string toString() const;
 
-  bool operator<=(Arity const & o) const;
-  operator Kind () const;
+  bool operator<=(Arity const& o) const;
+  operator Kind() const;
 
- private:
-
-  Kind    m_kind;
-  size_t  m_min;
-  size_t  m_max;
+private:
+  Kind m_kind;
+  size_t m_min;
+  size_t m_max;
 };
 
-std::ostream &
-operator<<(std::ostream & o, Arity const & arity);
+std::ostream& operator<<(std::ostream& o, Arity const& arity);
 
-} // namespace model
-} // namespace ace
+}}

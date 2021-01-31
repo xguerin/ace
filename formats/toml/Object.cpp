@@ -27,15 +27,14 @@
 #include <ace/tree/Object.h>
 #include <string>
 
-namespace ace {
-namespace tomlfmt {
-namespace Object {
+namespace ace { namespace tomlfmt { namespace Object {
 
 tree::Value::Ref
-build(std::string const & name, toml::Value const & obj) {
+build(std::string const& name, toml::Value const& obj)
+{
   tree::Object::Ref object = tree::Object::build(name);
-  const toml::Table & tb = obj.as<toml::Table>();
-  for (auto const & e : tb) {
+  const toml::Table& tb = obj.as<toml::Table>();
+  for (auto const& e : tb) {
     std::string skey(e.first);
     tree::Value::Ref v = Common::build(skey, e.second);
     if (v == nullptr) {
@@ -48,15 +47,14 @@ build(std::string const & name, toml::Value const & obj) {
 }
 
 toml::Value
-dump(tree::Value const & v) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
+dump(tree::Value const& v)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
   toml::Table table;
-  for (auto const & e : w) {
+  for (auto const& e : w) {
     table[e.first] = Common::dump(*e.second);
   }
   return table;
 }
 
-} // namespace Object
-} // namespace tomlfmt
-} // namespace ace
+}}}

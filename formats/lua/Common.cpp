@@ -23,14 +23,15 @@
 #include "Common.h"
 #include <string>
 
-namespace ace {
-namespace luafmt {
+namespace ace { namespace luafmt {
 
-static
-tree::Value::Ref
-build_array_or_object(std::string const & n, lua_State * L) {
+static tree::Value::Ref
+build_array_or_object(std::string const& n, lua_State* L)
+{
   lua_pushnil(L);
-  if (lua_next(L, -2) == 0) return Object::build(n, L);
+  if (lua_next(L, -2) == 0) {
+    return Object::build(n, L);
+  }
   int t = lua_type(L, -2);
   lua_pop(L, 1);
   lua_pop(L, 1);
@@ -38,25 +39,26 @@ build_array_or_object(std::string const & n, lua_State * L) {
 }
 
 void
-stack_dump(lua_State *L) {
+stack_dump(lua_State* L)
+{
   int i;
   int top = lua_gettop(L);
-  for (i = 1; i <= top; i++) {  /* repeat for each level */
+  for (i = 1; i <= top; i++) { /* repeat for each level */
     int t = lua_type(L, i);
     switch (t) {
-      case LUA_TSTRING:  /* strings */
+      case LUA_TSTRING: /* strings */
         std::cout << lua_tostring(L, i);
         break;
-      case LUA_TBOOLEAN:  /* booleans */
+      case LUA_TBOOLEAN: /* booleans */
         std::cout << (lua_toboolean(L, i) ? "true" : "false");
         break;
-      case LUA_TNUMBER:  /* numbers */
+      case LUA_TNUMBER: /* numbers */
         std::cout << lua_tonumber(L, i);
         break;
-      case LUA_TNIL:  /* numbers */
+      case LUA_TNIL: /* numbers */
         std::cout << "nil";
         break;
-      default:  /* other values */
+      default: /* other values */
         std::cout << lua_typename(L, t);
         break;
     }
@@ -66,7 +68,8 @@ stack_dump(lua_State *L) {
 }
 
 tree::Value::Ref
-build_value(std::string const & n, lua_State * L) {
+build_value(std::string const& n, lua_State* L)
+{
   switch (lua_type(L, -1)) {
     case LUA_TBOOLEAN:
     case LUA_TNUMBER:
@@ -81,18 +84,21 @@ build_value(std::string const & n, lua_State * L) {
 }
 
 void
-dump_value(tree::Value const & v, std::ostream & o, int l, bool i) {
+dump_value(tree::Value const& v, std::ostream& o, int l, bool i)
+{
   switch (v.type()) {
-    case tree::Value::Type::Boolean   :
-    case tree::Value::Type::Float     :
-    case tree::Value::Type::Integer   :
-    case tree::Value::Type::String    : return Primitive::dump(v, o, l, i);
-    case tree::Value::Type::Array     : return Array::dump(v, o, l, i);
-    case tree::Value::Type::Object    : return Object::dump(v, o, l, i);
-    default                           : break;
+    case tree::Value::Type::Boolean:
+    case tree::Value::Type::Float:
+    case tree::Value::Type::Integer:
+    case tree::Value::Type::String:
+      return Primitive::dump(v, o, l, i);
+    case tree::Value::Type::Array:
+      return Array::dump(v, o, l, i);
+    case tree::Value::Type::Object:
+      return Object::dump(v, o, l, i);
+    default:
+      break;
   }
 }
 
-} // namespace luafmt
-} // namespace ace
-
+}}

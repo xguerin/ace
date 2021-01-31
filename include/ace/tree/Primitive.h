@@ -28,319 +28,317 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace tree {
+namespace ace { namespace tree {
 
-class Primitive : public Value {
- public:
-
+class Primitive : public Value
+{
+public:
   using Ref = std::shared_ptr<Primitive>;
 
- public:
-
+public:
   Primitive() = delete;
 
-  template<typename T> static Ref build(T const & v);
-  template<typename T> static Ref build(std::string const & n, T const & v);
-  template<size_t N, typename T> static Ref build(const char (&n)[N], T const & v);
+  template<typename T>
+  static Ref build(T const& v);
+  template<typename T>
+  static Ref build(std::string const& n, T const& v);
+  template<size_t N, typename T>
+  static Ref build(const char (&n)[N], T const& v);
 
   Value::Ref clone() const;
 
-  template<typename T> bool is() const;
-  template<typename T> T value() const;
+  template<typename T>
+  bool is() const;
+  template<typename T>
+  T value() const;
 
   void stringify();
   std::string value() const;
 
- private:
-
-  class Content {
-   public:
+private:
+  class Content
+  {
+  public:
     using Ref = std::unique_ptr<Content>;
-    virtual ~Content() { }
+    virtual ~Content() {}
     virtual Ref clone() const = 0;
     virtual std::string toString() const = 0;
   };
 
-  template<typename T> class TypedContent : public Content {
-   public:
-
+  template<typename T>
+  class TypedContent : public Content
+  {
+  public:
     TypedContent() = delete;
-    explicit TypedContent(T const & v) : m_value(v) { }
+    explicit TypedContent(T const& v) : m_value(v) {}
 
-    T value() const {
-      return m_value;
-    }
+    T value() const { return m_value; }
 
-    Ref clone() const {
-      return Ref(new TypedContent<T>(m_value));
-    }
+    Ref clone() const { return Ref(new TypedContent<T>(m_value)); }
 
-    std::string toString() const {
-      return common::String::from<T>(m_value);
-    }
+    std::string toString() const { return common::String::from<T>(m_value); }
 
     template<typename U>
-    bool is() const {
+    bool is() const
+    {
       return std::is_same<T, U>();
     }
 
-   private:
-
+  private:
     T m_value;
   };
 
-  template<typename T> static Value::Type typeOf();
+  template<typename T>
+  static Value::Type typeOf();
 
-  template<typename T> Primitive(std::string const & n, T const & v);
-  template<size_t N> Primitive(std::string const & n, const char (&v)[N]);
+  template<typename T>
+  Primitive(std::string const& n, T const& v);
+  template<size_t N>
+  Primitive(std::string const& n, const char (&v)[N]);
 
-  Primitive(Primitive const & p);
+  Primitive(Primitive const& p);
 
-  Content::Ref  m_content;
+  Content::Ref m_content;
 };
 
 template<typename T>
 Primitive::Ref
-Primitive::build(T const & v) {
+Primitive::build(T const& v)
+{
   return build("", v);
 }
 
 template<typename T>
 Primitive::Ref
-Primitive::build(std::string const & n, T const & v) {
+Primitive::build(std::string const& n, T const& v)
+{
   return Ref(new Primitive(n, v));
 }
 
 template<size_t N, typename T>
 Primitive::Ref
-Primitive::build(const char (&n)[N], T const & v) {
+Primitive::build(const char (&n)[N], T const& v)
+{
   return Ref(new Primitive(std::string(n), v));
 }
 
 template<>
-Primitive::Primitive(std::string const & n, bool const & v);
+Primitive::Primitive(std::string const& n, bool const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, char const & v);
+Primitive::Primitive(std::string const& n, char const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, char const & v);
+Primitive::Primitive(std::string const& n, char const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, short const & v);
+Primitive::Primitive(std::string const& n, short const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned short const & v);
+Primitive::Primitive(std::string const& n, unsigned short const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, int const & v);
+Primitive::Primitive(std::string const& n, int const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned int const & v);
+Primitive::Primitive(std::string const& n, unsigned int const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, long const & v);
+Primitive::Primitive(std::string const& n, long const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, unsigned long const & v);
+Primitive::Primitive(std::string const& n, unsigned long const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, float const & v);
+Primitive::Primitive(std::string const& n, float const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, double const & v);
+Primitive::Primitive(std::string const& n, double const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, std::string const & v);
+Primitive::Primitive(std::string const& n, std::string const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, char * const & v);
+Primitive::Primitive(std::string const& n, char* const& v);
 
 template<>
-Primitive::Primitive(std::string const & n, const char * const & v);
+Primitive::Primitive(std::string const& n, const char* const& v);
 
 template<size_t N>
-Primitive::Primitive(std::string const & n, const char (&v)[N])
-  : Value(n, Type::String), m_content() {
+Primitive::Primitive(std::string const& n, const char (&v)[N])
+  : Value(n, Type::String), m_content()
+{
   if (N > 0) {
     bool hasZero = false;
-    for (size_t i = 0; i < N; i += 1) if (v[i] == '\0') {
-      hasZero = true;
-      break;
+    for (size_t i = 0; i < N; i += 1) {
+      if (v[i] == '\0') {
+        hasZero = true;
+        break;
+      }
     }
-    auto * c = new TypedContent<std::string>(hasZero ? std::string(v) : std::string(v, N));
+    auto* c = new TypedContent<std::string>(hasZero ? std::string(v)
+                                                    : std::string(v, N));
     m_content = Content::Ref(c);
   }
 }
 
 template<>
-bool
-Primitive::is<bool>() const;
+bool Primitive::is<bool>() const;
 
 template<>
-bool
-Primitive::is<short>() const;
+bool Primitive::is<short>() const;
 
 template<>
-bool
-Primitive::is<unsigned short>() const;
+bool Primitive::is<unsigned short>() const;
 
 template<>
-bool
-Primitive::is<int>() const;
+bool Primitive::is<int>() const;
 
 template<>
-bool
-Primitive::is<unsigned int>() const;
+bool Primitive::is<unsigned int>() const;
 
 template<>
-bool
-Primitive::is<long>() const;
+bool Primitive::is<long>() const;
 
 template<>
-bool
-Primitive::is<unsigned long>() const;
+bool Primitive::is<unsigned long>() const;
 
 template<>
-bool
-Primitive::is<float>() const;
+bool Primitive::is<float>() const;
 
 template<>
-bool
-Primitive::is<double>() const;
+bool Primitive::is<double>() const;
 
 template<>
-bool
-Primitive::is<std::string>() const;
+bool Primitive::is<std::string>() const;
 
 template<>
-double
-Primitive::value() const;
+double Primitive::value() const;
 
 template<typename T>
 Value::Type
-Primitive::typeOf() {
+Primitive::typeOf()
+{
   return Value::Type::Undefined;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<bool>() {
+inline Value::Type
+Primitive::typeOf<bool>()
+{
   return Value::Type::Boolean;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<short>() {
+inline Value::Type
+Primitive::typeOf<short>()
+{
   return Value::Type::Integer;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<int>() {
+inline Value::Type
+Primitive::typeOf<int>()
+{
   return Value::Type::Integer;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<long>() {
+inline Value::Type
+Primitive::typeOf<long>()
+{
   return Value::Type::Integer;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<float>() {
+inline Value::Type
+Primitive::typeOf<float>()
+{
   return Value::Type::Float;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<double>() {
+inline Value::Type
+Primitive::typeOf<double>()
+{
   return Value::Type::Float;
 }
 
 template<>
-inline
-Value::Type
-Primitive::typeOf<std::string>() {
+inline Value::Type
+Primitive::typeOf<std::string>()
+{
   return Value::Type::String;
 }
 
 template<typename T>
 T
-Primitive::value() const {
+Primitive::value() const
+{
   throw std::logic_error("Bad type conversion");
 }
 
 template<>
-inline
-bool
-Primitive::value() const {
+inline bool
+Primitive::value() const
+{
   if (Primitive::typeOf<bool>() == m_type) {
-    return static_cast<TypedContent<bool> const &>(*m_content).value();
+    return static_cast<TypedContent<bool> const&>(*m_content).value();
   }
   throw std::logic_error("Bad type conversion");
 }
 
 template<>
-inline
-short
-Primitive::value() const {
+inline short
+Primitive::value() const
+{
   if (Primitive::typeOf<short>() == m_type) {
-    auto const & c = static_cast<TypedContent<long> const &>(*m_content);
+    auto const& c = static_cast<TypedContent<long> const&>(*m_content);
     return static_cast<short>(c.value());
   }
   throw std::logic_error("Bad type conversion");
 }
 
 template<>
-inline
-int
-Primitive::value() const {
+inline int
+Primitive::value() const
+{
   if (Primitive::typeOf<int>() == m_type) {
-    auto const & c = static_cast<TypedContent<long> const &>(*m_content);
+    auto const& c = static_cast<TypedContent<long> const&>(*m_content);
     return static_cast<int>(c.value());
   }
   throw std::logic_error("Bad type conversion");
 }
 
 template<>
-inline
-long
-Primitive::value() const {
+inline long
+Primitive::value() const
+{
   if (Primitive::typeOf<long>() == m_type) {
-    return static_cast<TypedContent<long> const &>(*m_content).value();
+    return static_cast<TypedContent<long> const&>(*m_content).value();
   }
   throw std::logic_error("Bad type conversion");
 }
 
 template<>
-inline
-float
-Primitive::value() const {
+inline float
+Primitive::value() const
+{
   if (Primitive::typeOf<float>() == m_type) {
-    auto const & c = static_cast<TypedContent<double> const &>(*m_content);
+    auto const& c = static_cast<TypedContent<double> const&>(*m_content);
     return static_cast<float>(c.value());
   }
   throw std::logic_error("Bad type conversion");
 }
 
 template<>
-inline
-std::string
-Primitive::value() const {
+inline std::string
+Primitive::value() const
+{
   if (Primitive::typeOf<std::string>() == m_type) {
-    return static_cast<TypedContent<std::string> const &>(*m_content).value();
+    return static_cast<TypedContent<std::string> const&>(*m_content).value();
   }
   throw std::logic_error("Bad type conversion");
 }
 
-} // namespace tree
-} // namespace ace
+}}

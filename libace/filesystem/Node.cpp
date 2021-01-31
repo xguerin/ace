@@ -26,133 +26,187 @@
 #include <pwd.h>
 #include <unistd.h>
 
-namespace ace {
-namespace fs {
+namespace ace { namespace fs {
 
-Node::Node() : m_fd(-1), m_path() { }
+Node::Node() : m_fd(-1), m_path() {}
 
-Node::Node(Node const & o) : m_fd(o.m_fd), m_path(o.m_path) {
-  if (o.m_fd != -1) m_fd = dup(o.m_fd);
+Node::Node(Node const& o) : m_fd(o.m_fd), m_path(o.m_path)
+{
+  if (o.m_fd != -1) {
+    m_fd = dup(o.m_fd);
+  }
 }
 
-Node::~Node() {
-  if (m_fd != -1) close(m_fd);
+Node::~Node()
+{
+  if (m_fd != -1) {
+    close(m_fd);
+  }
 }
 
 bool
-Node::isValid() const {
+Node::isValid() const
+{
   return m_fd != -1;
 }
 
-fs::Path const &
-Node::path() const {
+fs::Path const&
+Node::path() const
+{
   return m_path;
 }
 
 Node::Type
-Node::type() const {
-  if (m_fd == -1) return Type::Unknown;
+Node::type() const
+{
+  if (m_fd == -1) {
+    return Type::Unknown;
+  }
   struct stat st;
-  if (fstat(m_fd, & st) != 0) return Type::Unknown;
-  return type(st.st_mode);
-}
-
-Node::Permission
-Node::permissions() const {
-  if (m_fd == -1) return Permission::None;
-  struct stat st;
-  if (fstat(m_fd, & st) != 0) return Permission::None;
-  return permissions(st.st_mode);
-}
-
-Node::Type
-Node::type(fs::Path const & p, const bool follow) {
-  struct stat st;
-  if (follow) {
-    if (stat(p.toString().c_str(), & st) != 0) return Type::Unknown;
-  } else {
-    if (lstat(p.toString().c_str(), & st) != 0) return Type::Unknown;
+  if (fstat(m_fd, &st) != 0) {
+    return Type::Unknown;
   }
   return type(st.st_mode);
 }
 
 Node::Permission
-Node::permissions(fs::Path const & p, const bool follow) {
+Node::permissions() const
+{
+  if (m_fd == -1) {
+    return Permission::None;
+  }
   struct stat st;
-  if (follow) {
-    if (stat(p.toString().c_str(), & st) != 0) return Permission::None;
-  } else {
-    if (lstat(p.toString().c_str(), & st) != 0) return Permission::None;
+  if (fstat(m_fd, &st) != 0) {
+    return Permission::None;
   }
   return permissions(st.st_mode);
 }
 
 Node::Type
-Node::parseType(std::string const & s) {
+Node::type(fs::Path const& p, const bool follow)
+{
+  struct stat st;
+  if (follow) {
+    if (stat(p.toString().c_str(), &st) != 0) {
+      return Type::Unknown;
+    }
+  } else {
+    if (lstat(p.toString().c_str(), &st) != 0) {
+      return Type::Unknown;
+    }
+  }
+  return type(st.st_mode);
+}
+
+Node::Permission
+Node::permissions(fs::Path const& p, const bool follow)
+{
+  struct stat st;
+  if (follow) {
+    if (stat(p.toString().c_str(), &st) != 0) {
+      return Permission::None;
+    }
+  } else {
+    if (lstat(p.toString().c_str(), &st) != 0) {
+      return Permission::None;
+    }
+  }
+  return permissions(st.st_mode);
+}
+
+Node::Type
+Node::parseType(std::string const& s)
+{
   const std::map<std::string, ace::fs::Node::Type> stringToType = {
-    { "block"     , ace::fs::Node::Type::Block      },
-    { "character" , ace::fs::Node::Type::Character  },
-    { "directory" , ace::fs::Node::Type::Directory  },
-    { "fifo"      , ace::fs::Node::Type::FIFO       },
-    { "regular"   , ace::fs::Node::Type::Regular    }
+    { "block", ace::fs::Node::Type::Block },
+    { "character", ace::fs::Node::Type::Character },
+    { "directory", ace::fs::Node::Type::Directory },
+    { "fifo", ace::fs::Node::Type::FIFO },
+    { "regular", ace::fs::Node::Type::Regular }
   };
-  if (stringToType.count(s) != 0) return stringToType.at(s);
+  if (stringToType.count(s) != 0) {
+    return stringToType.at(s);
+  }
   return Type::Unknown;
 }
 
 std::string
-Node::toString(const Type t) {
+Node::toString(const Type t)
+{
   const std::map<ace::fs::Node::Type, std::string> typeToString = {
-    {ace::fs::Node::Type::Block     , "block"     },
-    {ace::fs::Node::Type::Character , "character" },
-    {ace::fs::Node::Type::Directory , "directory" },
-    {ace::fs::Node::Type::FIFO      , "fifo"      },
-    {ace::fs::Node::Type::Regular   , "regular"   }
+    { ace::fs::Node::Type::Block, "block" },
+    { ace::fs::Node::Type::Character, "character" },
+    { ace::fs::Node::Type::Directory, "directory" },
+    { ace::fs::Node::Type::FIFO, "fifo" },
+    { ace::fs::Node::Type::Regular, "regular" }
   };
-  if (typeToString.count(t) != 0) return typeToString.at(t);
+  if (typeToString.count(t) != 0) {
+    return typeToString.at(t);
+  }
   return "unknown";
 }
 
 uid_t
-Node::userID() const {
-  if (m_fd == -1) return -1;
+Node::userID() const
+{
+  if (m_fd == -1) {
+    return -1;
+  }
   struct stat st;
-  if (fstat(m_fd, & st) != 0) return -1;
+  if (fstat(m_fd, &st) != 0) {
+    return -1;
+  }
   return st.st_uid;
 }
 
 uid_t
-Node::userID(fs::Path const & p, const bool follow) {
+Node::userID(fs::Path const& p, const bool follow)
+{
   struct stat st;
   if (follow) {
-    if (stat(p.toString().c_str(), & st) != 0) return -1;
+    if (stat(p.toString().c_str(), &st) != 0) {
+      return -1;
+    }
   } else {
-    if (lstat(p.toString().c_str(), & st) != 0) return -1;
+    if (lstat(p.toString().c_str(), &st) != 0) {
+      return -1;
+    }
   }
   return st.st_uid;
 }
 
 gid_t
-Node::groupID() const {
-  if (m_fd == -1) return -1;
+Node::groupID() const
+{
+  if (m_fd == -1) {
+    return -1;
+  }
   struct stat st;
-  if (fstat(m_fd, & st) != 0) return -1;
+  if (fstat(m_fd, &st) != 0) {
+    return -1;
+  }
   return st.st_gid;
 }
 
 gid_t
-Node::groupID(fs::Path const & p, const bool follow) {
+Node::groupID(fs::Path const& p, const bool follow)
+{
   struct stat st;
   if (follow) {
-    if (stat(p.toString().c_str(), & st) != 0) return -1;
+    if (stat(p.toString().c_str(), &st) != 0) {
+      return -1;
+    }
   } else {
-    if (lstat(p.toString().c_str(), & st) != 0) return -1;
+    if (lstat(p.toString().c_str(), &st) != 0) {
+      return -1;
+    }
   }
   return st.st_gid;
 }
 
 bool
-Node::readable() const {
+Node::readable() const
+{
   auto perms = permissions();
   if (perms & Permission::OtherRead) {
     return true;
@@ -169,7 +223,8 @@ Node::readable() const {
 }
 
 bool
-Node::readable(fs::Path const & p, const bool follow) {
+Node::readable(fs::Path const& p, const bool follow)
+{
   auto perms = permissions(p, follow);
   if (perms & Permission::OtherRead) {
     return true;
@@ -186,7 +241,8 @@ Node::readable(fs::Path const & p, const bool follow) {
 }
 
 bool
-Node::writeable() const {
+Node::writeable() const
+{
   auto perms = permissions();
   if (perms & Permission::OtherWrite) {
     return true;
@@ -203,7 +259,8 @@ Node::writeable() const {
 }
 
 bool
-Node::writeable(fs::Path const & p, const bool follow) {
+Node::writeable(fs::Path const& p, const bool follow)
+{
   auto perms = permissions(p, follow);
   if (perms & Permission::OtherWrite) {
     return true;
@@ -220,51 +277,64 @@ Node::writeable(fs::Path const & p, const bool follow) {
 }
 
 Node
-Node::parent() const {
+Node::parent() const
+{
   return Node();
 }
 
-Node &
-Node::operator=(Node const & o) {
+Node&
+Node::operator=(Node const& o)
+{
   m_path = o.m_path;
   m_fd = o.m_fd;
-  if (o.m_fd != -1) m_fd = dup(o.m_fd);
+  if (o.m_fd != -1) {
+    m_fd = dup(o.m_fd);
+  }
   return *this;
 }
 
 Node::Type
-Node::type(mode_t mode) {
+Node::type(mode_t mode)
+{
   return static_cast<Type>(mode & S_IFMT);
 }
 
 Node::Permission
-Node::permissions(mode_t mode) {
+Node::permissions(mode_t mode)
+{
   return static_cast<Permission>(mode & ~S_IFMT);
 }
 
-std::ostream &
-operator<<(std::ostream & o, Node::Type const & t) {
+std::ostream&
+operator<<(std::ostream& o, Node::Type const& t)
+{
   switch (t) {
-    case Node::Type::Block     : o << "Block";
-                                 break;
-    case Node::Type::Character : o << "Character";
-                                 break;
-    case Node::Type::Directory : o << "Directory";
-                                 break;
-    case Node::Type::FIFO      : o << "FIFO";
-                                 break;
-    case Node::Type::Regular   : o << "Regular";
-                                 break;
-    case Node::Type::Link      : o << "Link";
-                                 break;
-    case Node::Type::Socket    : o << "Socket";
-                                 break;
-    case Node::Type::Unknown   : o << "Unknown";
-                                 break;
+    case Node::Type::Block:
+      o << "Block";
+      break;
+    case Node::Type::Character:
+      o << "Character";
+      break;
+    case Node::Type::Directory:
+      o << "Directory";
+      break;
+    case Node::Type::FIFO:
+      o << "FIFO";
+      break;
+    case Node::Type::Regular:
+      o << "Regular";
+      break;
+    case Node::Type::Link:
+      o << "Link";
+      break;
+    case Node::Type::Socket:
+      o << "Socket";
+      break;
+    case Node::Type::Unknown:
+      o << "Unknown";
+      break;
   }
   return o;
 }
 
-} // namespace ace
-} // namespace fs
-
+}}

@@ -26,12 +26,11 @@
 #include <ace/common/String.h>
 #include <string>
 
-namespace ace {
-namespace pyfmt {
-namespace Object {
+namespace ace { namespace pyfmt { namespace Object {
 
 tree::Value::Ref
-build(std::string const & n, PyObject * o) {
+build(std::string const& n, PyObject* o)
+{
   tree::Object::Ref object = tree::Object::build(n);
   tree::Value::Ref v(nullptr);
   PyObject *key, *value;
@@ -49,20 +48,23 @@ build(std::string const & n, PyObject * o) {
 }
 
 void
-dump(tree::Value const & v, std::ostream & o, int l, bool i) {
-  tree::Object const & w = static_cast<tree::Object const &>(v);
-  if (not i) common::String::indent(o, l);
+dump(tree::Value const& v, std::ostream& o, int l, bool i)
+{
+  tree::Object const& w = static_cast<tree::Object const&>(v);
+  if (not i) {
+    common::String::indent(o, l);
+  }
   o << '{' << std::endl;
   size_t count = 0;
-  for (auto & e : w) {
+  for (auto& e : w) {
     common::String::indent(o, l + 2) << '\'' << e.first << "\' : ";
     dump_value(*e.second, o, l + 2, true);
-    if (count < w.size() - 1) o << ", ";
+    if (count < w.size() - 1) {
+      o << ", ";
+    }
     o << std::endl;
   }
   common::String::indent(o, l + 2) << '}';
 }
 
-} // namespace Object
-} // namespace pyfmt
-} // namespace ace
+}}}

@@ -34,23 +34,22 @@
 #define FILENAME_LEN 24
 #define FILELINE_LEN 5
 
-namespace ace {
-namespace common {
+namespace ace { namespace common {
 
 // Log constants
 
-const char Log::Plain[]      = "\x1b[0m";
-const char Log::Bold[]       = "\x1b[1m";
-const char Log::Faint[]      = "\x1b[2m";
-const char Log::Italic[]     = "\x1b[3m";
-const char Log::Underline[]  = "\x1b[4m";
-const char Log::Red[]        = "\x1b[31m";
-const char Log::Yellow[]     = "\x1b[32m";
-const char Log::Green[]      = "\x1b[33m";
-const char Log::Blue[]       = "\x1b[34m";
-const char Log::Magenta[]    = "\x1b[35m";
-const char Log::Cyan[]       = "\x1b[36m";
-const char Log::White[]      = "\x1b[37m";
+const char Log::Plain[] = "\x1b[0m";
+const char Log::Bold[] = "\x1b[1m";
+const char Log::Faint[] = "\x1b[2m";
+const char Log::Italic[] = "\x1b[3m";
+const char Log::Underline[] = "\x1b[4m";
+const char Log::Red[] = "\x1b[31m";
+const char Log::Yellow[] = "\x1b[32m";
+const char Log::Green[] = "\x1b[33m";
+const char Log::Blue[] = "\x1b[34m";
+const char Log::Magenta[] = "\x1b[35m";
+const char Log::Cyan[] = "\x1b[36m";
+const char Log::White[] = "\x1b[37m";
 
 static const char levelCode[7] = {
   'N', // None
@@ -67,28 +66,42 @@ static const char levelCode[7] = {
 Log::Channel::Channel()
   : m_file()
   , m_fileName(defaultOutputPath())
-  , m_outStream(toStream(getenv("ACE_LOG_STREAM"))) {
-  if (isFileStream()) m_file.open(m_fileName);
+  , m_outStream(toStream(getenv("ACE_LOG_STREAM")))
+{
+  if (isFileStream()) {
+    m_file.open(m_fileName);
+  }
 }
 
-Log::Channel::~Channel() {
-  if (isFileStream()) m_file.close();
+Log::Channel::~Channel()
+{
+  if (isFileStream()) {
+    m_file.close();
+  }
 }
 
 bool
-Log::Channel::changeFileStreamDestination(std::string const & dest) {
-  if (not isFileStream()) return false;
+Log::Channel::changeFileStreamDestination(std::string const& dest)
+{
+  if (not isFileStream()) {
+    return false;
+  }
   m_file.close();
   m_file.clear();
-  if (::rename(m_fileName.c_str(), dest.c_str()) != 0) return false;
+  if (::rename(m_fileName.c_str(), dest.c_str()) != 0) {
+    return false;
+  }
   m_file.open(dest);
-  if (m_file.fail()) return false;
+  if (m_file.fail()) {
+    return false;
+  }
   m_fileName = dest;
   return true;
 }
 
 std::string
-Log::Channel::defaultOutputPath() {
+Log::Channel::defaultOutputPath()
+{
   std::stringstream ss;
 #if defined(__linux__)
   char name[32] = { 0 };
@@ -109,77 +122,95 @@ Log::Channel::defaultOutputPath() {
   return (fs::Directory().path() / ss.str()).toString();
 }
 
-std::ostream &
-Log::Channel::toStream(const char * description) {
-  if (description == 0) {
-    return std::cout;
-  } else if (strcmp(description, "STDOUT") == 0) {
-    return std::cout;
-  } else if (strcmp(description, "STDERR") == 0) {
-    return std::cerr;
-  } else if (strcmp(description, "FILE") == 0) {
-    return m_file;
-  } else {
-    return std::cout;
+std::ostream&
+Log::Channel::toStream(const char* description)
+{
+  if (description != NULL) {
+    if (strcmp(description, "STDOUT") == 0) {
+      return std::cout;
+    } else if (strcmp(description, "STDERR") == 0) {
+      return std::cerr;
+    } else if (strcmp(description, "FILE") == 0) {
+      return m_file;
+    }
   }
+  return std::cout;
 }
 
 // Log class
 
-Log::Log()
-  : m_lock(PTHREAD_MUTEX_INITIALIZER)
-  , m_level()
-  , m_channels() {
+Log::Log() : m_lock(PTHREAD_MUTEX_INITIALIZER), m_level(), m_channels()
+{
   Level l = Warning;
-  const char * d = getenv("ACE_LOG_LEVEL");
-  if (d != 0) l = parseLogLevel(d);
+  const char* d = getenv("ACE_LOG_LEVEL");
+  if (d != 0) {
+    l = parseLogLevel(d);
+  }
   setLogLevel(l);
 }
 
-Log::~Log() { }
+Log::~Log() {}
 
 bool
-Log::isFileStream() {
+Log::isFileStream()
+{
   return channel().isFileStream();
 }
 
 bool
-Log::changeFileStreamDestination(std::string const & dest) {
+Log::changeFileStreamDestination(std::string const& dest)
+{
   return channel().changeFileStreamDestination(dest);
 }
 
 bool
-Log::recycle() {
-  return channel(true).isFileStream() ;
+Log::recycle()
+{
+  return channel(true).isFileStream();
 }
 
 Log::Level
-Log::parseLogLevel(std::string const & l) {
-  if (l == "ERROR")   return Error;
-  if (l == "WARNING") return Warning;
-  if (l == "INFO")    return Info;
-  if (l == "DEBUG")   return Debug;
-  if (l == "EXTRA")   return Extra;
-  if (l == "ALL")     return All;
+Log::parseLogLevel(std::string const& l)
+{
+  if (l == "ERROR") {
+    return Error;
+  }
+  if (l == "WARNING") {
+    return Warning;
+  }
+  if (l == "INFO") {
+    return Info;
+  }
+  if (l == "DEBUG") {
+    return Debug;
+  }
+  if (l == "EXTRA") {
+    return Extra;
+  }
+  if (l == "ALL") {
+    return All;
+  }
   return None;
 }
 
 void
-Log::setLogLevel(const Level l) {
+Log::setLogLevel(const Level l)
+{
   m_level = l;
 }
 
-Log::Channel &
-Log::channel(bool recycle) {
-  static __thread Channel * c = 0;
+Log::Channel&
+Log::channel(bool recycle)
+{
+  static __thread Channel* c = 0;
   /**
    * Recycle channel if requested
    */
   if (c != nullptr and recycle) {
     pthread_t self = pthread_self();
-    pthread_mutex_lock(& m_lock);
+    pthread_mutex_lock(&m_lock);
     m_channels.erase(m_channels.find(self));
-    pthread_mutex_unlock(& m_lock);
+    pthread_mutex_unlock(&m_lock);
     c = nullptr;
   }
   /**
@@ -187,47 +218,57 @@ Log::channel(bool recycle) {
    */
   if (c == nullptr) {
     pthread_t self = pthread_self();
-    pthread_mutex_lock(& m_lock);
+    pthread_mutex_lock(&m_lock);
     /**
      * First clean-up the channel list
      */
     struct sched_param params;
     int policy;
-    auto it = m_channels . begin(), cur = it;
-    while (it != m_channels . end()) {
-      switch (pthread_getschedparam(it -> first, & policy, & params)) {
-        case ESRCH    : cur = it++;
-                        m_channels . erase(cur);
-                        break;
-        default       : ++it;
-                        break;
+    auto it = m_channels.begin(), cur = it;
+    while (it != m_channels.end()) {
+      switch (pthread_getschedparam(it->first, &policy, &params)) {
+        case ESRCH:
+          cur = it++;
+          m_channels.erase(cur);
+          break;
+        default:
+          ++it;
+          break;
       }
     }
     /**
      * Then create a new channel for the thread
      */
     m_channels[self] = std::shared_ptr<Channel>(new Channel());
-    c = m_channels[self] . get();
-    pthread_mutex_unlock(& m_lock);
+    c = m_channels[self].get();
+    pthread_mutex_unlock(&m_lock);
   }
   return *c;
 }
 
 void
-Log::doHeader(Channel & c, Level l, std::string const & f, int n, std::ostringstream & oss) {
+Log::doHeader(Channel& c, Level l, std::string const& f, int n,
+              std::ostringstream& oss)
+{
   char buffer[128] = { 0 };
   /**
    * Color the line depending on the log level
    */
-  if (not c.isFileStream() and isatty(1)) switch (l) {
-    case Error    : oss << Red;
-                    break;
-    case Warning  : oss << Yellow;
-                    break;
-    case Info     : oss << Blue;
-                    break;
-    default       : oss << Plain;
-                    break;
+  if (not c.isFileStream() and isatty(1)) {
+    switch (l) {
+      case Error:
+        oss << Red;
+        break;
+      case Warning:
+        oss << Yellow;
+        break;
+      case Info:
+        oss << Blue;
+        break;
+      default:
+        oss << Plain;
+        break;
+    }
   }
   /**
    * Add a timestamp
@@ -238,7 +279,8 @@ Log::doHeader(Channel & c, Level l, std::string const & f, int n, std::ostringst
   strftime(buffer, 128, "%T", timeinfo);
   struct timeval tv;
   gettimeofday(&tv, nullptr);
-  oss << buffer << "." << std::setw(6) << std::setfill('0') << std::right << tv.tv_usec << " ";
+  oss << buffer << "." << std::setw(6) << std::setfill('0') << std::right
+      << tv.tv_usec << " ";
   oss << std::setfill(' ') << std::left;
   /**
    * Show the log level
@@ -265,27 +307,24 @@ Log::doHeader(Channel & c, Level l, std::string const & f, int n, std::ostringst
    * Write the file info
    */
   size_t len = f.length();
-  size_t off =(len > FILENAME_LEN) ? len - FILENAME_LEN : 0;
-  std::string fnfo = f . substr(off) + ":" + std::to_string(n);
-  oss
-    << std::left
-    << std::setfill('.')
-    << std::setw(FILENAME_LEN + FILELINE_LEN + 1)
-    << fnfo
-    << std::left << std::setfill(' ') << std::setw(2)
-    << "] ";
+  size_t off = (len > FILENAME_LEN) ? len - FILENAME_LEN : 0;
+  std::string fnfo = f.substr(off) + ":" + std::to_string(n);
+  oss << std::left << std::setfill('.')
+      << std::setw(FILENAME_LEN + FILELINE_LEN + 1) << fnfo << std::left
+      << std::setfill(' ') << std::setw(2) << "] ";
   /**
    * Reset the coloring to Plain
    */
-  if (not c.isFileStream() and isatty(1)) oss << Plain;
+  if (not c.isFileStream() and isatty(1)) {
+    oss << Plain;
+  }
 }
 
-Log &
-Log::get() {
+Log&
+Log::get()
+{
   static Log singleton;
   return singleton;
 }
 
-} // namespace common
-} // namespace ace
-
+}}

@@ -29,39 +29,39 @@
 #include <list>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-template<typename T, bool O = false, typename C = std::less<T>, typename F = FormatChecker<T>>
-class RangedType : public virtual Type<T, F> {
- public:
-
+template<typename T, bool O = false, typename C = std::less<T>,
+         typename F = FormatChecker<T>>
+class RangedType : public virtual Type<T, F>
+{
+public:
   using RangeAttributeType = RangeAttribute<T, C, O>;
 
- public:
-
+public:
   RangedType() = delete;
-  explicit RangedType(RangedType const &) = default;
-  virtual ~RangedType() { }
+  explicit RangedType(RangedType const&) = default;
+  virtual ~RangedType() {}
 
   virtual bool validateModel();
 
   bool isRanged() const;
 
-  bool checkRangeConstraint(std::string const & v) const;
-  bool constrainByRange(std::string const & v);
+  bool checkRangeConstraint(std::string const& v) const;
+  bool constrainByRange(std::string const& v);
 
   virtual bool hasRangeAttribute() const;
-  virtual RangeAttributeType const & rangeAttribute() const;
+  virtual RangeAttributeType const& rangeAttribute() const;
 
- protected:
-
-  RangedType(const BasicType::Kind k, std::string const & a = "?1+*");
+protected:
+  RangedType(const BasicType::Kind k, std::string const& a = "?1+*");
 };
 
 template<typename T, bool O, typename C, typename F>
-RangedType<T, O, C, F>::RangedType(const BasicType::Kind k, std::string const & a)
-    : Type<T, F>(k, a) {
+RangedType<T, O, C, F>::RangedType(const BasicType::Kind k,
+                                   std::string const& a)
+  : Type<T, F>(k, a)
+{
   this->m_attributes.template define<RangeAttributeType>("range", true);
   this->m_attributes.exclude("range", "either");
   this->m_attributes.exclude("range", "map");
@@ -69,26 +69,37 @@ RangedType<T, O, C, F>::RangedType(const BasicType::Kind k, std::string const & 
 
 template<typename T, bool O, typename C, typename F>
 bool
-RangedType<T, O, C, F>::validateModel() {
-  if (not Type<T, F>::validateModel()) return false;
-  if (not this->hasDefaultAttribute()) return true;
-  if (not hasRangeAttribute()) return true;
-  for (auto const & dv : this->defaultValues()) if (not rangeAttribute().check(dv)) {
-    ERROR(ERR_RANGE_INVALID_DEFAULT);
+RangedType<T, O, C, F>::validateModel()
+{
+  if (not Type<T, F>::validateModel()) {
     return false;
+  }
+  if (not this->hasDefaultAttribute()) {
+    return true;
+  }
+  if (not hasRangeAttribute()) {
+    return true;
+  }
+  for (auto const& dv : this->defaultValues()) {
+    if (not rangeAttribute().check(dv)) {
+      ERROR(ERR_RANGE_INVALID_DEFAULT);
+      return false;
+    }
   }
   return true;
 }
 
 template<typename T, bool O, typename C, typename F>
 bool
-RangedType<T, O, C, F>::isRanged() const {
+RangedType<T, O, C, F>::isRanged() const
+{
   return true;
 }
 
 template<typename T, bool O, typename C, typename F>
 bool
-RangedType<T, O, C, F>::checkRangeConstraint(std::string const & v) const {
+RangedType<T, O, C, F>::checkRangeConstraint(std::string const& v) const
+{
   RangeAttributeType attr("range", true);
   attr.setParent(this);
   return attr.checkConstraint(v);
@@ -96,24 +107,28 @@ RangedType<T, O, C, F>::checkRangeConstraint(std::string const & v) const {
 
 template<typename T, bool O, typename C, typename F>
 bool
-RangedType<T, O, C, F>::constrainByRange(std::string const & v) {
-  if (not hasRangeAttribute()) this->m_attributes.activate("range");
-  Attribute & attr = *this->m_attributes["range"];
-  return static_cast<RangeAttributeType &>(attr).constrain(v);
+RangedType<T, O, C, F>::constrainByRange(std::string const& v)
+{
+  if (not hasRangeAttribute()) {
+    this->m_attributes.activate("range");
+  }
+  Attribute& attr = *this->m_attributes["range"];
+  return static_cast<RangeAttributeType&>(attr).constrain(v);
 }
 
 template<typename T, bool O, typename C, typename F>
 bool
-RangedType<T, O, C, F>::hasRangeAttribute() const {
+RangedType<T, O, C, F>::hasRangeAttribute() const
+{
   return this->m_attributes.has("range");
 }
 
 template<typename T, bool O, typename C, typename F>
-typename RangedType<T, O, C, F>::RangeAttributeType const &
-RangedType<T, O, C, F>::rangeAttribute() const {
-  Attribute const & attr = *this->m_attributes["range"];
-  return static_cast<RangeAttributeType const &>(attr);
+typename RangedType<T, O, C, F>::RangeAttributeType const&
+RangedType<T, O, C, F>::rangeAttribute() const
+{
+  Attribute const& attr = *this->m_attributes["range"];
+  return static_cast<RangeAttributeType const&>(attr);
 }
 
-} // namespace model
-} // namespace ace
+}}

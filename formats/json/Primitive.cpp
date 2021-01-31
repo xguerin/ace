@@ -26,12 +26,11 @@
 #include <sstream>
 #include <string>
 
-namespace ace {
-namespace jsonfmt {
-namespace Primitive {
+namespace ace { namespace jsonfmt { namespace Primitive {
 
 tree::Value::Ref
-build(std::string const & name, json_t * const pri) {
+build(std::string const& name, json_t* const pri)
+{
   tree::Primitive::Ref result = nullptr;
   switch (json_typeof(pri)) {
     case JSON_STRING: {
@@ -58,9 +57,10 @@ build(std::string const & name, json_t * const pri) {
   return result;
 }
 
-json_t *
-dump(tree::Value const & v) {
-  tree::Primitive const & p = static_cast<tree::Primitive const &>(v);
+json_t*
+dump(tree::Value const& v)
+{
+  tree::Primitive const& p = static_cast<tree::Primitive const&>(v);
   if (p.is<bool>()) {
     return json_boolean(p.value<bool>());
   }
@@ -76,6 +76,4 @@ dump(tree::Value const & v) {
   return nullptr;
 }
 
-} // namespace Primitive
-} // namespace jsonfmt
-} // namespace ace
+}}}

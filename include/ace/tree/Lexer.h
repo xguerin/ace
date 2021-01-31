@@ -26,27 +26,22 @@
 #include <cstdlib>
 #include <string>
 
-namespace ace {
-namespace tree {
-namespace path {
+namespace ace { namespace tree { namespace path {
 
-class Scan {
- public:
-
+class Scan
+{
+public:
   Scan();
   ~Scan();
 
-  Path parse(std::string const & str);
+  Path parse(std::string const& str);
 
- private:
-
-  int           cs;       // NOLINT
-  int           act;      // NOLINT
-  const char *  ts;       // NOLINT
-  const char *  te;       // NOLINT
-  void *        lparser;  // NOLINT
+private:
+  int cs;         // NOLINT
+  int act;        // NOLINT
+  const char* ts; // NOLINT
+  const char* te; // NOLINT
+  void* lparser;  // NOLINT
 };
 
-} // namespace path
-} // namespace tree
-} // namespace ace
+}}}

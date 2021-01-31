@@ -24,19 +24,18 @@
 #include <ace/tree/Checker.h>
 #include <string>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 Boolean::Boolean()
-  : Type(BasicType::Kind::Boolean)
-  , EnumeratedType(BasicType::Kind::Boolean) { }
+  : Type(BasicType::Kind::Boolean), EnumeratedType(BasicType::Kind::Boolean)
+{}
 
 BasicType::Ref
-Boolean::clone(std::string const & n) const {
-  Boolean * b = new Boolean(*this);
+Boolean::clone(std::string const& n) const
+{
+  Boolean* b = new Boolean(*this);
   b->setName(n);
   return BasicType::Ref(b);
 }
 
-} // namespace model
-} // namespace ace
+}}

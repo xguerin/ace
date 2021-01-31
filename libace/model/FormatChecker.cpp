@@ -22,16 +22,15 @@
 
 #include <ace/model/FormatChecker.h>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
-FormatChecker<void>::FormatChecker(const BasicType * o) : m_owner(o) { }
+FormatChecker<void>::FormatChecker(const BasicType* o) : m_owner(o) {}
 
 bool
-FormatChecker<void>::operator()(tree::Object const & r, tree::Value const & v) const {
+FormatChecker<void>::operator()(tree::Object const& r,
+                                tree::Value const& v) const
+{
   return true;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

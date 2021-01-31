@@ -27,16 +27,16 @@
 #include <ace/tree/Array.h> // NOLINT
 #include <string>
 
-namespace ace {
-namespace jsonfmt {
-namespace Array {
+namespace ace { namespace jsonfmt { namespace Array {
 
 tree::Value::Ref
-build(std::string const & name, json_t * const ary) {
+build(std::string const& name, json_t* const ary)
+{
   tree::Array::Ref array = tree::Array::build(name);
   size_t index = 0;
-  json_t * value = nullptr;
-  json_array_foreach(ary, index, value) {
+  json_t* value = nullptr;
+  json_array_foreach(ary, index, value)
+  {
     tree::Value::Ref v = Common::build(std::to_string(index), value);
     if (v == nullptr) {
       ACE_LOG(Error, "skipping unsupported value format at index: ", index);
@@ -47,17 +47,16 @@ build(std::string const & name, json_t * const ary) {
   return array;
 }
 
-json_t *
-dump(tree::Value const & v) {
-  tree::Array const & ary = static_cast<tree::Array const &>(v);
-  json_t * result = json_array();
-  for (auto const & e : ary) {
-    json_t * value = Common::dump(*e);
+json_t*
+dump(tree::Value const& v)
+{
+  tree::Array const& ary = static_cast<tree::Array const&>(v);
+  json_t* result = json_array();
+  for (auto const& e : ary) {
+    json_t* value = Common::dump(*e);
     json_array_append_new(result, value);
   }
   return result;
 }
 
-} // namespace Array
-} // namespace jsonfmt
-} // namespace ace
+}}}

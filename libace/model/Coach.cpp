@@ -23,29 +23,34 @@
 #include <ace/model/Coach.h>
 #include <iostream>
 
-namespace ace {
-namespace model {
+namespace ace { namespace model {
 
 const Coach::Branch Coach::Branch::Root(0, 0);
 
 Coach::Branch::Branch(const uint64_t mask, const size_t count)
-    : m_mask(mask), m_count(count) { }
+  : m_mask(mask), m_count(count)
+{}
 
 Coach::Branch
-Coach::Branch::push(const Type t) const {
+Coach::Branch::push(const Type t) const
+{
   Coach::Branch here = *this;
   switch (here.front()) {
-    case Type::Corner : here = here.pop().push(Type::None);
-                        break;
-    case Type::Tee    : here = here.pop().push(Type::Straight);
-                        break;
-    default           : break;
+    case Type::Corner:
+      here = here.pop().push(Type::None);
+      break;
+    case Type::Tee:
+      here = here.pop().push(Type::Straight);
+      break;
+    default:
+      break;
   }
   return here.append(t);
 }
 
 Coach::Branch
-Coach::Branch::pop() const {
+Coach::Branch::pop() const
+{
   size_t count = m_count - 1;
   uint64_t erase = 0xFF;
   erase = ~(erase << (count * 2));
@@ -53,19 +58,24 @@ Coach::Branch::pop() const {
   return Branch(mask, count);
 }
 
-std::ostream &
-Coach::Branch::print(std::ostream & o) const {
+std::ostream&
+Coach::Branch::print(std::ostream& o) const
+{
   uint64_t iter = m_mask;
-  while (iter !=0) {
+  while (iter != 0) {
     switch (iter & 0x3) {
-      case Branch::Type::Straight : o << "│   ";
-                                    break;
-      case Branch::Type::Corner   : o << "└── ";
-                                    break;
-      case Branch::Type::Tee      : o << "├── ";
-                                    break;
-      default                     : o << "    ";
-                                    break;
+      case Branch::Type::Straight:
+        o << "│   ";
+        break;
+      case Branch::Type::Corner:
+        o << "└── ";
+        break;
+      case Branch::Type::Tee:
+        o << "├── ";
+        break;
+      default:
+        o << "    ";
+        break;
     }
     iter = iter >> 2;
   }
@@ -73,7 +83,8 @@ Coach::Branch::print(std::ostream & o) const {
 }
 
 Coach::Branch
-Coach::Branch::append(const Type t) const {
+Coach::Branch::append(const Type t) const
+{
   uint64_t elem = t;
   uint64_t mask = (elem << (m_count * 2)) | m_mask;
   size_t count = m_count + 1;
@@ -81,7 +92,8 @@ Coach::Branch::append(const Type t) const {
 }
 
 Coach::Branch::Type
-Coach::Branch::front() const {
+Coach::Branch::front() const
+{
   uint64_t sel = 0xFF;
   sel = sel << ((m_count - 1) * 2);
   Type t = static_cast<Type>((m_mask & sel) >> ((m_count - 1) * 2));
@@ -89,18 +101,16 @@ Coach::Branch::front() const {
 }
 
 void
-Coach::display(Branch const & br) const {
-}
-
+Coach::display(Branch const& br) const
+{}
 
 bool
-Coach::explain(tree::Path const & p, tree::Path::const_iterator const & i) const {
+Coach::explain(tree::Path const& p, tree::Path::const_iterator const& i) const
+{
   if (i == p.end()) {
     std::cout << "[" << p << "]" << std::endl;
   }
   return true;
 }
 
-} // namespace model
-} // namespace ace
-
+}}

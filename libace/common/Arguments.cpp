@@ -24,18 +24,19 @@
 #include <cstdlib>
 #include <cstring>
 
-namespace ace {
-namespace common {
-namespace Arguments {
+namespace ace { namespace common { namespace Arguments {
 
-char **
-normalize(const int argc, const char * const argv[]) {
-  if (argc <= 0) return nullptr;
-  char ** r = static_cast<char **>(calloc(argc, sizeof(char *)));
+char**
+normalize(const int argc, const char* const argv[])
+{
+  if (argc <= 0) {
+    return nullptr;
+  }
+  char** r = static_cast<char**>(calloc(argc, sizeof(char*)));
   for (int i = 0; i < argc; i += 1) {
     if (strncmp(argv[i], "-L", 2) == 0 or strncmp(argv[i], "-I", 2) == 0) {
       const size_t arglen = strlen(argv[i]) + 2;
-      r[i] = static_cast<char *>(calloc(arglen, sizeof(char)));
+      r[i] = static_cast<char*>(calloc(arglen, sizeof(char)));
       strncpy(r[i], argv[i], 2);
       r[i][2] = ' ';
 #if defined(__OpenBSD__)
@@ -50,8 +51,4 @@ normalize(const int argc, const char * const argv[]) {
   return r;
 }
 
-} // namespace Arguments
-} // namespace common
-} // namespace ace
-
-
+}}}

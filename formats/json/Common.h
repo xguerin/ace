@@ -26,22 +26,14 @@
 #include <string>
 #include <jansson.h>
 
-namespace ace {
-namespace jsonfmt {
-namespace Common {
+namespace ace { namespace jsonfmt { namespace Common {
 
-tree::Value::Ref
-build(std::string const & name, json_t * const value);
+tree::Value::Ref build(std::string const& name, json_t* const value);
 
-tree::Value::Ref
-parseFile(std::string const & path);
+tree::Value::Ref parseFile(std::string const& path);
 
-tree::Value::Ref
-parseString(std::string const & str);
+tree::Value::Ref parseString(std::string const& str);
 
-json_t *
-dump(tree::Value const & v);
+json_t* dump(tree::Value const& v);
 
-} // namespace Common
-} // namespace inifmt
-} // namespace ace
+}}}

@@ -29,15 +29,14 @@
 #include <string>
 #include <pthread.h>
 
-#define ACE_LOG(__l, __a...)  \
+#define ACE_LOG(__l, __a...)                                                   \
   ace::common::Log::get().write(ace::common::Log::__l, __FILE__, __LINE__, __a)
 
-namespace ace {
-namespace common {
+namespace ace { namespace common {
 
-class Log {
- public:
-
+class Log
+{
+public:
   // Constants
 
   static const char Plain[];
@@ -55,101 +54,102 @@ class Log {
 
   // Level
 
-  enum Level {
-    None    = 0,
-    Error   = 1,
+  enum Level
+  {
+    None = 0,
+    Error = 1,
     Warning = 2,
-    Info    = 3,
-    Debug   = 4,
-    Extra   = 5,
-    All     = 6
+    Info = 3,
+    Debug = 4,
+    Extra = 5,
+    All = 6
   };
 
- public:
-
+public:
   ~Log();
 
-  static Log & get();
+  static Log& get();
 
   bool isFileStream();
-  bool changeFileStreamDestination(std::string const & dest);
+  bool changeFileStreamDestination(std::string const& dest);
 
   template<typename... Args>
-  void write(Level l, std::string const & f, int n, Args const & ... a);
+  void write(Level l, std::string const& f, int n, Args const&... a);
 
   bool recycle();
 
-  static Level parseLogLevel(std::string const & l);
+  static Level parseLogLevel(std::string const& l);
   void setLogLevel(const Level l);
 
- private:
-
-  class Channel {
-   public:
-
+private:
+  class Channel
+  {
+  public:
     Channel();
-    explicit Channel(Channel const & o) = delete;
+    explicit Channel(Channel const& o) = delete;
     ~Channel();
 
     bool isFileStream() const;
-    bool changeFileStreamDestination(std::string const & dest);
+    bool changeFileStreamDestination(std::string const& dest);
 
     template<typename T, typename... Args>
-      void write(T const & e, Args const & ... args);
+    void write(T const& e, Args const&... args);
 
-   private:
-
+  private:
     static std::string defaultOutputPath();
 
-    std::ostream & toStream(const char * description);
+    std::ostream& toStream(const char* description);
     void write();
 
-    std::ofstream   m_file;
-    std::string     m_fileName;
-    std::ostream &  m_outStream;
+    std::ofstream m_file;
+    std::string m_fileName;
+    std::ostream& m_outStream;
   };
 
-  using Channels = std::map<pthread_t, std::shared_ptr<Channel> >;
+  using Channels = std::map<pthread_t, std::shared_ptr<Channel>>;
 
   Log();
 
-  Channel & channel(bool recycle = false);
+  Channel& channel(bool recycle = false);
 
-  void doHeader(Channel & c, Level l, std::string const & f, int n,
-                 std::ostringstream & o);
+  void doHeader(Channel& c, Level l, std::string const& f, int n,
+                std::ostringstream& o);
 
   pthread_mutex_t m_lock;
-  Level           m_level;
-  Channels        m_channels;
+  Level m_level;
+  Channels m_channels;
 };
 
 inline bool
-Log::Channel::isFileStream() const {
+Log::Channel::isFileStream() const
+{
   return &m_outStream == &m_file;
 }
 
 template<typename T, typename... Args>
 void
-Log::Channel::write(T const & e, Args const & ... args) {
+Log::Channel::write(T const& e, Args const&... args)
+{
   m_outStream << e;
   write(args...);
 }
 
 inline void
-Log::Channel::write() {
+Log::Channel::write()
+{
   m_outStream << std::endl;
 }
 
 template<typename... Args>
 void
-Log::write(Level l, std::string const & f, int n, Args const & ... a) {
+Log::write(Level l, std::string const& f, int n, Args const&... a)
+{
   if (__builtin_expect(l <= m_level and m_level != Level::None, 0)) {
     std::ostringstream oss;
-    Channel & c = channel();
+    Channel& c = channel();
     doHeader(c, l, f, n, oss);
     c.write(oss.str(), a...);
   }
 }
 
-} // namespace common
-} // namespace ace
+}}
