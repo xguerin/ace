@@ -1,0 +1,22 @@
+name: Build-And-Test
+
+on: [ push, pull_request ]
+
+jobs:
+  buildAndTest:
+    name: Build the code base and run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install packages
+        run: sudo apt-get install lemon libgtest-dev libjansson-dev liblua5.2-dev libre2-dev libtclap-dev ragel
+      - name: Build googletests
+        run: cd /usr/src/googletest && sudo cmake . && sudo cmake --build . --target install
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build project
+        uses: nicledomaS/cmake_build_action@v1.3
+        with:
+          submodule_update: ON
+          cmake_args: -DACE_PLUGIN_HJSON=OFF;-DACE_PLUGIN_PYTHON=OFF;-DACE_PLUGIN_SEXP=OFF;-DACE_PLUGIN_YAML=OFF
+          run_tests: ON
+          unit_test_build: -DACE_BUILD_TESTS=ON
