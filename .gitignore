@@ -8,6 +8,6 @@
 *.x
 .*.swp
 .cache
-build*
+build
 reports
 site
