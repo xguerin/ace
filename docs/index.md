@@ -14,11 +14,12 @@ Grab [the source code](https://github.com/xguerin/ace). ACE has several
 dependencies, listed below. Dependencies with checkmarks can be installed using
 [Conan](https://conan.io):
 
-* [X] [lemon](http://www.hwaci.com/sw/lemon) (macOS: **NOT** the current Homebrew version)
+* [X] [lemon](http://www.hwaci.com/sw/lemon)
 * [X] [ragel](http://www.colm.net/open-source/ragel)
 * [X] [TCLAP](http://tclap.sourceforge.net/)
 * [X] [RE2](https://github.com/google/re2)
 * [X] [GTest](https://github.com/google/googletest) if testing is enabled
+* [ ] [hjson](https://hjson.github.io) for HJSON support
 * [X] [jansson](http://www.digip.org/jansson) for JSON support
 * [ ] Python 2.x for Python support
 * [ ] Lua 5.2.4 for Lua support
@@ -56,6 +57,7 @@ make install
 
 The `cmake` command accepts the following variables (default is shown **bold**):
 
+* `ACE_PLUGIN_HJSON`: enables the HJSON file plugin. Accepts **`ON`** or `OFF`.
 * `ACE_PLUGIN_JSON`: enables the JSON file plugin. Accepts **`ON`** or `OFF`.
 * `ACE_PLUGIN_LUA`: enables the LUA file plugin. Accepts **`ON`** or `OFF`.
 * `ACE_PLUGIN_PYTHON`: enables the PYTHON file plugin. Accepts **`ON`** or `OFF`.

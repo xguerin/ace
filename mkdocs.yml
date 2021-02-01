@@ -1,6 +1,6 @@
 site_name: Adaptable Configuration Engine
 theme: windmill
-pages:
+nav:
   - 'Home' : 'index.md'
   - 'Models' : 'models.md'
   - 'Types' : 'types.md'

@@ -1,11 +1,11 @@
 #### About
 
-ACE is a model-based authoring and validation environment for configurations. It
-aims at bringing determinism to tool configuration by externalizing the
-configuration definition into a separate model file that acts as the expected
-layout of the configuration. Additionally, ACE's flexible architecture makes it
-easy to integrate any kind of configuration formats. It currently supports JSON,
-TOML, Python and Lua.
+ACE is a model-based authoring and validation environment for configurations.
+
+It aims at bringing determinism to configurations by externalizing their
+definitions into a separate model files. Its flexible architecture facilitates
+the integration of many configuration formats. It currently supports HJSON,
+JSON, INI, SEXP, TOML, Python, Lua, and YAML.
 
 #### Documentation
 

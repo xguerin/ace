@@ -9,7 +9,7 @@ default: build
 all: clean build test lint
 
 clean:
-	@rm -rf $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR) site
 
 prepare:
 	@if [ ! -e $(BUILD_DIR) ];		\
