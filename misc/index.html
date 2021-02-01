@@ -75,7 +75,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <h2 id="alterations">Alterations</h2>
 <p>It is possible to use the command line arguments to alter the configuration. To use this feature, simple use the <code>parseFile</code> or <code>parseString</code> helper API, passing as a third argument a vector of string with the following format: <code>X.Y.Z=VALUE</code>.</p>
 <h3 id="example">Example</h3>
-<pre><code class="cpp">#include &lt;Model.ac.h&gt;
+<pre><code class="language-cpp">#include &lt;Model.ac.h&gt;
 #include &lt;ace/engine/Master.h&gt;
 #include &lt;ace/model/Helper.h&gt;
 #include &lt;tclap/CmdLine.h&gt;
@@ -116,11 +116,9 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 </code></pre>
-
 <h3 id="usage">Usage</h3>
-<pre><code class="bash">./acme -c config_file.ini -D stringItem= -D stringItem=&quot;hello, world&quot;
+<pre><code class="language-bash">./acme -c config_file.ini -D stringItem= -D stringItem=&quot;hello, world&quot;
 </code></pre>
-
 <h3 id="syntax">Syntax</h3>
 <p>The <code>parseFile</code> or <code>parseString</code> helper expect a vector of strings with the following format: <code>X.Y.Z=VALUE</code>. <code>X.Y.Z</code> represents a path in the configuration tree. <code>VALUE</code> is the value that needs to be assigned to that path. The format used for the value is the same as the one use in the INI format. Altering the tree works as follows:</p>
 <ul>

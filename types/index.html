@@ -110,21 +110,19 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p>Ranged and enumerated types are types that support the <code>range</code> attribute and the <code>either</code> (enumeration) attribute.</p>
 <h3 id="the-range-attribute">The range attribute</h3>
 <p>The <code>range</code> attribute specifies a range within which the value must be defined:</p>
-<pre><code class="json">&quot;closed&quot;: &quot;[ X, Y ]&quot;,
+<pre><code class="language-json">&quot;closed&quot;: &quot;[ X, Y ]&quot;,
 &quot;open&quot;: &quot;( X, Y )&quot;,
 &quot;open-left&quot;: &quot;( X, Y ]&quot;,
 &quot;open-right&quot;: &quot;[ X, Y )&quot;
 </code></pre>
-
 <h3 id="the-either-attribute">The either attribute</h3>
 <p>The <code>either</code> attribute specifies a list in which the value must be defined:</p>
-<pre><code class="json">&quot;either&quot;: [ V0, V1, V2, V3 ]
+<pre><code class="language-json">&quot;either&quot;: [ V0, V1, V2, V3 ]
 </code></pre>
-
 <h2 id="value-hook">Value hook</h2>
 <p>A <code>hook</code> is a string composed of three parts separated by <code>:</code>: <code>"SOURCE:MATCH:EXPANSION"</code>. <code>SOURCE</code> is the path of the option to be used as a value source. <code>MATCH</code> is a regular expression that define sub-pattern matches that will be later expanded into the <code>EXPANSION</code> field. The match/expansion syntax is similar to this of <code>sed</code>.</p>
 <p>Example:</p>
-<pre><code class="json">&quot;option1&quot;: {
+<pre><code class="language-json">&quot;option1&quot;: {
   &quot;kind&quot;: &quot;string&quot;, &quot;arity&quot;: &quot;1&quot;,
    &quot;doc&quot;: &quot;an option&quot;, &quot;default&quot;: &quot;hello_world&quot;
 } // -&gt; hello_world
@@ -134,7 +132,6 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   &quot;doc&quot;: &quot;a second option&quot;
  } // -&gt; hello, world !
 </code></pre>
-
 <h2 id="kinds">Kinds</h2>
 <table>
 <thead>
@@ -228,86 +225,77 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 </table>
 <h3 id="boolean">Boolean</h3>
 <p>The <code>boolean</code> kind of type describes a boolean type. Accepted values for that type are <code>true</code> and <code>false</code>.</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;boolean&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;a boolean option&quot;
 }
 </code></pre>
-
 <h3 id="integer">Integer</h3>
 <p>The <code>integer</code> kind of type describes a 64-bit signed integer type.</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;integer&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;an integer option&quot;
 }
 </code></pre>
-
 <h3 id="float">Float</h3>
 <p>The <code>float</code> kind of type describes a 64-bit signed float type.</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;float&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;a float option&quot;
 }
 </code></pre>
-
 <p>It also support positive infinity <code>+inf</code> and negative infinity <code>-inf</code> values.</p>
 <h3 id="cpuid">CPUID</h3>
 <p>The <code>cpuid</code> kind of type describes a CPU identifier type. When used, extra checks are performed to ensure that the CPUID refers to a valid CPU number. Supported values are any integer ranging from -1 (any CPU) to <code>SYSTEM_MAX_CPU</code> - 1. Like integers, this option accept <code>range</code>, <code>either</code>, and <code>default</code>:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;cpuid&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;default&quot;: -1, &quot;doc&quot;: &quot;a CPUID option&quot;,
   &quot;either&quot;: [ -1, 0, 1 ]
 }
 </code></pre>
-
 <h3 id="file">File</h3>
 <p>The <code>file</code> kind of type describes a filesystem file. When used, extra checks are performed to ensure that the file is corresponds to an allowed  list of sub-types and can be accessed using specified mode. It requires one extra attribute: <code>mode</code>. The <code>mode</code> attribute is a string that contains the access mode to use. The accepted values are equivalent to these of <code>fopen</code>.</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;file&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;a file option&quot;,
   &quot;either&quot;: [ &quot;fifo&quot;, &quot;regular&quot; ],
   &quot;mode&quot;: &quot;r+&quot;
 }
 </code></pre>
-
 <p>The sub-types of file recognized are: <code>block</code>, <code>character</code>, <code>directory</code>, <code>fifo</code>, and <code>regular</code>.</p>
 <h3 id="string">String</h3>
 <p>The <code>string</code> kind of type describes a string type. It supports one extra attribute: <code>either</code>. The <code>either</code> attribute is a N-value array that defines the set of acceptable values for that type:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;string&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;a string option&quot;, &quot;either&quot;: [ &quot;hello&quot;, &quot;world&quot; ]
 }
 </code></pre>
-
 <h3 id="mac">MAC</h3>
 <p>The <code>mac</code> kind of type describes a MAC address type. It supports one extra attribute: <code>either</code>. The <code>either</code> attribute is a N-value array that defines the set of acceptable values for that type:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;mac&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;a MAC option&quot;,
   &quot;either&quot;: [ &quot;00:11:22:33:44:55&quot;, &quot;66:77:88:99:AA:BB&quot; ]
 }
 </code></pre>
-
 <h3 id="ipv4">IPv4</h3>
 <p>The <code>ipv4</code> kind of type describes a IPv4 address type. It supports one extra attribute: <code>either</code>. The <code>either</code> attribute is a N-value array that defines the set of acceptable values for that type:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;ipv4&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;an IPv4 option&quot;,
   &quot;either&quot;: [ &quot;192.168.1.1&quot;, &quot;10.0.1.1&quot; ]
 
 </code></pre>
-
 <h3 id="uri">URI</h3>
 <p>The <code>uri</code> kind of type describes a URI type. When used, extra checks are performed to ensure that the URI is valid. Supported schemes are <code>file</code> and <code>http</code>. It supports one extra attribute: <code>either</code>. The <code>either</code> attribute is a N-value array that defines the set of acceptable schemes:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;uri&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;an URI option&quot;, &quot;either&quot;: [ &quot;file&quot; ]
 }
 </code></pre>
-
 <h3 id="enum">Enum</h3>
 <p>The <code>enum</code> kind of type describes an integer-based enumeration. It supports one extra attribute: <code>bind</code>. The <code>bind</code> attribute is a N-value map that defines the set of acceptable values:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;enum&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;bind&quot;: {
     &quot;ENUM_VAL_A&quot;: 0,
@@ -318,64 +306,56 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   &quot;doc&quot;: &quot;an enum option&quot;
 }
 </code></pre>
-
 <p>The generated code looks like this:</p>
-<pre><code class="cpp">typedef enum _OptionType {
+<pre><code class="language-cpp">typedef enum _OptionType {
   ENUM_VAL_A = 0,
   ENUM_VAL_B = 1,
   ENUM_VAL_C = 2,
   ENUM_VAL_D = 3,
 } OptionType;
 </code></pre>
-
 <h3 id="class">Class</h3>
 <p>The <code>class</code> kind of type describes an option in the model that is defined by an external model. Options of that type are usually implemented as sub-sections in the configuration instance. It requires one extra attribute: <code>model</code>. The <code>model</code> attribute is a string that contains the path and name of the model to use:</p>
-<pre><code class="json">&quot;option&quot;: {
+<pre><code class="language-json">&quot;option&quot;: {
   &quot;kind&quot;: &quot;class&quot;, &quot;arity&quot;: &quot;1&quot;,
   &quot;doc&quot;: &quot;a class option&quot;, &quot;model&quot;: &quot;my_path/my_model.json&quot;
 }
 </code></pre>
-
 <h3 id="select">Select</h3>
 <p>The <code>select</code> kind of type describes a selector of options that are dynamically generated using values from the configuration instance. The values of that option are used as name for options which types are taken from the <code>templates</code> section of the model. It requires two extra attributes: <code>template</code> and <code>size</code>. The <code>template</code> attribute is a string that contains the name of the template to use for the option. The <code>size</code> attribute is an arity attribute that defines how many entries in the selector are expected:</p>
-<pre><code class="json">&quot;strings&quot;: {
+<pre><code class="language-json">&quot;strings&quot;: {
   &quot;kind&quot;: &quot;select&quot;, &quot;arity&quot;: &quot;?&quot;, &quot;size&quot;: &quot;+&quot;,
   &quot;doc&quot;: &quot;a select option&quot;, &quot;template&quot;: &quot;my_string_template&quot;
 }
 </code></pre>
-
 <p>The example above would dynamically generate options with type <code>my_string_template</code> and names defined as values in the <code>select</code> option. See the instance example below:</p>
-<pre><code class="json">&quot;strings&quot;: {
+<pre><code class="language-json">&quot;strings&quot;: {
   &quot;A_string&quot;: &quot;hello&quot;,
   &quot;B_string&quot;: &quot;world&quot;
 }
 </code></pre>
-
 <p>It supports one extra attribute: <code>either</code>. The <code>either</code> attribute is a N-value array that defines the valid values for that type.</p>
-<pre><code class="json">&quot;strings&quot;: {
+<pre><code class="language-json">&quot;strings&quot;: {
   &quot;kind&quot;: &quot;select&quot;, &quot;arity&quot;: &quot;?&quot;,
    &quot;doc&quot;: &quot;a select option&quot;,
    &quot;either&quot;: [ &quot;foo&quot;, &quot;bar&quot; ],
    &quot;template&quot;: &quot;my_string_template&quot;
 }
 </code></pre>
-
 <p>The example above defines a <code>select</code> option that generate new options of type <code>my_string_template</code> and that allow only the values <code>hello</code> and <code>world</code>:</p>
-<pre><code class="json">&quot;strings&quot;: {
+<pre><code class="language-json">&quot;strings&quot;: {
   &quot;foo&quot;: &quot;hello&quot;,
   &quot;bar&quot;: &quot;world&quot;
 }
 </code></pre>
-
 <h3 id="plugin">Plugin</h3>
 <p>The <code>plugin</code> kind type describes an selector objects that are dynamically generated using values from the configuration instance. These objects must inherit from the same base model.  Plugins are dynamically loaded at run time and options are automatically computed using the <code>trigger</code> element of the model header, and the option are made available if and only if the models in the mapping are found in the model path. It requires two extra attributes: <code>model</code>, and <code>target-arity</code>. The <code>model</code> attribute is a string that contains the path and name of the model to use as a base model for the plugins.  By default, the expected arity of the target class is <code>1</code>. The attribute <code>target-arity</code> can be used to alter that default arity to <code>+</code>:</p>
-<pre><code class="json">&quot;plugins&quot;: {
+<pre><code class="language-json">&quot;plugins&quot;: {
   &quot;kind&quot;: &quot;plugin&quot;, &quot;arity&quot;: &quot;?&quot;, &quot;doc&quot;: &quot;a plugin option&quot;,
   &quot;model&quot;: &quot;my/base/Model.json&quot;,
   &quot;target-arity&quot;: &quot;+&quot;
 }
 </code></pre>
-
 <p>The new arity will be applied to all elements of the plugin.</p>
 
   <br>

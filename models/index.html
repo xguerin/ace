@@ -87,7 +87,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
     <h1 id="models">Models</h1>
 <h2 id="top-level-structure">Top-level structure</h2>
 <p>Models are JSON objects that contain three entries: <code>header</code>, <code>body</code> and <code>templates</code>. The <code>header</code> entry contains information about the model, such as its author's name and e-mail, the its version string, and a line of documentation explaining the model's purpose. The <code>body</code> entry contains the definitions of the options expected by the model. The <code>templates</code> entry contains type definitions that can be injected into the model based on instance values. This injection is supported for options of type <code>select</code>.</p>
-<pre><code class="json">&quot;header&quot;: {
+<pre><code class="language-json">&quot;header&quot;: {
   &quot;package&quot;: [ &quot;my&quot;, &quot;package&quot; ],
   &quot;author&quot;: { &quot;name&quot;: &quot;John Doe&quot;, &quot;email&quot;: &quot;jdoe@acme.com&quot; },
   &quot;version&quot;: &quot;1.0&quot;,
@@ -95,7 +95,6 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   &quot;doc&quot;: &quot;ACME configuration model&quot;
 }
 </code></pre>
-
 <p>The <code>package</code> and <code>namespace</code> entries are related to C++ code generation. The <code>package</code> entry defines the compilation unit path of the configuration model. The compilation subsystem must provide an include path the can resolve the package path. The <code>namespace</code> entry defines the namespace to use for the generated classes.</p>
 <h2 id="inheritance">Inheritance</h2>
 <p>A model can extend external pre-existing models. When extending models, the options defined in these models are imported and merged in the newly defined models. Extended models can in turns extend models themselves. To extends from existing models, a model need to declare path and name of extended models in its headers using the <code>include</code> clause as follows:</p>
@@ -112,7 +111,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p>ACE uses the <a href="http://goessner.net/articles/JsonPath">JSONPath</a> notation to represent paths.</p>
 <h2 id="triggers">Triggers</h2>
 <p>Models that are supposed to work in conjunction with plugin types can declare "trigger" patterns that will be used to load them depending on the option path in the instance.</p>
-<pre><code class="json">&quot;header&quot;: {
+<pre><code class="language-json">&quot;header&quot;: {
   &quot;name&quot;: &quot;ACME_EX&quot;,
   &quot;author&quot;: { &quot;name&quot;: &quot;John Doe&quot;, &quot;email&quot;: &quot;jdoe@acme.com&quot; },
   &quot;version&quot;: &quot;1.0&quot;,
@@ -121,7 +120,6 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   &quot;doc&quot;: &quot;ACME_EX configuration model&quot;
 }
 </code></pre>
-
 <p>In the above example, the defined trigger allow that model to be loaded when the path match <code>$.*.acme</code> and the plugin use <code>plugin/base/model.json</code> as a base model. The path matched by the trigger is the full JSON path of the option instance.</p>
 
   <br>

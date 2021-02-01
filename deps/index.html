@@ -89,32 +89,26 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p>Option value definition may have one or more dependencies on other option value definitions within the same model or across included models. The supported types of dependencies are presented below. Dependent types are addressed using a local JSONPath path.</p>
 <h2 id="requirement-dependency">Requirement dependency</h2>
 <p>When options are mentioned in this type of dependency, their arity is promoted to <code>required</code>.</p>
-<pre><code class="json">&quot;deps&quot;: [ { &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
+<pre><code class="language-json">&quot;deps&quot;: [ { &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
-
 <h2 id="disable-dependency">Disable dependency</h2>
 <p>When options are mentioned in this type of dependency, their use is disabled.</p>
-<pre><code class="json">&quot;deps&quot;: [ { &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
+<pre><code class="language-json">&quot;deps&quot;: [ { &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
-
 <h2 id="value-guarded-dependency">Value-guarded dependency</h2>
 <p>Value-guarded dependencies are activated only when the option has one of the value specified in the <code>when</code> list.</p>
-<pre><code class="json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
+<pre><code class="language-json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
-
-<pre><code class="json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
+<pre><code class="language-json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
-
 <h2 id="constraint-guarded-dependency">Constraint-guarded dependency</h2>
 <p>Constraint-guarded dependencies enforce the final value of the dependent type.</p>
-<pre><code class="json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;either&quot;: [ V1, V2 ] } ]
+<pre><code class="language-json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;either&quot;: [ V1, V2 ] } ]
 </code></pre>
-
-<pre><code class="json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;range&quot;: &quot;[ V1, V2 ]&quot; } ]
+<pre><code class="language-json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;range&quot;: &quot;[ V1, V2 ]&quot; } ]
 </code></pre>
-
 <h2 id="mixing-dependencies">Mixing dependencies</h2>
-<pre><code class="json">&quot;deps&quot;: [
+<pre><code class="language-json">&quot;deps&quot;: [
   { &quot;require&quot;: [ &quot;@.A&quot;, ... ] },
   { &quot;when&quot;: [ V ], &quot;require&quot;: [ &quot;@.A&quot;, ... ] }
 ]
