@@ -145,11 +145,11 @@ add_subdirectory(tools)
 
 add_subdirectory(formats/json)
 
-if(ACE_PLUGIN_HJSON OR ACE_BUILD_TESTS)
+if(ACE_PLUGIN_HJSON)
   add_subdirectory(formats/hjson)
 endif()
 
-if(ACE_PLUGIN_INI OR ACE_BUILD_TESTS)
+if(ACE_PLUGIN_INI)
   add_subdirectory(formats/ini)
 endif()
 
@@ -157,19 +157,19 @@ if(ACE_PLUGIN_LUA OR ACE_BUILD_TESTS)
   add_subdirectory(formats/lua)
 endif()
 
-if(ACE_PLUGIN_PYTHON OR ACE_BUILD_TESTS)
+if(ACE_PLUGIN_PYTHON)
   add_subdirectory(formats/python)
 endif()
 
-if(ACE_PLUGIN_SEXP OR ACE_BUILD_TESTS)
+if(ACE_PLUGIN_SEXP)
   add_subdirectory(formats/sexp)
 endif()
 
-if(ACE_PLUGIN_TOML OR ACE_BUILD_TESTS)
+if(ACE_PLUGIN_TOML)
   add_subdirectory(formats/toml)
 endif()
 
-if(ACE_PLUGIN_YAML OR ACE_BUILD_TESTS)
+if(ACE_PLUGIN_YAML)
   add_subdirectory(formats/yaml)
 endif()
 
