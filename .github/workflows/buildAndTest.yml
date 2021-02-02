@@ -1,6 +1,6 @@
 name: Build-And-Test
 
-on: [ push, pull_request ]
+on: [ pull_request ]
 
 jobs:
   buildAndTest:
@@ -8,15 +8,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install packages
-        run: sudo apt-get install lemon libgtest-dev libjansson-dev liblua5.2-dev libre2-dev libtclap-dev ragel
-      - name: Build googletests
-        run: cd /usr/src/googletest && sudo cmake . && sudo cmake --build . --target install
+        run: |-
+          sudo apt-get install \
+            lemon \
+            libgtest-dev \
+            libjansson-dev \
+            liblua5.2-dev \
+            libpython-dev \
+            libre2-dev \
+            libtclap-dev \
+            libyaml-cpp-dev \
+            ragel
+      - name: Build and install googletest
+        run: |-
+          cd /usr/src/googletest && \
+          sudo cmake . && \
+          sudo cmake --build . --target install
+      - name: Fetch, build and install HJSON
+        run: |-
+          cd /tmp &&
+          git clone https://github.com/hjson/hjson-cpp.git &&
+          cd hjson-cpp && \
+          cmake -DBUILD_SHARED_LIBS=ON -DHJSON_ENABLE_INSTALL=ON && \
+          make && \
+          sudo make install
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build project
         uses: nicledomaS/cmake_build_action@v1.3
         with:
           submodule_update: ON
-          cmake_args: -DACE_PLUGIN_HJSON=OFF;-DACE_PLUGIN_PYTHON=OFF;-DACE_PLUGIN_SEXP=OFF;-DACE_PLUGIN_YAML=OFF
           run_tests: ON
           unit_test_build: -DACE_BUILD_TESTS=ON
