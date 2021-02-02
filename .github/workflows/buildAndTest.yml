@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install packages
-        run: sudo apt-get install lemon libgtest-dev libjansson-dev liblua5.2-dev libpython-dev libre2-dev libtclap-dev ragel
+        run: sudo apt-get install lemon libgtest-dev libjansson-dev liblua5.2-dev libpython-dev libre2-dev libtclap-dev libyaml-cpp-dev ragel
       - name: Build googletests
         run: cd /usr/src/googletest && sudo cmake . && sudo cmake --build . --target install
       - name: Checkout
@@ -17,6 +17,6 @@ jobs:
         uses: nicledomaS/cmake_build_action@v1.3
         with:
           submodule_update: ON
-          cmake_args: -DACE_PLUGIN_HJSON=OFF;-DACE_PLUGIN_YAML=OFF
+          cmake_args: -DACE_PLUGIN_HJSON=OFF
           run_tests: ON
           unit_test_build: -DACE_BUILD_TESTS=ON
