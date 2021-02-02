@@ -24,12 +24,19 @@ jobs:
           cd /usr/src/googletest && \
           sudo cmake . && \
           sudo cmake --build . --target install
+      - name: Fetch, build and install HJSON
+        run: |-
+          cd /tmp &&
+          git clone https://github.com/hjson/hjson-cpp.git &&
+          cd hjson-cpp && \
+          cmake -DBUILD_SHARED_LIBS=ON -DHJSON_ENABLE_INSTALL=ON && \
+          make && \
+          sudo make install
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build project
         uses: nicledomaS/cmake_build_action@v1.3
         with:
           submodule_update: ON
-          cmake_args: -DACE_PLUGIN_HJSON=OFF
           run_tests: ON
           unit_test_build: -DACE_BUILD_TESTS=ON
