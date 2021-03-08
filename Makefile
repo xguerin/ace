@@ -20,11 +20,11 @@ prepare:
 	fi
 
 prepare-lite:
-	@if [ ! -e $(BUILD_DIR) ];																								\
- 	then																																			\
-		mkdir -p $(BUILD_DIR);																									\
-		cd $(BUILD_DIR);																												\
-		cmake $(CMAKE_OPTIONS) -DACE_PLUGIN_LUA=OFF -DACE_PLUGIN_PYTHON=OFF ..;	\
+	@if [ ! -e $(BUILD_DIR) ];																																				\
+ 	then																																															\
+		mkdir -p $(BUILD_DIR);																																					\
+		cd $(BUILD_DIR);																																								\
+		cmake $(CMAKE_OPTIONS) -DACE_PLUGIN_HJSON=OFF -DACE_PLUGIN_LUA=OFF -DACE_PLUGIN_PYTHON=OFF ..;	\
 	fi
 
 prepare-test:
