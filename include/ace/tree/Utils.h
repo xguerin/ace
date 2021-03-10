@@ -79,7 +79,7 @@ parsePrimitive(Object const& r, std::string const& k, T& l)
 {
   auto path = tree::Path::parse(k);
   if (not r.has(path)) {
-    ACE_LOG(Error, "Path \"", path.toString(), "\" not found");
+    ACE_LOG(Info, "Path \"", path.toString(), "\" not found");
     return false;
   }
   tree::Value const& v = r.get(path);
@@ -97,7 +97,7 @@ parsePrimitive(Object const& r, std::string const& k, std::vector<T>& l)
 {
   auto path = tree::Path::parse(k);
   if (not r.has(path)) {
-    ACE_LOG(Error, "Path \"", path.toString(), "\" not found");
+    ACE_LOG(Info, "Path \"", path.toString(), "\" not found");
     return;
   }
   l.clear();
