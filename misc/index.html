@@ -73,7 +73,10 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 
     <h1 id="miscellaneous">Miscellaneous</h1>
 <h2 id="alterations">Alterations</h2>
-<p>It is possible to use the command line arguments to alter the configuration. To use this feature, simple use the <code>parseFile</code> or <code>parseString</code> helper API, passing as a third argument a vector of string with the following format: <code>X.Y.Z=VALUE</code>.</p>
+<p>It is possible to use the command line arguments to alter the configuration. To
+use this feature, simple use the <code>parseFile</code> or <code>parseString</code> helper API,
+passing as a third argument a vector of string with the following format:
+<code>X.Y.Z=VALUE</code>.</p>
 <h3 id="example">Example</h3>
 <pre><code class="language-cpp">#include &lt;Model.ac.h&gt;
 #include &lt;ace/engine/Master.h&gt;
@@ -120,9 +123,13 @@ int main(int argc, char *argv[]) {
 <pre><code class="language-bash">./acme -c config_file.ini -D stringItem= -D stringItem=&quot;hello, world&quot;
 </code></pre>
 <h3 id="syntax">Syntax</h3>
-<p>The <code>parseFile</code> or <code>parseString</code> helper expect a vector of strings with the following format: <code>X.Y.Z=VALUE</code>. <code>X.Y.Z</code> represents a path in the configuration tree. <code>VALUE</code> is the value that needs to be assigned to that path. The format used for the value is the same as the one use in the INI format. Altering the tree works as follows:</p>
+<p>The <code>parseFile</code> or <code>parseString</code> helper expect a vector of strings with the
+following format: <code>X.Y.Z=VALUE</code>. <code>X.Y.Z</code> represents a path in the configuration
+tree. <code>VALUE</code> is the value that needs to be assigned to that path. The format
+used for the value is the same as the one use in the INI format. Altering the
+tree works as follows:</p>
 <ul>
-<li>Specifying a empty value for a path erase that value in the existing tree: <code>-D X.Y.Z=</code></li>
+<li>Specifying an empty value for a path erase that value in the existing tree: <code>-D X.Y.Z=</code></li>
 <li>Specifying one value for a path sets that value in the existing tree: <code>-D X.Y.Z=VALUE</code></li>
 <li>Setting multiple values for a path appends these values to that path: <code>-D X.Y.Z=VALUE1 -D X.Y.Z=VALUE2 -D X.Y.Z=VALUE3</code></li>
 </ul>

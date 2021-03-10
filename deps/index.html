@@ -86,9 +86,13 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
     
 
     <h1 id="dependencies">Dependencies</h1>
-<p>Option value definition may have one or more dependencies on other option value definitions within the same model or across included models. The supported types of dependencies are presented below. Dependent types are addressed using a local JSONPath path.</p>
+<p>Option value definition may have one or more dependencies on other option value
+definitions within the same model or across included models. The supported types
+of dependencies are presented below. Dependent types are addressed using a local
+JSONPath path.</p>
 <h2 id="requirement-dependency">Requirement dependency</h2>
-<p>When options are mentioned in this type of dependency, their arity is promoted to <code>required</code>.</p>
+<p>When options are mentioned in this type of dependency, their arity is promoted
+to <code>required</code>.</p>
 <pre><code class="language-json">&quot;deps&quot;: [ { &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
 <h2 id="disable-dependency">Disable dependency</h2>
@@ -96,7 +100,8 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <pre><code class="language-json">&quot;deps&quot;: [ { &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
 <h2 id="value-guarded-dependency">Value-guarded dependency</h2>
-<p>Value-guarded dependencies are activated only when the option has one of the value specified in the <code>when</code> list.</p>
+<p>Value-guarded dependencies are activated only when the option has one of the
+value specified in the <code>when</code> list.</p>
 <pre><code class="language-json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;require&quot;: [ &quot;@.A&quot;, ... ] } ]
 </code></pre>
 <pre><code class="language-json">&quot;deps&quot;: [ { &quot;when&quot;: [ v0, v1 ], &quot;disable&quot;: [ &quot;@.A&quot;, ... ] } ]
