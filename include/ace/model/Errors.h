@@ -306,6 +306,9 @@
 
 #define ERR_STR_LEN_OUTSIDE_OF_CONSTRAINT                                      \
   "Length of string is outside of specified constraint"
+#define ERR_STR_DOES_NOT_MATCH_CONSTRAINT                                      \
+  "String does not match the specified constraint"
+#define ERR_MATCH_FORMAT(_f) "Invalid match format \"", _f, "\""
 
 // Type
 

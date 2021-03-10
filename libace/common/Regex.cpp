@@ -87,6 +87,13 @@ expand_string(std::string const& p, std::vector<std::string> const& x)
 namespace ace { namespace common { namespace Regex {
 
 bool
+check(std::string const& r)
+{
+  RE2 re(r, RE2::Quiet);
+  return re.ok();
+}
+
+bool
 match(std::string const& s, std::string const& r)
 {
   return RE2::FullMatch(s, r);

@@ -8,6 +8,7 @@
     "var0": {
       "kind": "string", "arity": "1",
       "length": "(0, 10]",
+      "match": "[a-z]+",
       "doc": "Length-constrained string option"
     }
   }

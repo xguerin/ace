@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+#include <ace/common/Regex.h>
 #include <ace/types/String.h>
 #include <ace/model/Model.h>
 #include <set>
@@ -31,8 +32,10 @@ String::String()
   : Type(BasicType::Kind::String)
   , EnumeratedType(BasicType::Kind::String)
   , m_length()
+  , m_match()
 {
   m_attributes.define<LengthAttributeType>("length", true);
+  m_attributes.define<MatchAttributeType>("match", true);
 }
 
 bool
@@ -50,6 +53,13 @@ String::checkModel(tree::Value const& t) const
       return false;
     }
   }
+  if (o.has("match")) {
+    auto const& s = static_cast<tree::Primitive const&>(o["match"]);
+    if (!common::Regex::check(s.value<std::string>())) {
+      ERROR(ERR_MATCH_FORMAT(s.value<std::string>()));
+      return false;
+    }
+  }
   return true;
 }
 
@@ -61,6 +71,11 @@ String::loadModel(tree::Value const& t)
     auto const& a =
       static_cast<LengthAttributeType const&>(*m_attributes["length"]);
     common::Range<long>::parse(a.head(), m_length);
+  }
+  if (m_attributes.has("match")) {
+    auto const& a =
+      static_cast<MatchAttributeType const&>(*m_attributes["match"]);
+    m_match = a.head();
   }
 }
 
@@ -75,6 +90,11 @@ String::checkInstance(tree::Object const& r, tree::Value const& v) const
     auto const& s = static_cast<tree::Primitive const&>(w);
     if (not m_length.contains(s.value<std::string>().length())) {
       ERROR(ERR_STR_LEN_OUTSIDE_OF_CONSTRAINT);
+      score += 1;
+    }
+    if (not m_match.empty() and
+        not common::Regex::match(s.value<std::string>(), m_match)) {
+      ERROR(ERR_STR_DOES_NOT_MATCH_CONSTRAINT);
       score += 1;
     }
   });

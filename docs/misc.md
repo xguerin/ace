@@ -2,7 +2,10 @@
 
 ## Alterations
 
-It is possible to use the command line arguments to alter the configuration. To use this feature, simple use the `parseFile` or `parseString` helper API, passing as a third argument a vector of string with the following format: `X.Y.Z=VALUE`.
+It is possible to use the command line arguments to alter the configuration. To
+use this feature, simple use the `parseFile` or `parseString` helper API,
+passing as a third argument a vector of string with the following format:
+`X.Y.Z=VALUE`.
 
 ### Example
 
@@ -57,8 +60,12 @@ int main(int argc, char *argv[]) {
 
 ### Syntax
 
-The `parseFile` or `parseString` helper expect a vector of strings with the following format: `X.Y.Z=VALUE`. `X.Y.Z` represents a path in the configuration tree. `VALUE` is the value that needs to be assigned to that path. The format used for the value is the same as the one use in the INI format. Altering the tree works as follows:
+The `parseFile` or `parseString` helper expect a vector of strings with the
+following format: `X.Y.Z=VALUE`. `X.Y.Z` represents a path in the configuration
+tree. `VALUE` is the value that needs to be assigned to that path. The format
+used for the value is the same as the one use in the INI format. Altering the
+tree works as follows:
 
-* Specifying a empty value for a path erase that value in the existing tree: `-D X.Y.Z=`
+* Specifying an empty value for a path erase that value in the existing tree: `-D X.Y.Z=`
 * Specifying one value for a path sets that value in the existing tree: `-D X.Y.Z=VALUE`
 * Setting multiple values for a path appends these values to that path: `-D X.Y.Z=VALUE1 -D X.Y.Z=VALUE2 -D X.Y.Z=VALUE3`

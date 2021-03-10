@@ -34,6 +34,7 @@ class String : public EnumeratedType<std::string, true>
 {
 public:
   using LengthAttributeType = FlagAttribute<std::string>;
+  using MatchAttributeType = FlagAttribute<std::string>;
 
   String();
 
@@ -49,6 +50,7 @@ public:
 
 private:
   common::Range<long> m_length;
+  std::string m_match;
 };
 
 }}

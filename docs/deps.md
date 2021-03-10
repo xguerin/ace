@@ -1,10 +1,14 @@
 # Dependencies
 
-Option value definition may have one or more dependencies on other option value definitions within the same model or across included models. The supported types of dependencies are presented below. Dependent types are addressed using a local JSONPath path.
+Option value definition may have one or more dependencies on other option value
+definitions within the same model or across included models. The supported types
+of dependencies are presented below. Dependent types are addressed using a local
+JSONPath path.
 
 ## Requirement dependency
 
-When options are mentioned in this type of dependency, their arity is promoted to `required`.
+When options are mentioned in this type of dependency, their arity is promoted
+to `required`.
 
 ```json
 "deps": [ { "require": [ "@.A", ... ] } ]
@@ -20,7 +24,8 @@ When options are mentioned in this type of dependency, their use is disabled.
 
 ## Value-guarded dependency
 
-Value-guarded dependencies are activated only when the option has one of the value specified in the `when` list.
+Value-guarded dependencies are activated only when the option has one of the
+value specified in the `when` list.
 
 ```json
 "deps": [ { "when": [ v0, v1 ], "require": [ "@.A", ... ] } ]
@@ -50,5 +55,4 @@ Constraint-guarded dependencies enforce the final value of the dependent type.
   { "when": [ V ], "require": [ "@.A", ... ] }
 ]
 ```
-
 

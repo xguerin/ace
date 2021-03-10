@@ -26,6 +26,8 @@
 
 namespace ace { namespace common { namespace Regex {
 
+bool check(std::string const& r);
+
 bool match(std::string const& s, std::string const& r);
 
 bool expand(std::string const& s, std::string const& r, std::string const& p,

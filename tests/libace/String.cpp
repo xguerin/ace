@@ -107,3 +107,12 @@ TEST_F(String, Pass_Constrained_BadLength)
     res->validate("string/02_BadLength.json", 1, const_cast<char**>(&prgnam));
   ASSERT_EQ(svr.get(), nullptr);
 }
+
+TEST_F(String, Pass_Constrained_NoMatch)
+{
+  WRITE_HEADER;
+  auto res = ace::model::Model::load("02_Constrained.json");
+  auto svr =
+    res->validate("string/02_NoMatch.json", 1, const_cast<char**>(&prgnam));
+  ASSERT_EQ(svr.get(), nullptr);
+}
