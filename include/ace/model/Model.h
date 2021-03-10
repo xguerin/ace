@@ -117,6 +117,8 @@ public:
   Header const& header() const;
 
   std::string fileName() const;
+
+  std::string filePath(std::string const& pkg) const;
   std::string filePath() const;
 
   Section& templates();

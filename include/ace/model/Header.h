@@ -46,7 +46,9 @@ public:
 
   bool explain(tree::Path const& p, tree::Path::const_iterator const& i) const;
 
+  static std::string package(tree::Value const& t);
   std::string package() const;
+
   bool hasAuthor() const;
   Author const& author() const;
   std::list<std::string> const& nameSpace() const;

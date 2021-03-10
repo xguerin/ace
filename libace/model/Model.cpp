@@ -64,6 +64,9 @@ namespace ace { namespace model {
 
 /**
  * Context class.
+ *
+ * The role of this class to is keep a track of loaded models in order to catch
+ * reference loops. Its design is RAII.
  */
 
 Model::Context::Context(std::string const& path) : m_path(path)
@@ -137,7 +140,6 @@ try {
     { "templates", { ace::tree::Value::Type::Object, true } },
     { "body", { ace::tree::Value::Type::Object, false } }
   };
-  Context context(filePath());
   ace::tree::Checker chk(path(), t);
   if (not chk.validate(schema)) {
     return false;
@@ -145,6 +147,8 @@ try {
   if (not m_header.checkModel(t["header"])) {
     return false;
   }
+  std::string pkg = Header::package(t["header"]);
+  Context context(filePath(pkg));
   if (t.has("templates")) {
     DEBUG("Check model templates");
     if (not m_templates.checkModel(t["templates"])) {
@@ -946,6 +950,12 @@ std::string
 Model::fileName() const
 {
   return name() + "." + m_ext;
+}
+
+std::string
+Model::filePath(std::string const& pkg) const
+{
+  return pkg + fileName();
 }
 
 std::string

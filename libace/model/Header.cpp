@@ -201,6 +201,19 @@ Header::explain(tree::Path const& p, tree::Path::const_iterator const& i) const
 }
 
 std::string
+Header::package(tree::Value const& t)
+{
+  std::ostringstream oss;
+  if (t.has("package")) {
+    for (auto& ex : static_cast<tree::Array const&>(t["package"])) {
+      oss << static_cast<tree::Primitive const&>(*ex).value<std::string>()
+          << "/";
+    }
+  }
+  return oss.str();
+}
+
+std::string
 Header::package() const
 {
   std::ostringstream oss;
