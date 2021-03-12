@@ -104,3 +104,11 @@ TEST_F(Class, Pass_Defaulted_All)
   auto const& val1 = dynamic_cast<ace::tree::Primitive const&>(*values[0]);
   ASSERT_EQ(val1.value<double>(), -1);
 }
+
+TEST_F(Class, Fail_BadArity_All)
+{
+  WRITE_HEADER;
+  auto res = ace::model::Model::load("03_BadArity.json");
+  auto svr = res->validate("class/03_Bad.json", 1, const_cast<char**>(&prgnam));
+  ASSERT_EQ(svr.get(), nullptr);
+}

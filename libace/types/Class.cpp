@@ -58,6 +58,9 @@ Class::build(std::string const& n, const Object* p, std::string const& m,
 bool
 Class::checkInstance(tree::Object const& r, tree::Value const& v) const
 {
+  if (not Type::checkInstance(r, v)) {
+    return false;
+  }
   int score = 0;
   if (not multiple() and v.type() != tree::Value::Type::Object) {
     ERROR(ERR_INSTANCE_NOT_AN_OBJECT);
@@ -82,6 +85,7 @@ Class::checkInstance(tree::Object const& r, tree::Value const& v) const
 void
 Class::expandInstance(tree::Object& r, tree::Value& v)
 {
+  Type::expandInstance(r, v);
   if (m_clones.empty()) {
     v.each([&](tree::Value& w) {
       Model::Ref mdl = Model::Ref(new Model(modelAttribute().model()));
@@ -96,6 +100,9 @@ Class::expandInstance(tree::Object& r, tree::Value& v)
 bool
 Class::flattenInstance(tree::Object& r, tree::Value& v)
 {
+  if (not Type::flattenInstance(r, v)) {
+    return false;
+  }
   int score = 0;
   int index = 0;
   v.each([&](tree::Value& w) {
@@ -109,6 +116,9 @@ Class::flattenInstance(tree::Object& r, tree::Value& v)
 bool
 Class::resolveInstance(tree::Object const& r, tree::Value const& v) const
 {
+  if (not Type::resolveInstance(r, v)) {
+    return false;
+  }
   int score = 0;
   int index = 0;
   v.each([&](tree::Value const& w) {
