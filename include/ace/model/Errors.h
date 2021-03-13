@@ -234,8 +234,8 @@
 // Map attribute
 
 #define ERR_MAP_NOT_AN_OBJECT "Map attribute must be an object"
-#define ERR_MAP_INSTANCE_NOT_AN_OBJECT                                         \
-  "Instance for map attribute must be an object"
+#define ERR_MAP_INSTANCE_NOT_A_STRING                                          \
+  "Instance for map attribute must be a string"
 #define ERR_MAP_ITEM_TYPE_MISMATCH "Mismatched map item type"
 #define ERR_CONFLICTING_MAP_KEY(_k) "Conflicting map key \"", _k, "\""
 

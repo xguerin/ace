@@ -47,3 +47,11 @@ TEST_F(Enum, Pass_Ok)
   auto res = ace::model::Model::load("01_Ok.json");
   ASSERT_NE(res.get(), nullptr);
 }
+
+TEST_F(Enum, Pass_Ok_All)
+{
+  WRITE_HEADER;
+  auto res = ace::model::Model::load("01_Ok.json");
+  auto svr = res->validate("enum/01_Ok.toml", 1, const_cast<char**>(&prgnam));
+  ASSERT_NE(svr.get(), nullptr);
+}

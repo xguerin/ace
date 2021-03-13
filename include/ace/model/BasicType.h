@@ -154,7 +154,8 @@ public:
   virtual void collectImplementationIncludes(std::set<std::string>& i) const;
 
   virtual bool hasPrivateNamespaceDefinition() const;
-  virtual void doPrivateNamespaceDefinition(std::ostream& o, int l) const;
+  virtual void doPrivateNamespaceDefinition(std::string const& ns,
+                                            std::ostream& o, int l) const;
 
   virtual bool hasTypeDeclaration() const;
   virtual void doTypeDeclaration(std::ostream& o, int l) const;

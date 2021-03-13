@@ -171,7 +171,8 @@ BasicType::hasPrivateNamespaceDefinition() const
 }
 
 void
-BasicType::doPrivateNamespaceDefinition(std::ostream& o, int l) const
+BasicType::doPrivateNamespaceDefinition(std::string const& ns, std::ostream& o,
+                                        int l) const
 {}
 
 bool

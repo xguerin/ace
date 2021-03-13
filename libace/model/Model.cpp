@@ -611,6 +611,13 @@ Model::generateInterfaceHeader(std::ostream& o) const
   Generator::indent(o, 2) << "static const bool REGISTERED;" << std::endl;
   o << std::endl;
 
+  for (auto& e : m_body) {
+    if (e.second->hasTypeDeclaration()) {
+      e.second->doTypeDeclaration(o, 2);
+      o << std::endl;
+    }
+  }
+
   Generator::indent(o, 2) << "virtual ~I" << normalizedName() << "() { }"
                           << std::endl;
   o << std::endl;
@@ -684,13 +691,6 @@ Model::generateImplementationHeader(std::ostream& o) const
 
   Generator::indent(o, 1) << "public:" << std::endl << std::endl;
 
-  for (auto& e : m_body) {
-    if (e.second->hasTypeDeclaration()) {
-      e.second->doTypeDeclaration(o, 2);
-      o << std::endl;
-    }
-  }
-
   Generator::indent(o, 2) << "explicit " << normalizedName()
                           << "(ace::tree::Object const & r);" << std::endl
                           << std::endl;
@@ -727,9 +727,6 @@ Model::generateImplementationHeader(std::ostream& o) const
   Generator::indent(o, 2) << normalizedName() << "() = default;" << std::endl
                           << std::endl;
 
-  for (auto& e : m_body) {
-    e.second->doTypeDeclaration(o, 2);
-  }
   for (auto& e : m_body) {
     e.second->doTypeDefinition(o, 2);
   }
@@ -782,8 +779,7 @@ Model::generateImplementationSource(std::ostream& o) const
       o << "}" << std::endl << std::endl;
     }
     for (auto& e : m_body) {
-      e.second->doPrivateNamespaceDefinition(o, 0);
-      o << std::endl;
+      e.second->doPrivateNamespaceDefinition(declarationType(), o, 0);
     }
     o << "} // namespace" << std::endl << std::endl;
   }

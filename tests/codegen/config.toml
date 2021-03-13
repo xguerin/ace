@@ -1,4 +1,6 @@
 var0 = 0
+var4 = "Hello"
+var5 = ["Hello", "World"]
 
 [[var1]]
 var0 = "hello"

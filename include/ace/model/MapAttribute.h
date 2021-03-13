@@ -143,16 +143,14 @@ MapAttribute<T, O>::validate(tree::Object const& r, tree::Value const& v) const
 {
   int score = 0;
   v.each([&](tree::Value const& w) {
-    if (w.type() != tree::Value::Type::Object) {
-      ERROR(ERR_MAP_INSTANCE_NOT_AN_OBJECT);
+    if (w.type() != tree::Value::Type::String) {
+      ERROR(ERR_MAP_INSTANCE_NOT_A_STRING);
       score += 1;
     } else {
-      tree::Object const& p = static_cast<tree::Object const&>(w);
-      for (auto& e : p) {
-        if (not check(e.first)) {
-          ERROR(ERR_UNSUPPORTED_VALUE(e.first));
-          score += 1;
-        }
+      auto const& s = static_cast<tree::Primitive const&>(w);
+      if (not check(s.value<std::string>())) {
+        ERROR(ERR_UNSUPPORTED_VALUE(s.value<std::string>()));
+        score += 1;
       }
     }
   });

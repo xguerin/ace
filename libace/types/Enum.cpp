@@ -40,27 +40,73 @@ Enum::hasPrivateNamespaceDefinition() const
 }
 
 void
-Enum::doPrivateNamespaceDefinition(std::ostream& o, int l) const
+Enum::doPrivateNamespaceDefinition(std::string const& ns, std::ostream& o,
+                                   int l) const
 {
-  indent(o, l) << "int ";
-  o << typeName() << "Parse(std::string const & v) {" << std::endl;
+  std::string ftn = ns + "::" + typeName();
   auto const& b = bindAttribute().values();
-  indent(o, l + 2);
+  /*
+   * Generate the single-value parser.
+   */
+  indent(o, l) << ftn << std::endl;
+  indent(o, l) << typeName() << "Parse(std::string const & v) {" << std::endl;
   for (auto e = b.begin(); e != b.end(); e++) {
-    auto next = e;
-    ++next;
-    if (next != b.end()) {
-      o << "if (v == \"" << e->first << "\") ";
-    }
-    o << "{" << std::endl;
-    indent(o, l + 4) << "return " << e->second << ";" << std::endl;
+    indent(o, l + 2) << "if (v == \"" << e->first << "\") {" << std::endl;
+    indent(o, l + 4) << "return " << ftn << "::" << e->first << ";";
+    indent(o, l + 4) << std::endl;
     indent(o, l + 2) << "}";
-    if (next != b.end()) {
-      o << " else ";
-    }
   }
   o << std::endl;
+  indent(o, l + 2) << "throw std::invalid_argument(\"" << typeName() << "\");"
+                   << std::endl;
+  indent(o, l) << "}" << std::endl << std::endl;
+  /*
+   * Generate the multi-value parser.
+   */
+  if (multiple()) {
+    indent(o, l) << "std::vector<" << ftn << ">" << std::endl;
+    indent(o, l) << typeName() << "Parse(std::vector<std::string> const & v) {"
+                 << std::endl;
+    indent(o, l + 2) << "std::vector<" << ftn << "> res;" << std::endl;
+    indent(o, l + 2) << "for(auto const& e : v) {" << std::endl;
+    indent(o, l + 4) << "res.push_back(" << typeName() << "Parse(e));"
+                     << std::endl;
+    indent(o, l + 2) << "}" << std::endl;
+    indent(o, l + 2) << "return res;" << std::endl;
+    indent(o, l) << "}" << std::endl << std::endl;
+  }
+  /*
+   * Generate the single-value serializer.
+   */
+  indent(o, l) << "std::string" << std::endl;
+  indent(o, l) << typeName() << "Serialize(const " << ftn << " v) {"
+               << std::endl;
+  indent(o, l + 2) << "switch(v) {" << std::endl;
+  for (auto e = b.begin(); e != b.end(); e++) {
+    indent(o, l + 4) << "case " << ftn << "::" << e->first << ": ";
+    o << "return \"" << e->first << "\";" << std::endl;
+  }
+  indent(o, l + 4);
+  o << "default: throw std::invalid_argument(\"" << typeName() << "\");";
+  o << std::endl;
+  indent(o, l + 2) << "}" << std::endl;
   indent(o, l) << "}" << std::endl;
+  o << std::endl;
+  /*
+   * Generate the multi-value serializer.
+   */
+  if (multiple()) {
+    indent(o, l) << "std::vector<std::string>" << std::endl;
+    indent(o, l) << typeName() << "Serialize(std::vector<" << ftn
+                 << "> const & v) {" << std::endl;
+    indent(o, l + 2) << "std::vector<std::string> res;" << std::endl;
+    indent(o, l + 2) << "for(auto const& e : v) {" << std::endl;
+    indent(o, l + 4) << "res.push_back(" << typeName() << "Serialize(e));"
+                     << std::endl;
+    indent(o, l + 2) << "}" << std::endl;
+    indent(o, l + 2) << "return res;" << std::endl;
+    indent(o, l) << "}" << std::endl << std::endl;
+  }
 }
 
 bool
@@ -72,11 +118,11 @@ Enum::hasTypeDeclaration() const
 void
 Enum::doTypeDeclaration(std::ostream& o, int l) const
 {
-  indent(o, l) << "typedef enum _" << typeName() << " {" << std::endl;
+  indent(o, l) << "enum class " << typeName() << " {" << std::endl;
   for (auto const& e : bindAttribute().values()) {
     indent(o, l + 2) << e.first << " = " << e.second << "," << std::endl;
   }
-  indent(o, l) << "} " << typeName() << ";" << std::endl;
+  indent(o, l) << "};" << std::endl;
 }
 
 void
@@ -96,9 +142,16 @@ Enum::doBuildDefinition(std::string const& s, std::string const& v,
   o << "ace::tree::utils::parsePrimitive<std::string>";
   o << "(r, " << e << ", " << declName() << ");" << std::endl;
   indent(o, l);
-  o << v << " = static_cast<" << typeName() << ">(";
-  o << typeName() << "Parse(" << declName() << "));";
+  o << v << " = " << typeName() << "Parse(" << declName() << ");";
   o << std::endl;
+}
+
+void
+Enum::doSerializerDefinition(std::string const& c, std::string const& n,
+                             std::ostream& o, int l) const
+{
+  std::string p = typeName() + "Serialize(m_" + m_declName + ")";
+  EnumeratedType::doSerializerDefinition(c, n, p, false, o, l);
 }
 
 void

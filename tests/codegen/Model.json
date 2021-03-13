@@ -28,6 +28,22 @@
     "var3": {
       "kind": "plugin", "model": "Class.json", "arity": "1",
       "doc": "Valid CLASS option"
+    },
+    "var4": {
+      "kind": "enum", "arity": "1",
+      "bind": {
+        "Hello": 0,
+        "World": 1
+      },
+      "doc": "Valid ENUM option"
+    },
+    "var5": {
+      "kind": "enum", "arity": "+",
+      "bind": {
+        "Hello": 0,
+        "World": 1
+      },
+      "doc": "Valid ENUM option"
     }
   }
 }

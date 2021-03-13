@@ -44,7 +44,8 @@ public:
     std::set<std::string>& i) const = 0;
 
   virtual bool hasPrivateNamespaceDefinition() const = 0;
-  virtual void doPrivateNamespaceDefinition(std::ostream& o, int l) const = 0;
+  virtual void doPrivateNamespaceDefinition(std::string const& ns,
+                                            std::ostream& o, int l) const = 0;
 
   virtual bool hasTypeDeclaration() const = 0;
   virtual void doTypeDeclaration(std::ostream& o, int l) const = 0;

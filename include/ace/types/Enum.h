@@ -41,7 +41,8 @@ public:
   void collectImplementationIncludes(std::set<std::string>& i) const;
 
   bool hasPrivateNamespaceDefinition() const;
-  void doPrivateNamespaceDefinition(std::ostream& o, int l) const;
+  void doPrivateNamespaceDefinition(std::string const& ns, std::ostream& o,
+                                    int l) const;
 
   bool hasTypeDeclaration() const;
   void doTypeDeclaration(std::ostream& o, int l) const;
@@ -49,6 +50,9 @@ public:
   using EnumeratedType::doBuildDefinition;
   void doBuildDefinition(std::string const& s, std::string const& v,
                          std::string const& e, std::ostream& o, int l) const;
+
+  void doSerializerDefinition(std::string const& c, std::string const& n,
+                              std::ostream& o, int l) const;
 
   void doGetterInterface(std::ostream& o, int level = 0) const;
   void doGetterDeclaration(std::ostream& o, int level = 0) const;
