@@ -428,8 +428,13 @@ Section::promoteArity(tree::Path const& p)
 void
 Section::disable(tree::Path const& p)
 {
-  tree::Path::const_iterator n(p.begin());
-  disable(p, p.down(n));
+  if (p.global() and owner()->parent() != nullptr) {
+    auto* up = static_cast<Model*>(owner()->parent()->owner());
+    up->body().disable(p);
+  } else {
+    tree::Path::const_iterator n(p.begin());
+    disable(p, p.down(n));
+  }
 }
 
 Section::iterator

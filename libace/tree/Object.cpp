@@ -100,7 +100,7 @@ Object::has(Path const& p, Path::const_iterator const& i) const
       }
     } break;
     default:
-      break;
+      return false;
   }
   if ((*i)->recursive()) {
     for (auto& e : m_content) {

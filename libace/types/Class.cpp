@@ -282,6 +282,15 @@ Class::has(tree::Path const& p, tree::Path::const_iterator const& i) const
         success += 1;
       }
     } break;
+    case tree::path::Item::Type::Indexed: {
+      if (multiple()) {
+        for (auto const& index : (*i)->indexes()) {
+          if (m_clones.size() >= index) {
+            success += m_clones[index]->body().has(p, p.down(i)) ? 1 : 0;
+          }
+        }
+      }
+    } break;
     default:
       return false;
   }
@@ -316,7 +325,7 @@ Class::get(tree::Path const& p, tree::Path::const_iterator const& i,
       }
     } break;
     default:
-      break;
+      return;
   }
   if ((*i)->recursive()) {
     for (auto& e : m_clones) {
@@ -349,9 +358,18 @@ Class::promoteArity(tree::Path const& p, tree::Path::const_iterator const& i)
       } else if (not m_clones.empty()) {
         m_clones[0]->body().promoteArity(p, i);
       }
-    }
+    } break;
+    case tree::path::Item::Type::Indexed: {
+      if (multiple()) {
+        for (auto const& index : (*i)->indexes()) {
+          if (m_clones.size() >= index) {
+            m_clones[index]->body().promoteArity(p, p.down(i));
+          }
+        }
+      }
+    } break;
     default:
-      break;
+      return;
   }
   if ((*i)->recursive()) {
     for (auto& e : m_clones) {
@@ -376,14 +394,23 @@ Class::disable(tree::Path const& p, tree::Path::const_iterator const& i)
     case tree::path::Item::Type::Any: {
       if (multiple()) {
         for (auto& e : m_clones) {
-          e->body().promoteArity(p, p.down(i));
+          e->body().disable(p, p.down(i));
         }
       } else if (not m_clones.empty()) {
         m_clones[0]->body().disable(p, i);
       }
-    }
+    } break;
+    case tree::path::Item::Type::Indexed: {
+      if (multiple()) {
+        for (auto const& index : (*i)->indexes()) {
+          if (m_clones.size() >= index) {
+            m_clones[index]->body().disable(p, p.down(i));
+          }
+        }
+      }
+    } break;
     default:
-      break;
+      return;
   }
   if ((*i)->recursive()) {
     for (auto& e : m_clones) {
