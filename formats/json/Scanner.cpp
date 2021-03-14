@@ -58,6 +58,7 @@ Scanner::dump(tree::Value const& v, const Format f, std::ostream& o) const
   }
   json_decref(result);
   o << data;
+  free(data);
 }
 
 bool
