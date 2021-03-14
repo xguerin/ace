@@ -79,7 +79,10 @@ path ::= root(A) accessorL(B).
 {
   auto * p = new ace::tree::Path();
   p->push(ace::tree::path::Item::Ref(A));
-  for (auto & i : *B) p->push(ace::tree::path::Item::Ref(i));
+  for (auto & i : *B) {
+    p->push(ace::tree::path::Item::Ref(i));
+  }
+  delete B;
   *ppPath = p;
 }
 
@@ -126,18 +129,21 @@ member(A) ::= DOT MEMBER(B).
   ACE_LOG(Extra, "member ::= DOT MEMBER");
   auto const & n = dynamic_cast<MemberToken *>(B)->value;
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Named, n);
+  delete B;
 }
 
 member(A) ::= index(B).
 {
   ACE_LOG(Extra, "member ::= index");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Indexed, *B);
+  delete B;
 }
 
 member(A) ::= range(B).
 {
   ACE_LOG(Extra, "member ::= MEMBER range");
   A = new ace::tree::path::Item(ace::tree::path::Item::Type::Ranged, *B);
+  delete B;
 }
 
 member(A) ::= OPENC WILDCARD CLOSEC.
@@ -170,6 +176,8 @@ range(A) ::= OPENC INDEX(B) SLICE INDEX(C) CLOSEC.
     dynamic_cast<IndexToken *>(C)->value,
     1 
   };
+  delete B;
+  delete C;
 }
 
 range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
@@ -180,6 +188,9 @@ range(A) ::= OPENC INDEX(B) SLICE INDEX(C) SLICE INDEX(D) CLOSEC.
     dynamic_cast<IndexToken *>(C)->value,
     dynamic_cast<IndexToken *>(D)->value
   };
+  delete B;
+  delete C;
+  delete D;
 }
 
 // Entries
@@ -189,11 +200,13 @@ entries(A) ::= INDEX(B).
   ACE_LOG(Extra, "entry");
   A = new std::vector<size_t>();
   A->push_back(dynamic_cast<IndexToken *>(B)->value);
+  delete B;
 }
 
 entries(A) ::= entries(B) COMMA INDEX(C).
 {
   ACE_LOG(Extra, "entries, entry");
   B->push_back(dynamic_cast<IndexToken *>(C)->value);
+  delete C;
   A = B;
 }
