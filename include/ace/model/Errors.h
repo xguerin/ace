@@ -35,7 +35,7 @@
 
 // Attribute set
 
-#define ERR_WRONG_ATTRIBUTE_SET_TYPE "attribute set must be an object"
+#define ERR_WRONG_ATTRIBUTE_SET_TYPE "Attribute set must be an object"
 
 // Basic type
 

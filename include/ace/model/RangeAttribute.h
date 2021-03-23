@@ -136,8 +136,14 @@ RangeAttribute<T, C, O>::validate(tree::Object const& r,
     if (not w.isPrimitive()) {
       ERROR(ERR_RANGE_INSTANCE_NOT_A_PRIMITIVE);
       score += 1;
+      return;
     }
     tree::Primitive const& p = static_cast<tree::Primitive const&>(w);
+    if (not p.is<T>()) {
+      ERROR(ERR_UNEXPECTED_TYPE(p.value()));
+      score += 1;
+      return;
+    }
     if (not check(p.value<T>())) {
       ERROR(ERR_UNSUPPORTED_VALUE(p.value<T>()));
       score += 1;
