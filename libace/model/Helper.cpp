@@ -77,6 +77,9 @@ validate(std::string const& mp, std::string const& ver, const bool strict,
     return false;
   }
   if (strict and not MASTER.unexpected().empty()) {
+    for (auto const& v : MASTER.unexpected()) {
+      ACE_LOG(Error, "Unexpected value: ", v);
+    }
     return false;
   }
   return true;
