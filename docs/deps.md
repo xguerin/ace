@@ -40,11 +40,11 @@ value specified in the `when` list.
 Constraint-guarded dependencies enforce the final value of the dependent type.
 
 ```json
-"deps": [ "require": [ "@.A", ... ], "either": [ V1, V2 ] } ]
+"deps": [ { "require": [ "@.A", ... ], "either": [ V1, V2 ] } ]
 ```
 
 ```json
-"deps": [ "require": [ "@.A", ... ], "range": "[ V1, V2 ]" } ]
+"deps": [ { "require": [ "@.A", ... ], "range": "[ V1, V2 ]" } ]
 ```
 
 ## Mixing dependencies
