@@ -108,9 +108,9 @@ value specified in the <code>when</code> list.</p>
 </code></pre>
 <h2 id="constraint-guarded-dependency">Constraint-guarded dependency</h2>
 <p>Constraint-guarded dependencies enforce the final value of the dependent type.</p>
-<pre><code class="language-json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;either&quot;: [ V1, V2 ] } ]
+<pre><code class="language-json">&quot;deps&quot;: [ { &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;either&quot;: [ V1, V2 ] } ]
 </code></pre>
-<pre><code class="language-json">&quot;deps&quot;: [ &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;range&quot;: &quot;[ V1, V2 ]&quot; } ]
+<pre><code class="language-json">&quot;deps&quot;: [ { &quot;require&quot;: [ &quot;@.A&quot;, ... ], &quot;range&quot;: &quot;[ V1, V2 ]&quot; } ]
 </code></pre>
 <h2 id="mixing-dependencies">Mixing dependencies</h2>
 <pre><code class="language-json">&quot;deps&quot;: [
