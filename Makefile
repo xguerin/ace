@@ -4,6 +4,9 @@ CMAKE_OPTIONS  ?= -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
 MAKE_OPTIONS   ?= -j 4
 GTEST_ROOT     ?= $(HOME)/.local
 
+LITE_OPTIONS   ?= -DACE_PLUGIN_HJSON=OFF -DACE_PLUGIN_LUA=OFF -DACE_PLUGIN_PYTHON=OFF -DACE_PLUGIN_YAML=OFF
+TEST_OPTIONS   ?= -DCMAKE_BUILD_TYPE=Debug -DACE_BUILD_TESTS=ON -DGTEST_ROOT=$(GTEST_ROOT) 
+
 default: build
 
 all: clean build test lint
@@ -20,19 +23,19 @@ prepare:
 	fi
 
 prepare-lite:
-	@if [ ! -e $(BUILD_DIR) ];																																				\
- 	then																																															\
-		mkdir -p $(BUILD_DIR);																																					\
-		cd $(BUILD_DIR);																																								\
-		cmake $(CMAKE_OPTIONS) -DACE_PLUGIN_HJSON=OFF -DACE_PLUGIN_LUA=OFF -DACE_PLUGIN_PYTHON=OFF ..;	\
+	@if [ ! -e $(BUILD_DIR) ];										\
+ 	then																					\
+		mkdir -p $(BUILD_DIR);											\
+		cd $(BUILD_DIR);														\
+		cmake $(CMAKE_OPTIONS) $(LITE_OPTIONS) ..;	\
 	fi
 
 prepare-test:
-	@if [ ! -e $(BUILD_DIR) ];																																						\
-	then																																																	\
-		mkdir -p $(BUILD_DIR);																																							\
- 		cd $(BUILD_DIR);																																										\
-  	cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug -DACE_BUILD_TESTS=ON -DGTEST_ROOT=$(GTEST_ROOT) ..;	\
+	@if [ ! -e $(BUILD_DIR) ];										\
+	then																					\
+		mkdir -p $(BUILD_DIR);											\
+ 		cd $(BUILD_DIR);														\
+  	cmake $(CMAKE_OPTIONS) $(TEST_OPTIONS) ..;	\
  	fi
 
 build: prepare
