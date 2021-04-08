@@ -50,6 +50,8 @@ option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
 option(ACE_PLUGIN_SEXP    "Enable SEXP configuration plugin"   ON)
 option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
 option(ACE_PLUGIN_YAML    "Enable YAML configuration plugin"   ON)
+
+option(ACE_PTHREADS_NP    "Use pthreads non-portable API"      ON)
 option(ACE_BUILD_TESTS    "Build the Google tests suite"       OFF)
 
 #
@@ -64,6 +66,10 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_definitions(-DACE_VERSION="${LIB_VERSION}")
+
+if(ACE_PTHREADS_NP)
+  add_definitions(-DACE_PTHREADS_NP)
+endif()
 
 #
 # Global include directory

@@ -104,9 +104,13 @@ Log::Channel::defaultOutputPath()
 {
   std::stringstream ss;
 #if defined(__linux__)
+#if defined(ACE_PTHREADS_NP)
   char name[32] = { 0 };
   pthread_getname_np(pthread_self(), name, 32);
   ss << name << "_";
+#else
+  ss << "thread_";
+#endif
   ss << syscall(SYS_gettid) << ".log";
 #elif defined(__OpenBSD__)
   ss << "thread_";
@@ -292,8 +296,12 @@ Log::doHeader(Channel& c, Level l, std::string const& f, int n,
    */
   oss << std::setfill('.') << std::setw(15);
 #if defined(__linux__)
+#if defined(ACE_PTHREADS_NP)
   pthread_getname_np(pthread_self(), buffer, 40);
   oss << buffer << std::setfill(' ') << " ";
+#else
+  oss << syscall(SYS_gettid) << std::setfill(' ') << " ";
+#endif
 #elif defined(__OpenBSD__)
   oss << getthrid() << std::setfill(' ') << " ";
 #elif defined(__MACH__)
