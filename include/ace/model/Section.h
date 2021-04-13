@@ -57,6 +57,8 @@ public:
   bool merge(Section const& b);
   bool override(Section const& b);
 
+  bool empty() const;
+
   bool has(std::string const& k) const;
   bool has(tree::Path const& path) const;
   bool has(tree::Path const& p, tree::Path::const_iterator const& i) const;

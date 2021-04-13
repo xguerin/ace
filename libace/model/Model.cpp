@@ -836,7 +836,7 @@ Model::generateImplementationSource(std::ostream& o) const
   o << ";" << std::endl << std::endl;
 
   o << normalizedName() << "::" << normalizedName()
-    << "(ace::tree::Object const & r) {";
+    << "(ace::tree::Object const &" << (m_body.empty() ? "" : " r") << ") {";
   o << std::endl;
   for (auto& e : m_body) {
     auto str = e.second->path(true).toString();
@@ -857,8 +857,8 @@ Model::generateImplementationSource(std::ostream& o) const
   o << "}" << std::endl;
   o << std::endl;
 
-  o << "void " << normalizedName()
-    << "::serialize(ace::tree::Object::Ref & o) const {";
+  o << "void " << normalizedName() << "::serialize(ace::tree::Object::Ref &"
+    << (m_body.empty() ? "" : " o") << ") const {";
   o << std::endl;
   for (auto& e : m_body) {
     e.second->doSerializerDefinition("o", "\"" + e.first + "\"", o, 2);

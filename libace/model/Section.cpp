@@ -141,6 +141,12 @@ Section::override(Section const& b)
 }
 
 bool
+Section::empty() const
+{
+  return m_types.empty();
+}
+
+bool
 Section::has(tree::Path const& p, tree::Path::const_iterator const& i) const
 {
   if (i == p.end()) {
