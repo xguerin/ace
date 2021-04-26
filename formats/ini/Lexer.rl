@@ -100,10 +100,6 @@ action float_tok {
   Parse(lparser, FLOAT, getString(ts, te), nullptr);
 }
 
-action garbage_tok {
-  Parse(lparser, GARBAGE, getString(ts, te), nullptr);
-}
-
 wspace      = [\t\f' ']*;
 dot         = '.';
 comma       = ',';

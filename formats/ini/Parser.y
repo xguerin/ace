@@ -64,6 +64,7 @@ statement ::= section(A).
 statement ::= value_list(A).
 {
   *ppStatement = new ace::ini::ValueList(*A);
+  delete A;
 }
 
 // Section definition
@@ -77,6 +78,7 @@ section(A) ::= OPENC section_id(B) CLOSEC.
     path->push(item);
   }
   A = new ace::ini::Section((*(path->rbegin()))->value(), path);
+  delete B;
 }
 
 // section_id definition
@@ -85,12 +87,14 @@ section_id(A) ::= KEY(B).
 {
   A = new std::list<std::string>();
   A->push_back(*B);
+  delete B;
 }
 
 section_id(A) ::= section_id(B) DOT KEY(C).
 {
   B->push_back(*C);
   A = B;
+  delete C;
 }
 
 // Value list definition
@@ -112,6 +116,7 @@ value_list(A) ::= value_list(B) COMMA value(C).
 value(A) ::= KEY(B).
 {
   A = new ace::ini::Key(*B);
+  delete B;
 }
 
 value(A) ::= STRING(B).
@@ -119,21 +124,25 @@ value(A) ::= STRING(B).
   size_t len = B->length() - 2;
   auto content = B->substr(1, len);
   A = new ace::ini::String(content);
+  delete B;
 }
 
 value(A) ::= INTEGER_DEC(B).
 {
   A = new ace::ini::Integer(ace::ini::Integer::Base::Decimal, *B);
+  delete B;
 }
 
 value(A) ::= INTEGER_OCT(B).
 {
   A = new ace::ini::Integer(ace::ini::Integer::Base::Octal, *B);
+  delete B;
 }
 
 value(A) ::= INTEGER_HEX(B).
 {
   A = new ace::ini::Integer(ace::ini::Integer::Base::Hexadecimal, *B);
+  delete B;
 }
 
 value(A) ::= REF(B).
@@ -141,6 +150,7 @@ value(A) ::= REF(B).
   size_t len = B->length() - 1;
   auto content = B->substr(1, len);
   A = new ace::ini::Reference("$." + content);
+  delete B;
 }
 
 value(A) ::= VAR(B).
@@ -148,6 +158,7 @@ value(A) ::= VAR(B).
   size_t len = B->length() - 3;
   auto content = B->substr(2, len);
   A = new ace::ini::Environment(content);
+  delete B;
 }
 
 value(A) ::= SYSTEM(B).
@@ -155,14 +166,17 @@ value(A) ::= SYSTEM(B).
   size_t len = B->length() - 9;
   auto content = B->substr(8, len);
   A = new ace::ini::System(content);
+  delete B;
 }
 
 value(A) ::= BOOL(B).
 {
   A = new ace::ini::Boolean(*B);
+  delete B;
 }
 
 value(A) ::= FLOAT(B).
 {
   A = new ace::ini::Float(*B);
+  delete B;
 }
