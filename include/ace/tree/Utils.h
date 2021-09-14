@@ -158,7 +158,7 @@ parsePlugin(Value const& v, std::string const& m, typename T::Ref& l)
   for (auto& p : MASTER.childrenForPath(m)) {
     if (MASTER.hasModelBuildersFor(p)) {
       for (auto& b : MASTER.modelBuildersFor(p)) {
-        if (ace::common::Regex::match(v.path().toString(true), b.first)) {
+        if (Path::parse(b.first).match(v.path())) {
           if (v.type() == Value::Type::Object) {
             l = typename T::Ref(reinterpret_cast<T*>(b.second(v)));
             return true;
@@ -178,7 +178,7 @@ parsePlugin(Value const& v, std::string const& m,
   for (auto& p : MASTER.childrenForPath(m)) {
     if (MASTER.hasModelBuildersFor(p)) {
       for (auto& b : MASTER.modelBuildersFor(p)) {
-        if (ace::common::Regex::match(v.path().toString(true), b.first)) {
+        if (Path::parse(b.first).match(v.path())) {
           if (v.type() == Value::Type::Array) {
             Array const& p = static_cast<tree::Array const&>(v);
             for (auto& e : p) {
