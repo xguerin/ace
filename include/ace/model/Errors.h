@@ -105,6 +105,7 @@
 
 // Class
 
+#define ERR_INVALID_FLAT_CLASS_ARITY "N-ary classes cannot be flattened"
 #define ERR_MODEL_NOT_FOUND(_m) "Model \"", _m, "\" not found"
 #define ERR_INVALID_MODEL(_m) "Invalid model \"", _m, "\""
 #define ERR_CLASS_NOT_AN_OBJECT "Attribute \"class\" must be an object"

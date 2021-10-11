@@ -12,6 +12,10 @@
     "var1": {
       "kind": "class", "arity": "*", "model": "Simple.json",
       "doc": "Valid class option"
+    },
+    "var2": {
+      "kind": "class", "arity": "1", "model": "Simple.json",
+      "flat": true, "doc": "Valid flattened class option"
     }
   }
 }

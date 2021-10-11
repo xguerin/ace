@@ -44,6 +44,10 @@
         "World": 1
       },
       "doc": "Valid ENUM option"
+    },
+    "var6": {
+      "kind": "class", "model": "Class.json", "arity": "1",
+      "flat": true, "doc": "Valid flatened CLASS option"
     }
   }
 }

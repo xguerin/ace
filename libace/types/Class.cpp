@@ -34,6 +34,7 @@ namespace ace { namespace model {
 Class::Class() : Type(BasicType::Kind::Class)
 {
   m_attributes.define<ModelAttribute>("model", false);
+  m_attributes.define<FlatAttribute>("flat", true);
 }
 
 Class::Ref
@@ -127,6 +128,19 @@ Class::resolveInstance(tree::Object const& r, tree::Value const& v) const
     }
   });
   return score == 0;
+}
+
+bool
+Class::validateModel()
+{
+  if (!hasFlatAttribute() or !flatAttribute().head()) {
+    return Type::validateModel();
+  }
+  if (multiple()) {
+    ERROR(ERR_INVALID_FLAT_CLASS_ARITY);
+    return false;
+  }
+  return true;
 }
 
 bool
@@ -237,6 +251,58 @@ Class::doSerializerDefinition(std::string const& c, std::string const& n,
     indent(o, l + 2) << c << "->put(" << tmpArray << ");" << std::endl;
     indent(o, l) << "}" << std::endl;
   }
+}
+
+void
+Class::doGetterInterface(std::ostream& o, int l) const
+{
+  std::string tn = modelAttribute().model().declarationType();
+  if (!hasFlatAttribute() or !flatAttribute().head()) {
+    tn += "::Ref";
+  }
+  tn = decorateType(tn);
+  indent(o, l) << "virtual " << tn << " const & " << m_declName
+               << "() const = 0;" << std::endl;
+}
+
+void
+Class::doGetterDeclaration(std::ostream& o, int l) const
+{
+  std::string tn = modelAttribute().model().declarationType();
+  if (!hasFlatAttribute() or !flatAttribute().head()) {
+    tn += "::Ref";
+  }
+  tn = decorateType(tn);
+  indent(o, l) << tn << " const & " << m_declName << "() const;" << std::endl;
+}
+
+void
+Class::doGetterDefinition(std::ostream& o, int l) const
+{
+  const Model* m = static_cast<const Model*>(owner());
+  std::string const& h = m->normalizedName();
+  std::string tn = modelAttribute().model().declarationType();
+  if (!hasFlatAttribute() or !flatAttribute().head()) {
+    tn += "::Ref";
+  }
+  tn = decorateType(tn);
+  indent(o, l) << tn << " const & " << h << "::" << m_declName << "() const {"
+               << std::endl;
+  if (optional()) {
+    if (multiple()) {
+      indent(o, l + 2) << "if (m_" << m_declName << ".empty()) ";
+    } else {
+      indent(o, l + 2) << "if (not m_has_" << m_declName << ") ";
+    }
+    o << "ace::tree::utils::illegalValueAccess(__PRETTY_FUNCTION__);"
+      << std::endl;
+  }
+  if (!hasFlatAttribute() or !flatAttribute().head()) {
+    indent(o, l + 2) << "return m_" << m_declName << ";" << std::endl;
+  } else {
+    indent(o, l + 2) << "return *m_" << m_declName << ";" << std::endl;
+  }
+  indent(o, l) << "}" << std::endl;
 }
 
 BasicType::Ref
@@ -437,6 +503,26 @@ Class::modelAttribute() const
 {
   Attribute const& attr = *m_attributes["model"];
   return static_cast<ModelAttribute const&>(attr);
+}
+
+bool
+Class::hasFlatAttribute() const
+{
+  return this->m_attributes.has("flat");
+}
+
+Class::FlatAttribute&
+Class::flatAttribute()
+{
+  Attribute& attr = *m_attributes["flat"];
+  return static_cast<FlatAttribute&>(attr);
+}
+
+Class::FlatAttribute const&
+Class::flatAttribute() const
+{
+  Attribute const& attr = *m_attributes["flat"];
+  return static_cast<FlatAttribute const&>(attr);
 }
 
 }}

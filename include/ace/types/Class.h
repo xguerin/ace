@@ -37,6 +37,7 @@ namespace ace { namespace model {
 class Class : public Type<void, FormatChecker<void>>
 {
 public:
+  using FlatAttribute = FlagAttribute<bool>;
   using Ref = std::shared_ptr<Class>;
 
   Class();
@@ -48,6 +49,7 @@ public:
 
   // Object
 
+  bool validateModel();
   bool injectInherited(tree::Object const& r, Object const& o,
                        tree::Value& v) const;
 
@@ -79,6 +81,10 @@ public:
                               std::string const& v, const bool b,
                               std::ostream& o, int l) const;
 
+  void doGetterInterface(std::ostream& o, int l = 0) const;
+  void doGetterDeclaration(std::ostream& o, int l = 0) const;
+  void doGetterDefinition(std::ostream& o, int l = 0) const;
+
   // Basic Type
 
   BasicType::Ref clone(std::string const& n) const;
@@ -97,6 +103,10 @@ public:
 
   ModelAttribute& modelAttribute();
   ModelAttribute const& modelAttribute() const;
+
+  bool hasFlatAttribute() const;
+  FlatAttribute& flatAttribute();
+  FlatAttribute const& flatAttribute() const;
 
 private:
   std::vector<Model::Ref> m_clones;
