@@ -84,7 +84,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
       <div class="wm-top-title">
         Adaptable Configuration Engine<br>
         
-          <span class="wm-top-version">1.2.0</span>
+          <span class="wm-top-version">2.0.0</span>
         
       </div>
     </a>
@@ -150,8 +150,7 @@ necessary source code to access the options values.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="prepare">Prepare</h3>
 <p>Grab <a href="https://github.com/xguerin/ace">the source code</a>. ACE has several
-dependencies, listed below. Dependencies with checkmarks can be installed using
-<a href="https://conan.io">Conan</a>:</p>
+dependencies, listed below.</p>
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled checked/> <a href="http://www.hwaci.com/sw/lemon">lemon</a></li>
 <li class="task-list-item"><input type="checkbox" disabled checked/> <a href="http://www.colm.net/open-source/ragel">ragel</a></li>
@@ -164,22 +163,12 @@ dependencies, listed below. Dependencies with checkmarks can be installed using
 <li class="task-list-item"><input type="checkbox" disabled/> Lua 5.2.4 for Lua support</li>
 <li class="task-list-item"><input type="checkbox" disabled checked/> <a href="https://github.com/jbeder/yaml-cpp">yaml-cpp</a> for YAML support</li>
 </ul>
-<h3 id="building-without-conan">Building without Conan</h3>
+<h3 id="building">Building</h3>
 <p>ACE uses <a href="https://cmake.org">CMake</a> as its build system. To build the project,
 simply run the following commands:</p>
 <pre><code class="language-bash">cd ace
 mkdir build
 cd build
-cmake ..
-make
-make install
-</code></pre>
-<h3 id="building-with-conan">Building with Conan</h3>
-<p>To build the project using <code>Conan</code>, run the following commands:</p>
-<pre><code class="language-bash">cd ace
-mkdir build
-cd build
-conan install ..
 cmake ..
 make
 make install
@@ -391,6 +380,6 @@ configuration files:</p>
 </body>
 </html>
 <!--
-MkDocs version : 1.1.2
-Build Date UTC : 2021-03-26 17:00:30.384280+00:00
+MkDocs version : 1.2.3
+Build Date UTC : 2021-11-12 19:50:38.607350+00:00
 -->
