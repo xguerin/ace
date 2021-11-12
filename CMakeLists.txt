@@ -1,15 +1,33 @@
-#
-# Project definition
-#
-
-project("ACE" C CXX)
 cmake_minimum_required(VERSION 3.12)
-
 cmake_policy(SET CMP0074 NEW)
+
+#
+# Includes
+#
 
 include(cmake/GetGitRevisionDescription.cmake)
 include(cmake/Lemon.cmake)
 include(cmake/Ragel.cmake)
+
+#
+# Compiler configuration
+#
+
+set(CMAKE_C_COMPILER_NAMES clang gcc)
+set(CMAKE_CXX_COMPILER_NAMES clang++ g++)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+#
+# Project definition
+#
+
+project("ACE" VERSION 2.0.0 LANGUAGES C CXX)
 
 #
 # Uninstall target
@@ -43,16 +61,20 @@ message(STATUS "Build version: " ${LIB_VERSION})
 # Options
 #
 
-option(ACE_PLUGIN_HJSON   "Enable HJSON configuration plugin"  ON)
-option(ACE_PLUGIN_INI     "Enable INI configuration plugin"    ON)
-option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"    ON)
-option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin" ON)
-option(ACE_PLUGIN_SEXP    "Enable SEXP configuration plugin"   ON)
-option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"   ON)
-option(ACE_PLUGIN_YAML    "Enable YAML configuration plugin"   ON)
+option(ACE_PLUGIN_HJSON   "Enable HJSON configuration plugin"    ON)
+option(ACE_PLUGIN_INI     "Enable INI configuration plugin"      ON)
+option(ACE_PLUGIN_LUA     "Enable LUA configuration plugin"      ON)
+option(ACE_PLUGIN_PYTHON  "Enable PYTHON configuration plugin"   ON)
+option(ACE_PLUGIN_SEXP    "Enable SEXP configuration plugin"     ON)
+option(ACE_PLUGIN_TOML    "Enable TOML configuration plugin"     ON)
+option(ACE_PLUGIN_YAML    "Enable YAML configuration plugin"     ON)
 
-option(ACE_PTHREADS_NP    "Use pthreads non-portable API"      ON)
-option(ACE_BUILD_TESTS    "Build the Google tests suite"       OFF)
+option(ACE_PTHREADS_NP    "Use pthreads non-portable API"        ON)
+option(ACE_BUILD_TESTS    "Build the Google tests suite"         OFF)
+
+option(ACE_ENABLE_ASAN    "Enable address sanitizer"             OFF)
+option(ACE_ENABLE_MSAN    "Enable memory sanitizer"              OFF)
+option(ACE_ENABLE_UBSAN   "Enable undefined behavior sanitizer"  OFF)
 
 #
 # Global definitions
@@ -62,7 +84,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release ... FORCE)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 add_definitions(-DACE_VERSION="${LIB_VERSION}")
@@ -91,18 +113,28 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O3")
 
-#
-# Conan package integration
-#
+if(ACE_ENABLE_ASAN OR ACE_ENABLE_MSAN OR ACE_ENABLE_UBSAN)
+  if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Debug")
+    message(FATAL_ERROR "Sanitizers can only be enabled in Debug mode")
+  endif()
 
-if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  conan_basic_setup(KEEP_RPATHS)
-else()
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer")
+  add_link_options(-fno-omit-frame-pointer)
+
+  if(ACE_ENABLE_ASAN)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+    add_link_options(-fsanitize=undefined)
+  endif()
+
+  if(ACE_ENABLE_MSAN)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=memory")
+    add_link_options(-fsanitize=undefined)
+  endif()
+
+  if(ACE_ENABLE_UBSAN)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
+    add_link_options(-fsanitize=undefined)
+  endif()
 endif()
 
 #
@@ -132,7 +164,7 @@ if(ACE_PLUGIN_LUA)
 endif()
 
 if(ACE_PLUGIN_PYTHON)
-  find_package(PythonLibs 2.7 REQUIRED)
+  find_package(Python3 COMPONENTS Development REQUIRED)
 endif()
 
 if(ACE_PLUGIN_YAML)
@@ -195,7 +227,8 @@ if(ACE_BUILD_TESTS)
     TEST libace
     PROPERTY ENVIRONMENT
     "ACE_SCANNER_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
-    "ACE_TESTS_PATH=${CMAKE_BINARY_DIR}/tests/libace")
+    "ACE_TESTS_PATH=${CMAKE_BINARY_DIR}/tests/libace"
+    "LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/misc/suppressions.txt")
   #
   # Generated code tests
   #

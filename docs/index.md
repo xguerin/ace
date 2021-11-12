@@ -11,8 +11,7 @@ necessary source code to access the options values.
 ### Prepare
 
 Grab [the source code](https://github.com/xguerin/ace). ACE has several
-dependencies, listed below. Dependencies with checkmarks can be installed using
-[Conan](https://conan.io):
+dependencies, listed below.
 
 * [X] [lemon](http://www.hwaci.com/sw/lemon)
 * [X] [ragel](http://www.colm.net/open-source/ragel)
@@ -21,11 +20,11 @@ dependencies, listed below. Dependencies with checkmarks can be installed using
 * [X] [GTest](https://github.com/google/googletest) if testing is enabled
 * [ ] [hjson](https://hjson.github.io) for HJSON support
 * [X] [jansson](http://www.digip.org/jansson) for JSON support
-* [ ] Python 2.x for Python support
+* [ ] Python 3.x for Python support
 * [ ] Lua 5.2.4 for Lua support
 * [X] [yaml-cpp](https://github.com/jbeder/yaml-cpp) for YAML support
 
-### Building without Conan
+### Building
 
 ACE uses [CMake](https://cmake.org) as its build system. To build the project,
 simply run the following commands:
@@ -34,20 +33,6 @@ simply run the following commands:
 cd ace
 mkdir build
 cd build
-cmake ..
-make
-make install
-```
-
-### Building with Conan
-
-To build the project using `Conan`, run the following commands:
-
-```bash
-cd ace
-mkdir build
-cd build
-conan install ..
 cmake ..
 make
 make install

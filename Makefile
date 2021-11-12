@@ -1,11 +1,10 @@
 BUILD_DIR      ?= build
 INSTALL_PREFIX ?= /usr/local
-CMAKE_OPTIONS  ?= -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
-MAKE_OPTIONS   ?= -j 4
+CMAKE_OPTIONS  ?= -GNinja -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
 GTEST_ROOT     ?= $(HOME)/.local
 
 LITE_OPTIONS   ?= -DACE_PLUGIN_HJSON=OFF -DACE_PLUGIN_LUA=OFF -DACE_PLUGIN_PYTHON=OFF -DACE_PLUGIN_YAML=OFF
-TEST_OPTIONS   ?= -DCMAKE_BUILD_TYPE=Debug -DACE_BUILD_TESTS=ON -DGTEST_ROOT=$(GTEST_ROOT) 
+TEST_OPTIONS   ?= -DCMAKE_BUILD_TYPE=Debug -DACE_BUILD_TESTS=ON -DACE_ENABLE_ASAN=ON -DACE_ENABLE_UBSAN=ON -DGTEST_ROOT=$(GTEST_ROOT) 
 EXTR_OPTIONS   ?=
 
 default: build
@@ -15,44 +14,32 @@ all: clean build test lint
 clean:
 	@rm -rf $(BUILD_DIR) site
 
-prepare:
-	@if [ ! -e $(BUILD_DIR) ];										\
- 	then																					\
-		mkdir -p $(BUILD_DIR);											\
-		cd $(BUILD_DIR);														\
-		cmake $(CMAKE_OPTIONS) $(EXTR_OPTIONS) ..;	\
-	fi
+mkdir:
+	@if [ ! -e $(BUILD_DIR) ]; then mkdir -p $(BUILD_DIR); fi
 
-prepare-lite:
-	@if [ ! -e $(BUILD_DIR) ];																		\
- 	then																													\
-		mkdir -p $(BUILD_DIR);																			\
-		cd $(BUILD_DIR);																						\
-		cmake $(CMAKE_OPTIONS) $(LITE_OPTIONS) $(EXTR_OPTIONS) ..;	\
-	fi
+prepare: mkdir
+	@cmake -B $(BUILD_DIR) $(CMAKE_OPTIONS) $(EXTR_OPTIONS) .
 
-prepare-test:
-	@if [ ! -e $(BUILD_DIR) ];																		\
-	then																													\
-		mkdir -p $(BUILD_DIR);																			\
- 		cd $(BUILD_DIR);																						\
-  	cmake $(CMAKE_OPTIONS) $(TEST_OPTIONS) $(EXTR_OPTIONS) ..;	\
- 	fi
+prepare-lite: mkdir
+	@cmake -B $(BUILD_DIR) $(CMAKE_OPTIONS) $(LITE_OPTIONS) $(EXTR_OPTIONS) .;
+
+prepare-test: mkdir
+	@cmake -B $(BUILD_DIR) $(CMAKE_OPTIONS) $(TEST_OPTIONS) $(EXTR_OPTIONS) .;
 
 build: prepare
-	@cd $(BUILD_DIR) && make $(MAKE_OPTIONS)
+	@ninja -C $(BUILD_DIR)
 
 build-lite: prepare-lite
-	@cd $(BUILD_DIR) && make $(MAKE_OPTIONS)
+	@ninja -C $(BUILD_DIR)
 
 test: prepare-test build
-	@cd $(BUILD_DIR) && make test
+	@ninja -C $(BUILD_DIR) test
 
 lint: prepare
 	@BUILD_DIR=$(BUILD_DIR) .travis/lint.sh
 
 install: build
-	@cd $(BUILD_DIR) && make install
+	@ninja -C $(BUILD_DIR) install
 
 info:
 	@echo "         clean: clean the build directory"

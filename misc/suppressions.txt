@@ -1,0 +1,4 @@
+leak:__interceptor_realloc
+leak:*libjansson*
+leak:*liblua*
+leak:*libpython*

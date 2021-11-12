@@ -27,9 +27,10 @@
 #include <ace/common/Log.h>
 #include <ace/common/String.h>
 #include <ace/engine/Master.h>
-#include <ace/filesystem/Path.h>
+#include <codecvt>
 #include <fstream>
 #include <iostream>
+#include <locale>
 #include <string>
 #include <vector>
 
@@ -42,35 +43,36 @@ Scanner::open(std::string const& fn, int argc, char** argv)
     ACE_LOG(Error, "invalid ARGC/ARGV arguments");
     return nullptr;
   }
-
-  Py_SetProgramName(const_cast<char*>(fn.c_str()));
-  Py_InitializeEx(0);
-  shift(fn, argc, argv);
-  PySys_SetArgv(argc, argv);
-
-  fs::Path fnPath(fn), container = fnPath.prune();
-  std::string path = container.toString();
-  if (path.empty()) {
-    path = ".";
+  /*
+   * Initialize the Python configuration.
+   */
+  fs::Path path(fn);
+  if (!setUp(path, argc, argv)) {
+    ACE_LOG(Error, "error setting up Python interpreter");
+    return nullptr;
   }
-  path = path + ":" + std::string(Py_GetPath());
-  PySys_SetPath(const_cast<char*>(path.c_str()));
-
+  /*
+   * Compute the module name.
+   */
   std::vector<std::string> fnParts;
-  common::String::split(*fnPath.rbegin(), '.', fnParts);
+  common::String::split(*path.rbegin(), '.', fnParts);
   fnParts.erase(--fnParts.end());
   std::string mn = common::String::join(fnParts, '.');
-
-  PyObject* pName = PyString_FromString(mn.c_str());
+  /*
+   * Grab the module.
+   */
+  PyObject* pName = PyUnicode_FromString(mn.c_str());
   PyObject* pModule = PyImport_Import(pName);
   Py_DECREF(pName);
-
   PyObject* pConfig = nullptr;
   tree::Value::Ref obj;
   if (pModule == nullptr) {
     PyErr_Print();
     goto bad_file;
   }
+  /*
+   * Look-up the dictionary.
+   */
   if (not PyObject_HasAttrString(pModule, "config")) {
     ACE_LOG(Error, "no \"config\" dictionary found in \"", fn, "\"");
     goto bad_config;
@@ -80,8 +82,13 @@ Scanner::open(std::string const& fn, int argc, char** argv)
     ACE_LOG(Error, "\"config\" is not a dictionary");
     goto bad_type;
   }
+  /*
+   * Build the dictionary.
+   */
   obj = Object::build("", pConfig);
-
+  /*
+   * Errors.
+   */
 bad_type:
   Py_DECREF(pConfig);
 bad_config:
@@ -98,16 +105,23 @@ Scanner::parse(std::string const& s, int argc, char** argv)
     ACE_LOG(Error, "invalid ARGC/ARGV arguments");
     return nullptr;
   }
-
-  Py_SetProgramName(const_cast<char*>(""));
-  Py_InitializeEx(0);
-  shift("", argc, argv);
-  PySys_SetArgv(argc, argv);
-
+  /*
+   * Initialize the Python configuration.
+   */
+  fs::Path path;
+  if (!setUp(path, argc, argv)) {
+    ACE_LOG(Error, "error setting up Python interpreter");
+    return nullptr;
+  }
+  /*
+   * Create an inlined module.
+   */
   PyObject* pModule = PyModule_New("inlined");
   PyModule_AddStringConstant(pModule, "__file__", "");
   PyObject* pGlobal = PyDict_New();
-
+  /*
+   * Merge python built-ins.
+   */
   if (PyDict_GetItemString(pGlobal, "__builtins__") == nullptr) {
     if (PyDict_SetItemString(pGlobal, "__builtins__", PyEval_GetBuiltins()) !=
         0) {
@@ -115,16 +129,20 @@ Scanner::parse(std::string const& s, int argc, char** argv)
       return nullptr;
     }
   }
-
+  /*
+   * Execute the string.
+   */
   PyObject* pLocal = PyModule_GetDict(pModule);
   PyObject* pValue = PyRun_String(s.c_str(), Py_file_input, pGlobal, pLocal);
-
   PyObject* pConfig = nullptr;
   tree::Value::Ref obj;
   if (pValue == nullptr) {
     PyErr_Print();
     goto bad_data;
   }
+  /*
+   * Look-up the dictionary.
+   */
   Py_DECREF(pValue);
   if (not PyObject_HasAttrString(pModule, "config")) {
     ACE_LOG(Error, "no \"config\" dictionary found in inlined Python");
@@ -135,8 +153,13 @@ Scanner::parse(std::string const& s, int argc, char** argv)
     ACE_LOG(Error, "\"config\" is not a dictionary");
     goto bad_type;
   }
+  /*
+   * Build the dictionary.
+   */
   obj = Object::build("", pConfig);
-
+  /*
+   * Errors.
+   */
 bad_type:
   Py_DECREF(pConfig);
 bad_config:
@@ -199,6 +222,62 @@ std::string
 Scanner::extension() const
 {
   return "py";
+}
+
+bool
+Scanner::setUp(fs::Path const& path, int argc, char** argv) noexcept
+{
+  /*
+   * Initialize the Python configuration.
+   */
+  PyStatus status;
+  PyConfig config;
+  PyConfig_InitIsolatedConfig(&config);
+  /*
+   * Set the program name.
+   */
+  status = PyConfig_SetBytesString(&config, &config.program_name,
+                                   path.toString().c_str());
+  if (PyStatus_Exception(status)) {
+    PyConfig_Clear(&config);
+    return false;
+  }
+  /*
+   * Load the arguments.
+   */
+  shift(path.toString(), argc, argv);
+  status = PyConfig_SetBytesArgv(&config, argc, argv);
+  if (PyStatus_Exception(status)) {
+    PyConfig_Clear(&config);
+    return false;
+  }
+  /*
+   * Compute the search path.
+   */
+  fs::Path container = path.prune();
+  std::string p = container.toString();
+  if (p.empty()) {
+    p = ".";
+  }
+  const char* pythonpath = getenv("PYTHONPATH");
+  if (pythonpath != nullptr) {
+    p += ":" + std::string(pythonpath);
+  }
+  status = PyConfig_SetBytesString(&config, &config.pythonpath_env, p.c_str());
+  if (PyStatus_Exception(status)) {
+    PyConfig_Clear(&config);
+    return false;
+  }
+  /*
+   * Initialize the interpreter.
+   */
+  status = Py_InitializeFromConfig(&config);
+  if (PyStatus_Exception(status)) {
+    PyConfig_Clear(&config);
+    return false;
+  }
+  PyConfig_Clear(&config);
+  return true;
 }
 
 }}

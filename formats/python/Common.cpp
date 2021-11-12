@@ -28,8 +28,8 @@ namespace ace { namespace pyfmt {
 tree::Value::Ref
 build_value(std::string const& n, PyObject* o)
 {
-  if (PyBool_Check(o) or PyInt_Check(o) or PyLong_Check(o) or
-      PyFloat_Check(o) or PyString_Check(o)) {
+  if (PyBool_Check(o) or PyLong_Check(o) or PyFloat_Check(o) or
+      PyUnicode_Check(o)) {
     return Primitive::build(n, o);
   } else if (PyList_Check(o)) {
     return Array::build(n, o);

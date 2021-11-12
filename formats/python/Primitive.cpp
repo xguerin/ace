@@ -41,10 +41,7 @@ tree::Value::Ref
 build(std::string const& n, PyObject* o)
 {
   if (PyBool_Check(o)) {
-    bool v = PyObject_Compare(o, Py_True) == 0;
-    return tree::Primitive::build(n, v);
-  } else if (PyInt_Check(o)) {
-    long v = PyInt_AsLong(o);
+    bool v = PyObject_IsTrue(o) == 0;
     return tree::Primitive::build(n, v);
   } else if (PyLong_Check(o)) {
     long v = PyLong_AsLong(o);
@@ -52,8 +49,10 @@ build(std::string const& n, PyObject* o)
   } else if (PyFloat_Check(o)) {
     double v = PyFloat_AsDouble(o);
     return tree::Primitive::build(n, v);
-  } else if (PyString_Check(o)) {
-    std::string v(PyString_AsString(o));
+  } else if (PyUnicode_Check(o)) {
+    PyObject* obj = PyUnicode_AsUTF8String(o);
+    std::string v(PyBytes_AsString(obj));
+    Py_DECREF(obj);
     return tree::Primitive::build(n, v);
   }
   return tree::Value::Ref();

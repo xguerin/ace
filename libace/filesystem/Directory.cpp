@@ -37,8 +37,8 @@ Directory::Directory() : Node()
 {
   char buffer[PATH_MAX];
   bzero(buffer, PATH_MAX);
-  getcwd(buffer, PATH_MAX);
-  std::string base(buffer);
+  char* cwd = getcwd(buffer, PATH_MAX);
+  std::string base(cwd);
   if (*base.rbegin() != '/') {
     base += "/";
   }
@@ -53,8 +53,8 @@ Directory::Directory(fs::Path const& p) : Node()
     if (not p.isAbsolute()) {
       char buffer[PATH_MAX];
       bzero(buffer, PATH_MAX);
-      getcwd(buffer, PATH_MAX);
-      std::string base(buffer);
+      char* cwd = getcwd(buffer, PATH_MAX);
+      std::string base(cwd);
       if (*base.rbegin() != '/') {
         base += "/";
       }

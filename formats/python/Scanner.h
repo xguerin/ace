@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <ace/filesystem/Path.h>
 #include <ace/tree/Scanner.h>
 #include <string>
 
@@ -45,6 +46,9 @@ public:
 
   std::string name() const;
   std::string extension() const;
+
+private:
+  bool setUp(fs::Path const& path, int argc, char** argv) noexcept;
 };
 
 }}

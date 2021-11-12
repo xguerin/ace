@@ -36,7 +36,9 @@ build(std::string const& n, PyObject* o)
   PyObject *key, *value;
   Py_ssize_t pos = 0;
   while (PyDict_Next(o, &pos, &key, &value)) {
-    std::string k(PyString_AsString(key));
+    PyObject* obj = PyUnicode_AsUTF8String(key);
+    std::string k(PyBytes_AsString(obj));
+    Py_DECREF(obj);
     v = build_value(k, value);
     if (v.get() != nullptr) {
       object->put(k, v);
