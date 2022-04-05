@@ -20,15 +20,18 @@
  * SOFTWARE.
  */
 
+#include "Parser.h"
+#include <ace/common/Log.h>
+#include <ace/tree/Item.h>
 #include <ace/tree/Lexer.h>
+#include <ace/tree/Token.h>
+#include <cassert>
+#include <cstdlib>
 #include <iostream>
+#include <list>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
-#include <stdlib.h>
-
-#define NEVER(__arg__) __arg__
-#include "Parser.c"
 
 namespace {
 
@@ -45,6 +48,13 @@ getMember(const char * const beg, const char * const end) {
 }
 
 } // namespace
+
+namespace ace {
+namespace tree {
+namespace path {
+
+#define NEVER(__arg__) __arg__
+#include "Parser.c"
 
 %%{
 
@@ -117,10 +127,6 @@ main := |*
 }%%
 
 %% write data;
-
-namespace ace {
-namespace tree {
-namespace path {
 
 Scan::Scan()
   : cs(0)

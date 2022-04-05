@@ -37,15 +37,6 @@
 %type value_list_items       { ace::sexp::Value * }
 %destructor value_list_items {  }
 
-%include {
-  #include "Parser.h"
-  #include "Sexp.h"
-  #include <ace/common/Log.h>
-  #include <cassert>
-  #include <iostream>
-  #include <string>
-}
-
 %syntax_error {
   ACE_LOG(Error, "Recoverable SexpFile syntax error");
 }

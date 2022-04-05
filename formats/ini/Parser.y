@@ -40,12 +40,6 @@
 %type value            { ace::ini::Value * }
 %destructor value      { }
 
-%include {
-  #include "Parser.h"
-  #include <ace/common/Log.h>
-  #include <cassert>
-}
-
 %syntax_error {
   ACE_LOG(Error, "Recoverable INIFile syntax error");
 }

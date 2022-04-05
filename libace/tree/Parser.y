@@ -46,25 +46,6 @@
 %type entries         { std::vector<size_t> * }
 %destructor entries   { delete $$; }
 
-%include {
-  #include "Parser.h"
-  #include <ace/tree/Item.h>
-  #include <ace/tree/Token.h>
-  #include <ace/common/Log.h>
-  #include <cassert>
-  #include <iostream>
-  #include <list>
-#if defined(__linux__)
-  #include <malloc.h>
-#elif defined(__OpenBSD__)
-  #include <stdlib.h>
-#elif defined(__MACH__)
-  #include <malloc/malloc.h>
-#else
-#error "Unsupported operating system"
-#endif
-}
-
 %syntax_error {
   ACE_LOG(Error, "Recoverable JSONPath syntax error");
 }

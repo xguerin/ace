@@ -22,14 +22,12 @@
 
 #include "Lexer.h"
 #include "Sexp.h"
+#include <ace/common/Log.h>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <sstream>
 #include <stdlib.h>
-
-#define NEVER(__arg__) __arg__
-#include "Parser.c"
 
 namespace {
 
@@ -38,7 +36,13 @@ getString(const char * const beg, const char * const end) {
   return new std::string(std::string(beg).substr(0, end-beg));
 }
 
-}
+} // namespace
+
+namespace ace {
+namespace sexpfmt {
+
+#define NEVER(__arg__) __arg__
+#include "Parser.c"
 
 %%{
 
@@ -119,9 +123,6 @@ main := |*
 }%%
 
 %% write data;
-
-namespace ace {
-namespace sexpfmt {
 
 Scan::Scan()
   : cs(0)

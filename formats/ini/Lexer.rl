@@ -22,14 +22,12 @@
 
 #include "Lexer.h"
 #include "Ini.h"
+#include <ace/common/Log.h>
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
-#include <stdlib.h>
-
-#define NEVER(__arg__) __arg__
-#include "Parser.c"
 
 namespace {
 
@@ -39,6 +37,12 @@ getString(const char * const beg, const char * const end) {
 }
 
 }
+
+namespace ace {
+namespace inifmt {
+
+#define NEVER(__arg__) __arg__
+#include "Parser.c"
 
 %%{
 
@@ -144,9 +148,6 @@ main := |*
 }%%
 
 %% write data;
-
-namespace ace {
-namespace inifmt {
 
 Scan::Scan()
   : cs(0)
