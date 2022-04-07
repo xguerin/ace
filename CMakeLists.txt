@@ -27,7 +27,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Project definition
 #
 
-project("ACE" VERSION 2.0.1 LANGUAGES C CXX)
+project("ACE" VERSION 2.0.2 LANGUAGES C CXX)
 
 #
 # Uninstall target

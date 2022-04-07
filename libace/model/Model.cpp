@@ -613,8 +613,14 @@ Model::generateInterfaceHeader(std::ostream& o) const
 
   for (auto& e : m_body) {
     if (e.second->hasTypeDeclaration()) {
-      e.second->doTypeDeclaration(o, 2);
-      o << std::endl;
+      bool inherited = false;
+      for (auto& include : m_includes) {
+        inherited = inherited || include->body().has(e.first);
+      }
+      if (not inherited) {
+        e.second->doTypeDeclaration(o, 2);
+        o << std::endl;
+      }
     }
   }
 
