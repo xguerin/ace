@@ -278,6 +278,7 @@ Selector::doBuildDefinition(std::string const& s, std::string const& v,
 {
   const Model* m = static_cast<const Model*>(owner());
   std::string const& n = templateAttribute().head();
+  std::string topHas = optional() and not multiple() ? s : tempName();
   auto tmpPath = tempName();
   auto tmpObj = tempName();
   auto tmpIdx = tempName();
@@ -292,7 +293,9 @@ Selector::doBuildDefinition(std::string const& s, std::string const& v,
   BasicType const& bt = m->templates().get(n);
   indent(o, l) << "auto " << tmpPath << " = ace::tree::Path::parse(" << e
                << ");" << std::endl;
-  indent(o, l) << "if (r.has(" << tmpPath << ")) {" << std::endl;
+  indent(o, l) << (optional() and not multiple() ? "" : "auto ") << topHas
+               << " = r.has(" << tmpPath << ");" << std::endl;
+  indent(o, l) << "if (" << topHas << ") {" << std::endl;
   indent(o, l + 2) << "auto const & " << tmpObj << " =" << std::endl;
   indent(o, l + 4) << "static_cast<ace::tree::Object const &>(r.get(" << tmpPath
                    << "));";
